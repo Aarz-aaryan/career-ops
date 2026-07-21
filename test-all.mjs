@@ -702,6 +702,7 @@ const systemFiles = [
   '.qwen/skills/career-ops/SKILL.md',
   '.antigravitycli/skills/career-ops/SKILL.md',
   '.grok/skills/career-ops/SKILL.md',
+  '.kimi/skills/career-ops/SKILL.md',
 ];
 
 for (const f of systemFiles) {
@@ -709,6 +710,24 @@ for (const f of systemFiles) {
     pass(`System file exists: ${f}`);
   } else {
     fail(`Missing system file: ${f}`);
+  }
+}
+
+// Per-CLI SKILL.md entrypoints must be SYMLINKS in the git index (mode 120000).
+// A regular-file blob whose content is the link path as text ships a broken,
+// empty skill to every user of that CLI — exactly what happened to .kimi/ when
+// a symlink was created under core.symlinks=false and committed as-is. Checking
+// the INDEX mode (not the filesystem) keeps this assertion true on Windows
+// checkouts too.
+const skillEntrypoints = systemFiles.filter((f) => f.endsWith('/skills/career-ops/SKILL.md'));
+for (const f of skillEntrypoints) {
+  const staged = run('git', ['ls-files', '-s', f]);
+  if (staged === null || staged === '') {
+    fail(`Could not read git index entry for ${f} (lookup failed — not evidence of absence)`);
+  } else if (staged.startsWith('120000')) {
+    pass(`Entrypoint is a real symlink in git: ${f}`);
+  } else {
+    fail(`Entrypoint committed as a REGULAR file (mode ${staged.split(' ')[0]}) — users of this CLI get a broken skill: ${f}`);
   }
 }
 
