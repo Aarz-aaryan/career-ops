@@ -2278,7 +2278,7 @@ try {
   try {
     mkdirSync(join(fixtureRoot, 'data'), { recursive: true });
     process.chdir(fixtureRoot);
-    appendToPipeline([{ url: 'https://jobs.example.com/1', company: 'Acme', title: 'Engineer' }]);
+    await appendToPipeline([{ url: 'https://jobs.example.com/1', company: 'Acme', title: 'Engineer' }]);
     const pipeline = readFileSync(join(fixtureRoot, 'data', 'pipeline.md'), 'utf-8');
     if (
       pipeline.includes('# Pipeline') &&
@@ -2295,6 +2295,47 @@ try {
   }
 } catch (err) {
   fail(`scan.mjs fresh-install pipeline test crashed: ${err.message}`);
+}
+
+try {
+  const { appendToPipeline } = await import(pathToFileURL(join(ROOT, 'scan.mjs')).href);
+  const { acquirePipelineLock, LockTimeoutError } = await import(pathToFileURL(join(ROOT, 'pipeline-lock.mjs')).href);
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'career-ops-pipeline-lock-'));
+  const originalCwd = process.cwd();
+  let prevTimeout;
+  let prevRetry;
+  try {
+    mkdirSync(join(fixtureRoot, 'data'), { recursive: true });
+    process.chdir(fixtureRoot);
+    const pipelinePath = join(fixtureRoot, 'data', 'pipeline.md');
+    // Hold the exact lock appendToPipeline() takes, then confirm it genuinely
+    // blocks on it (times out) rather than racing straight through to its
+    // read-modify-write. The env overrides keep this assertion in the
+    // milliseconds range instead of waiting out the module's real default.
+    prevTimeout = process.env.CAREER_OPS_PIPELINE_LOCK_TIMEOUT_MS;
+    prevRetry = process.env.CAREER_OPS_PIPELINE_LOCK_RETRY_MS;
+    process.env.CAREER_OPS_PIPELINE_LOCK_TIMEOUT_MS = '200';
+    process.env.CAREER_OPS_PIPELINE_LOCK_RETRY_MS = '20';
+    const held = await acquirePipelineLock(pipelinePath);
+    try {
+      await appendToPipeline([{ url: 'https://jobs.example.com/1', company: 'Acme', title: 'Engineer' }]);
+      fail('appendToPipeline() proceeded while another holder had the pipeline lock — no shared exclusion');
+    } catch (e) {
+      if (e instanceof LockTimeoutError) pass('appendToPipeline() shares pipeline-lock.mjs — correctly blocked on a lock held elsewhere (LockTimeoutError)');
+      else fail(`appendToPipeline() lock sharing: expected LockTimeoutError, got: ${e?.constructor?.name}: ${e?.message}`);
+    } finally {
+      held.release();
+    }
+  } finally {
+    if (prevTimeout === undefined) delete process.env.CAREER_OPS_PIPELINE_LOCK_TIMEOUT_MS;
+    else process.env.CAREER_OPS_PIPELINE_LOCK_TIMEOUT_MS = prevTimeout;
+    if (prevRetry === undefined) delete process.env.CAREER_OPS_PIPELINE_LOCK_RETRY_MS;
+    else process.env.CAREER_OPS_PIPELINE_LOCK_RETRY_MS = prevRetry;
+    process.chdir(originalCwd);
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+} catch (err) {
+  fail(`pipeline-lock.mjs sharing test crashed: ${err.message}`);
 }
 
 // URL dedup normalization (#2065): a cosmetic query-suffix variant of an
@@ -9290,6 +9331,13 @@ console.log('\n59. CV template resolver (cv-templates.mjs)');
   const resolved = run(NODE, ['cv-templates.mjs', 'resolve', 'cv'], noProfile);
   if (resolved && resolved.endsWith('cv-template.html')) pass('CLI: resolve cv (unset) -> base template');
   else fail(`CLI: resolve cv (unset) unexpected: ${resolved}`);
+}
+
+console.log('\n59b. Pipeline lock (pipeline-lock.mjs)');
+{
+  const unit = run(NODE, ['--test', 'test/pipeline-lock.test.mjs']);
+  if (unit !== null) pass('pipeline-lock unit tests pass');
+  else fail('pipeline-lock unit tests failed (run: node --test test/pipeline-lock.test.mjs)');
 }
 
 console.log('\n60. Cover-letter template resolver (generate-cover-letter.mjs)');
