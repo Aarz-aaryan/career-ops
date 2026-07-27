@@ -447,7 +447,7 @@ function gitTimeoutEnvVar(args) {
   return args[0] === 'fetch' ? 'CAREER_OPS_GIT_FETCH_TIMEOUT_MS' : 'CAREER_OPS_GIT_TIMEOUT_MS';
 }
 
-function gitIn(root, ...args) {
+export function gitIn(root, ...args) {
   const timeout = gitTimeoutMs(args);
   try {
     return execFileSync('git', args, { cwd: root, encoding: 'utf-8', timeout }).trim();
@@ -642,7 +642,9 @@ export function prepareMaterializedSkillEntrypointsForStage(paths, root = ROOT) 
   return prepared;
 }
 
-function revertPaths(paths, protectedPaths = new Set()) {
+export function revertPaths(paths, protectedPaths = new Set(), ctx = {}) {
+  const runGit = ctx.git || git;
+  const root = ctx.root || ROOT;
   if (paths.length === 0) return;
   // Must restore from HEAD, not from the index (#915 bug 1). After
   // `git checkout FETCH_HEAD -- <path>` the index already holds the new
@@ -651,25 +653,25 @@ function revertPaths(paths, protectedPaths = new Set()) {
   // to the pre-update commit, which is the correct rollback target.
   for (const p of paths) {
     try {
-      git('checkout', 'HEAD', '--', p);
+      runGit('checkout', 'HEAD', '--', p);
     } catch (err) {
       const pathspec = p.endsWith('/') ? p.slice(0, -1) : p;
       // Only remove if the path genuinely doesn't exist in HEAD.
       // Other errors (permissions, corrupt refs) should re-throw.
       let existsInHead = true;
-      try { git('cat-file', '-e', `HEAD:${pathspec}`); } catch { existsInHead = false; }
+      try { runGit('cat-file', '-e', `HEAD:${pathspec}`); } catch { existsInHead = false; }
       if (existsInHead) throw err;
       // Path was newly introduced by the update — remove it so the
       // working tree is consistent with HEAD.
-      try { git('rm', '-r', '-f', '--ignore-unmatch', '--', pathspec); } catch { /* ignore */ }
-      try { rmSync(join(ROOT, pathspec), { recursive: true, force: true }); } catch { /* already gone */ }
+      try { runGit('rm', '-r', '-f', '--ignore-unmatch', '--', pathspec); } catch { /* ignore */ }
+      try { rmSync(join(root, pathspec), { recursive: true, force: true }); } catch { /* already gone */ }
     }
     // A directory pathspec that exists in HEAD checks out cleanly above, so the
     // catch never runs — but `git checkout HEAD -- docs/` only restores files
     // HEAD already knows about. Files the update introduced *under* that
     // directory are not in HEAD, so they survive the rollback as staged
     // additions and the tree is left dirtier than before the update (#2015).
-    removeAdditionsNotInHead(p, protectedPaths);
+    removeAdditionsNotInHead(p, protectedPaths, ctx);
   }
 }
 
@@ -684,14 +686,20 @@ function revertPaths(paths, protectedPaths = new Set()) {
  * @param {Set<string>} protectedPaths - Paths already dirty/staged BEFORE the
  *   update ran; never deleted, so a rollback cannot destroy the user's own
  *   pre-existing staged work under a system pathspec (#2015).
+ * @param {{git?: typeof git, root?: string}} [ctx] - Testability seam: the git
+ *   runner (defaults to the module `git`, bound to ROOT) and the working-tree
+ *   root used for filesystem deletes. Production always uses the defaults; only
+ *   the behavioral rollback test overrides them to drive a throwaway repo.
  */
-function removeAdditionsNotInHead(pathspec, protectedPaths = new Set()) {
+export function removeAdditionsNotInHead(pathspec, protectedPaths = new Set(), ctx = {}) {
+  const runGit = ctx.git || git;
+  const root = ctx.root || ROOT;
   const spec = pathspec.endsWith('/') ? pathspec.slice(0, -1) : pathspec;
   let added = '';
   try {
     // -z: NUL-delimited, unquoted output, so paths containing spaces or even
     // newlines survive intact — `split('\n').trim()` would mangle them.
-    added = git('diff', '--cached', '-z', '--name-only', '--diff-filter=A', 'HEAD', '--', spec);
+    added = runGit('diff', '--cached', '-z', '--name-only', '--diff-filter=A', 'HEAD', '--', spec);
   } catch {
     // No HEAD yet, or an unreadable pathspec — nothing safe to clean up.
     return;
@@ -702,7 +710,7 @@ function removeAdditionsNotInHead(pathspec, protectedPaths = new Set()) {
     if (protectedPaths.has(file)) continue;
     let removed = false;
     try {
-      git('rm', '-f', '--ignore-unmatch', '--', file);
+      runGit('rm', '-f', '--ignore-unmatch', '--', file);
       removed = true;
     } catch {
       // Index removal failed (lock/permission). Leave both the index entry AND
@@ -711,7 +719,7 @@ function removeAdditionsNotInHead(pathspec, protectedPaths = new Set()) {
       console.error(`Rollback: could not unstage ${file}; leaving it untouched.`);
     }
     if (removed) {
-      try { rmSync(join(ROOT, file), { force: true }); } catch { /* already gone */ }
+      try { rmSync(join(root, file), { force: true }); } catch { /* already gone */ }
     }
   }
 }
