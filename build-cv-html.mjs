@@ -62,6 +62,27 @@ function escapeHtml(text) {
     .replace(/'/g, '&#39;');
 }
 
+// stripMarkdown — convert the most common inline markdown patterns to HTML
+// (or strip them) so that user-provided text never leaks raw `*foo*` / `**bar**`
+// / `_baz_` into the rendered PDF. Used by sections whose text ends up in
+// fields where we want italic emphasis (e.g. edu-desc) rather than literal
+// asterisks. Always runs BEFORE escapeHtml so the resulting <em>/<strong>
+// tags survive intact (escapeHtml only escapes &, <, >, ", ').
+function stripMarkdown(text) {
+  if (typeof text !== 'string') return text;
+  return text
+    // `**bold**` → <strong>bold</strong>
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // `*italic*` → <em>italic</em> (must come after the bold rule)
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+    // `__bold__` → <strong>bold</strong>
+    .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+    // `_italic_` → <em>italic</em>
+    .replace(/(^|[^_])_([^_\n]+)_/g, '$1<em>$2</em>')
+    // `[text](url)` → <a href="url">text</a>
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+}
+
 // Sanitize a URL for an href attribute: only allow the schemes the template's
 // contact row uses, coerce bare emails/domains, drop javascript:/data: and other
 // script-bearing schemes, then HTML-escape for the attribute context.
@@ -165,9 +186,10 @@ function buildExperience(entries) {
     const bullets = Array.isArray(e.bullets)
       ? e.bullets.filter(Boolean).map(b => `        <li>${escapeHtml(b)}</li>`).join('\n')
       : '';
-    const location = e.location
-      ? `\n    <div class="job-location">${escapeHtml(e.location)}</div>`
-      : '';
+    // Aaryan preference (2026-07-25): no location/city under any job header.
+    // We strip e.location here even though AGY may include it. The .job-location
+    // CSS block is intentionally left in the template for future re-enable.
+    const location = '';
     return `<div class="job">
     <div class="job-header">
       <span class="job-company">${escapeHtml(e.company)}</span>
@@ -184,8 +206,11 @@ ${bullets}
 function buildProjects(entries) {
   if (!Array.isArray(entries) || entries.length === 0) return '';
   return entries.filter(Boolean).map(e => {
+    // Aaryan preference (2026-07-25): the badge (e.g. "Full Stack Developer") goes
+    // on the FAR RIGHT of the project header, like job-period does for experience.
+    // Use the same .project-header flex layout as the experience row.
     const badge = e.badge
-      ? `<span class="project-badge">${escapeHtml(e.badge)}</span>`
+      ? `<span class="project-badge-right">${escapeHtml(e.badge)}</span>`
       : '';
     // Prefer a single description; fall back to joining bullets into one line so
     // a bullets-shaped payload still renders inside the .project-desc block.
@@ -198,27 +223,85 @@ function buildProjects(entries) {
       ? `\n    <div class="project-tech">${escapeHtml(e.tech)}</div>`
       : '';
     return `<div class="project">
-    <div class="project-title">${escapeHtml(e.name)}${badge}</div>${desc}${tech}
+    <div class="project-header">
+      <span class="project-title">${escapeHtml(e.name)}</span>
+      ${badge}
+    </div>${desc}${tech}
   </div>`;
   }).join('\n  ');
 }
 
 function buildEducation(entries) {
   if (!Array.isArray(entries) || entries.length === 0) return '';
-  return entries.filter(Boolean).map(e => {
-    const org = e.org
-      ? ` <span class="edu-org">${escapeHtml(e.org)}</span>`
-      : '';
-    const desc = e.description
-      ? `\n    <div class="edu-desc">${escapeHtml(e.description)}</div>`
-      : '';
-    return `<div class="edu-item">
+  // Aaryan preference (2026-07-25 round-8): strip city/state from the description
+  // string itself, not just the standalone `location` field. AGY sometimes embeds
+  // "Philadelphia, PA" or other city/state directly in the description (e.g.
+  // "Dean's List | Drexel Founder Scholar (merit scholarship). Philadelphia, PA").
+  // Catches: "City, ST", "City ST", and bare city names like "San Francisco Bay Area".
+  const stripLocation = (text) => {
+    if (typeof text !== 'string' || !text) return text;
+    // Match "City, ST" or "City ST" only when preceded by a separator (·,.,;),
+    // NOT just whitespace. This avoids "AP Scholar" being eaten as
+    // "Scholar [City] [ST]" when "Scholar" is followed by a city.
+    return text
+      .replace(/[·.,;]\s*[A-Z][a-zA-Z\.\- ]+,\s*[A-Z]{2}\b\.?/g, '')
+      .replace(/[·.,;]\s*[A-Z][a-zA-Z\.\- ]+\s+[A-Z]{2}\b\.?/g, '')
+      .replace(/[·.,;]\s*(Philadelphia|San Francisco|New York|Seattle|Austin|Boston|Mountain View|Cupertino|Menlo Park|Sunnyvale|Palo Alto|Redmond|Los Angeles|Chicago|Berlin|London|Toronto)\b\.?/gi, '')
+      .replace(/\s*[·.]\s*$/, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  };
+  return entries.filter(Boolean).map(raw => {
+    // Schema normalizer: accept multiple input shapes (AGY produces 3 different
+    // ones depending on archetype). Map to canonical internal form:
+    //   { title, org, year, description, location }
+    //
+    // Canonical (pdf.md schema):
+    //   { title, org, year, description, location? }
+    // Variant A (institution-led, AGY FDE-style):
+    //   { institution, degree, dates, location, details? | bullets? }
+    // Variant B (institution-led with date+location, AGY FDE-style v2):
+    //   { institution, location, degree, dates, bullets? }
+    const e = {};
+    e.title = raw.title ?? raw.degree ?? '';
+    e.org = raw.org ?? raw.institution ?? '';
+    e.year = raw.year ?? raw.dates ?? '';
+    // AGY sometimes emits `details` or `bullets` as an array, sometimes as a string.
+    // Handle both shapes and join multiple strings with the same separator we use elsewhere.
+    const detailsArr = Array.isArray(raw.bullets) ? raw.bullets
+                     : Array.isArray(raw.details) ? raw.details
+                     : null;
+    const detailsStr = (typeof raw.details === 'string' && raw.details)
+                     || (typeof raw.bullets === 'string' && raw.bullets)
+                     || '';
+    const descBits = [];
+    if (raw.description) descBits.push(stripMarkdown(stripLocation(raw.description)));
+    if (detailsArr && detailsArr.length) descBits.push(detailsArr.map(d => stripMarkdown(stripLocation(d))).join(' · '));
+    if (detailsStr) descBits.push(stripMarkdown(stripLocation(detailsStr)));
+    e.description = descBits.join(' · ');
+    e.location = raw.location ?? '';
+    if (e.title || e.org) {
+      const org = e.org
+        ? ` <span class="edu-org">${escapeHtml(e.org)}</span>`
+        : '';
+      const desc = e.description
+        ? `\n    <div class="edu-desc">${escapeHtml(e.description)}</div>`
+        : '';
+      // Aaryan preference (2026-07-25): NO location (city/state) anywhere in the CV
+      // — neither in Education nor anywhere else. The .edu-location CSS block was
+      // intentionally left in the template so it can be re-enabled by future templates
+      // without re-adding the CSS. AGY payloads may still include `location` — we
+      // strip it here so no PDF shows "Philadelphia, PA" or any other city.
+      const loc = '';
+      return `<div class="edu-item">
     <div class="edu-header">
       <div class="edu-title">${escapeHtml(e.title)}${org}</div>
       <div class="edu-year">${escapeHtml(e.year || '')}</div>
-    </div>${desc}
+    </div>${desc}${loc}
   </div>`;
-  }).join('\n  ');
+    }
+    return '';
+  }).filter(Boolean).join('\n  ');
 }
 
 function buildCertifications(entries) {
@@ -236,6 +319,18 @@ function buildCertifications(entries) {
 
 function buildSkills(categories) {
   if (!Array.isArray(categories) || categories.length === 0) return '';
+  // Aaryan preference (2026-07-25): pack more content into fewer lines by laying out
+  // skill categories in a flex-wrap grid. Short categories (Languages, Cloud, CAD,
+  // Design) share a row; long categories (Tools & Frameworks, GenAI/LLMOps) take
+  // their own row. Each category uses display:inline-block with explicit minimum
+  // widths so the browser wraps to a 2-column layout naturally — no fixed grid
+  // that could force ugly overflow on different content lengths.
+  //
+  // NOTE on "no overlap" guarantee:
+  //   - inline-block elements with margin-right create a vertical column gutter.
+  //   - flex-wrap + align-content: flex-start ensures rows don't overlap vertically.
+  //   - The CSS sets min-width so a single very long category is forced to its own
+  //     row instead of squishing into half-width.
   const items = categories.filter(Boolean).map(c => {
     const cat = c.category
       ? `<span class="skill-category">${escapeHtml(c.category)}:</span> `
@@ -245,6 +340,29 @@ function buildSkills(categories) {
   return `<div class="skills-grid">
 ${items}
   </div>`;
+}
+
+// Leadership entries are bulleted role/org pairs.
+// Supports two shapes per entry:
+//   1) { role: '...', org: '...' }  — explicit split, role bold + org italic
+//   2) 'string'                     — naked string fallback
+// The function returns an empty string when no entries are present, so the
+// {{LEADERSHIP}} placeholder substitution ends up empty and the corresponding
+// <div class="section leadership-section"> wraps to nothing — same pattern
+// stripEmptySections uses for projects/education.
+function buildLeadership(entries) {
+  if (!Array.isArray(entries) || entries.length === 0) return '';
+  const items = entries.filter(Boolean).map(e => {
+    if (typeof e === 'string') {
+      return `    <li>${escapeHtml(e)}</li>`;
+    }
+    const role = e.role ? `<span class="leadership-role">${escapeHtml(e.role)}</span>` : '';
+    const org = e.org ? ` <span class="leadership-org">- ${escapeHtml(e.org)}</span>` : '';
+    return `    <li>${role}${org}</li>`;
+  }).join('\n');
+  return `<ul class="leadership-list">
+${items}
+  </ul>`;
 }
 
 // Rebuild the whole .contact-row block. Its markup uses fixed "|" separators
@@ -268,9 +386,8 @@ function buildContactRow(candidate) {
   if (c.portfolio && c.portfolio.url) {
     items.push(`<a href="${sanitizeUrl(c.portfolio.url)}">${escapeHtml(c.portfolio.display || c.portfolio.url)}</a>`);
   }
-  if (c.location) {
-    items.push(`<span>${escapeHtml(c.location)}</span>`);
-  }
+  // Aaryan preference (2026-07-25): NO city/state in the contact row.
+  // Even if candidate.location is provided, do NOT push it here.
   const sep = '\n      <span class="separator">|</span>\n      ';
   return `<div class="contact-row">\n      ${items.join(sep)}\n    </div>`;
 }
@@ -305,6 +422,8 @@ function renderReport(payload) {
     CERTIFICATIONS: buildCertifications(payload.certifications),
     SECTION_SKILLS: escapeHtml(sectionTitles.skills),
     SKILLS: buildSkills(payload.skills),
+    SECTION_LEADERSHIP: escapeHtml(sectionTitles.leadership || 'Leadership Experience'),
+    LEADERSHIP: buildLeadership(payload.leadership),
   };
   return { substitutions, candidate };
 }
