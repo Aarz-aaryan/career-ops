@@ -44,6 +44,7 @@ import { classifyFetchError } from './verify-portals.mjs';
 import { fingerprintText, findCrossListings } from './fingerprint-core.mjs';
 import { resolveColumns, parseTrackerRow } from './tracker-parse.mjs';
 import { normalizeCompany } from './tracker-utils.mjs';
+import { normalizeCompanyName } from './invite-match.mjs';
 import { withPipelineLock } from './pipeline-lock.mjs';
 
 try {
@@ -1316,6 +1317,17 @@ export function formatScanHistoryRow(offer, date, status = 'added') {
     // posting or a scan without trust_filter leaves both empty.
     trustIsFlagged(offer) ? String(offer.trustScore) : '',
     trustIsFlagged(offer) ? trustFlagList(offer).join(',') : '',
+    // Normalized company key (#2093): the canonical company form shared across
+    // the tracker (normalizeCompanyName — lowercased, punctuation/whitespace
+    // folded, trailing legal-entity suffixes stripped) so "Acme Inc.",
+    // "Acme, Inc." and "ACME  Inc" all key to `acme`. Stored at write time so
+    // repost/name-matching never has to route through executing a script, and
+    // the raw display company in col 5 stays faithful to what the provider
+    // returned. Trailing col 12 — purely additive: index-based readers
+    // (fingerprint@7, postedAt@8, trust@9-10, and the web parser's first 7
+    // cols) are unaffected, and older rows that lack it are tolerated by
+    // consumers normalizing the raw name on the fly.
+    normalizeCompanyName(offer.company || ''),
   ].map(sanitizeTsvField).join('\t');
 }
 
@@ -1331,6 +1343,11 @@ export function loadFingerprintHistory(historyPath = SCAN_HISTORY_PATH) {
   const rows = [];
   for (const line of readFileSync(historyPath, 'utf-8').split('\n')) {
     const cols = line.split('\t');
+    // Skip the header row. Older 7-col headers fall out of the `cols.length < 8`
+    // guard below on their own, but the 12-col header names col 7 `fingerprint`
+    // (non-empty), so it would otherwise pass that guard and be read as data.
+    // Real rows always carry a URL in col 0, never the literal `url`.
+    if (cols[0] === 'url') continue;
     if (cols.length < 8 || !cols[7].trim()) continue;
     rows.push({
       url: (cols[0] || '').trim(),
@@ -1400,13 +1417,19 @@ export async function appendToPipeline(offers) {
 }
 
 export function appendToScanHistory(offers, date, status = 'added') {
-  // Ensure file + header exist. Location appended as 7th column for non-breaking
-  // backward compat — older scan-history.tsv files with 6 columns still parse fine
-  // since loadSeenUrls only reads column 0. `status` is parameterized so callers
-  // can record verify outcomes (`skipped_expired`, etc.) without the legacy
-  // `(expired)` suffix in `source`.
+  // Ensure file + header exist. The header names every column the row writer
+  // (formatScanHistoryRow) emits, in the same order: the original 7 positional
+  // cols (url…location) plus the append-only trailing cols added since —
+  // fingerprint (7), posted_at (8), trust_score (9), trust_flags (10),
+  // normalized_company (11). Written ONLY on fresh-file creation; existing files
+  // (including headerless legacy files and older 7-col-header files) are never
+  // rewritten. All readers either skip line 0 unconditionally, detect the header
+  // by its `url\t` prefix, or skip non-URL col-0 rows, so widening it stays
+  // backward-compatible. `status` is parameterized so callers can record verify
+  // outcomes (`skipped_expired`, etc.) without the legacy `(expired)` suffix.
   if (!existsSync(SCAN_HISTORY_PATH)) {
-    writeFileSync(SCAN_HISTORY_PATH, 'url\tfirst_seen\tportal\ttitle\tcompany\tstatus\tlocation\n', 'utf-8');
+    mkdirSync(path.dirname(SCAN_HISTORY_PATH), { recursive: true });
+    writeFileSync(SCAN_HISTORY_PATH, 'url\tfirst_seen\tportal\ttitle\tcompany\tstatus\tlocation\tfingerprint\tposted_at\ttrust_score\ttrust_flags\tnormalized_company\n', 'utf-8');
   }
 
   const lines = offers.map(o => formatScanHistoryRow(o, date, status)).join('\n') + '\n';
