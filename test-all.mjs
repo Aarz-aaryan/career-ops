@@ -2347,11 +2347,22 @@ const upskillModeDoc = readFile('modes/upskill.md');
 
 // The phase-2 "coming later" placeholder must be gone — the plan ships now.
 // Reject ANY pending-wording variant about the learning plan (coming later,
-// pending, coming soon, TODO, ships in phase 2), not just one narrow phrasing,
-// so a regressing edit can't reintroduce a "not yet" placeholder.
+// pending, coming soon, not yet, unavailable/not available, TBD, WIP, in
+// progress, TODO, ships in phase 2), not just one narrow phrasing, and ALSO
+// catch standalone pending-phase wording near the plan (e.g. "phase 2b
+// pending", "planned for phase 2b"), so a regressing edit can't reintroduce a
+// "not yet" placeholder in either form.
+// Scope the negative pending-checks to ONLY the `## Learning Plan` section
+// (heading → next `## ` or EOF), so unrelated changelog/example content
+// elsewhere in the doc can't falsely trigger a pending failure. The positive
+// "section exists" check below still runs against the whole doc.
+const upskillLpMatch = upskillModeDoc.match(/^## Learning Plan\b[\s\S]*?(?=^## |(?![\s\S]))/m);
+const upskillLpSection = upskillLpMatch ? upskillLpMatch[0] : '';
 const upskillLearningPlanPending =
-  /learning plan[^\n]*(?:coming|later|pending|soon|todo|phase 2)/i.test(upskillModeDoc) ||
-  /ships in phase 2/i.test(upskillModeDoc);
+  /learning plan[^\n]*(?:coming|later|pending|soon|todo|phase 2|not yet|not available|unavailable|tbd|wip|in progress)/i.test(upskillLpSection) ||
+  /ships in phase 2/i.test(upskillLpSection) ||
+  /phase\s*2b?\b[^\n]*(?:pending|coming|planned|later|tbd)/i.test(upskillLpSection) ||
+  /(?:pending|planned|upcoming)\b[^\n]*phase\s*2b?/i.test(upskillLpSection);
 if (
   !upskillLearningPlanPending &&
   upskillModeDoc.includes('## Learning Plan')
