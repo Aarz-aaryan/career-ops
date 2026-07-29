@@ -10016,6 +10016,9 @@ try {
     { file: 'web/src/app/actions/registry.ts', re: /TAB_VALUES\s*=\s*\[([\s\S]*?)\]/, upper: true, exclude: [] },
     { file: 'web/src/components/pipeline-view.tsx', re: /TABS\s*=\s*\[([\s\S]*?)\]/, upper: true, exclude: [] },
     { file: 'web/src/app/analytics/page.tsx', re: /STAGES[^=]*=\s*\[([\s\S]*?)\];/, upper: true, exclude: ['SKIP'] },
+    // 55.3b+ the degraded-path FALLBACK in the states ACL (career-ops-ui's find, #2282):
+    // it promises to mirror states.yml and drifted to 8 states while the live path had 9.
+    { file: 'web/src/lib/core/states.ts', re: /const FALLBACK[^=]*=\s*\[([\s\S]*?)\n\];/, upper: false, exclude: [] },
   ];
   if (stateLabels.length > 0) {
     const drift = [];
