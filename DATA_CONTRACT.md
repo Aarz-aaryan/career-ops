@@ -36,6 +36,7 @@ These files contain your personal data, customizations, and work product. Update
 | `data/reply-candidates.json` | Your normalized employer-reply candidates (subject, body, sender, signal — read by `reply-watch.mjs`) |
 | `data/pdf-index.tsv` | PDF↔report linkage manifest (written by `generate-pdf.mjs`, read by `find.mjs`, the dashboard, and the `email` mode) |
 | `data/offers/*` | Your received offers/contracts, promise notes, prep reports, and reply drafts (PII — gitignored, written by the `offer-prep` mode) |
+| `data/outcomes/*` | Your application outcome logs and archived application artifacts (written by the `outcome` mode) |
 | `data/salary-observations.tsv` | Your append-only compensation observation log: `{tracker#}\t{date}\t{desired\|advertised\|actual}\t{amount}\t{currency}\t{source}\t{note}`. Written by interactive modes when a figure is stated/confirmed; never edited in place. Advertised figures come from reports' `advertised_comp` instead — reports are themselves observation sources. Read by `salary-gap.mjs` |
 | `status-log.tsv` (sibling of the active tracker file — `data/status-log.tsv` in the default layout) | Your append-only status transition ledger: `{tracker#}\t{date}\t{from}\t{to}\t{source}\t{note}`. Appended by `set-status.mjs` next to wherever the tracker lives, on every real status change (the tracker stays the source of truth for *state*; the ledger records *when* transitions happened); never edited in place — corrections are new `correction`-source lines. Read by `funnel-velocity.mjs` |
 | `data/upskill/*` | Your skill-gap analysis reports (written by the `upskill` mode) |
@@ -83,6 +84,7 @@ These files contain system logic, scripts, templates, and instructions that impr
 | `modes/interview.md` | Interactive profile/CV onboarding interview instructions |
 | `modes/interview-prep.md` | Company-specific interview prep instructions |
 | `modes/interview-redflag.md` | Company red-flag detection instructions |
+| `modes/outcome.md` | Application outcome instructions |
 | `modes/interview/*` | Interview prep planning, practice, and debrief skills |
 | `modes/agent-inbox.md` | Agent inbox (queued requests) instructions |
 | `modes/reply-watch.md` | Employer reply classification instructions |
