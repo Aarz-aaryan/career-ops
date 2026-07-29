@@ -1798,6 +1798,51 @@ if (shared.includes('_profile.md')) {
   fail('_shared.md does NOT reference _profile.md');
 }
 
+// --- _shared.md / _writing.md split (#1710) ---
+// The split can only relocate content, never edit or drop it. Byte-preservation
+// was verified at review time (concatenating the two files reproduced the
+// pre-split _shared.md exactly), but a frozen pre-split hash is deliberately NOT
+// kept as a permanent guard: it inverts once merged — failing on every
+// legitimate future edit to either file, and _shared.md is the most-edited
+// prompt file in the repo (a model-tier update fired it two days running). The
+// durable invariant is structural instead: each concern lives in exactly ONE
+// file, and no mode points at _shared.md for a writing section — the silent-loss
+// bug byte-preservation could never catch anyway.
+{
+  // Each concern lives in exactly ONE file: eval-core headers only in _shared.md,
+  // writing headers only in _writing.md (no loss, no duplication, no misplacement).
+  // Matched as line-anchored HEADERS (`^## …`) so a prose reference to a section
+  // name inside a table cell (e.g. Sources of Truth pointing at `## Writing Style`)
+  // isn't mistaken for the section itself.
+  const writing = readFile('modes/_writing.md');
+  const hasHeader = (src, h) => new RegExp('^' + h.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'm').test(src);
+  const coreHeaders = ['## Sources of Truth', '## Scoring System', '## Posting Legitimacy', '## Company Type and Compensation', '## Archetype Detection', '## Global Rules'];
+  const writingHeaders = ['## Voice DNA', '## Writing Style Calibration', '## Writing Style', '## Professional Writing'];
+  const coreOk = coreHeaders.every(h => hasHeader(shared, h) && !hasHeader(writing, h));
+  const writingOk = writingHeaders.every(h => hasHeader(writing, h) && !hasHeader(shared, h));
+  if (coreOk && writingOk) {
+    pass('eval-core sections stay in _shared.md; writing sections live only in _writing.md (#1710)');
+  } else {
+    fail(`_shared/_writing section placement wrong (#1710): coreOk=${coreOk} writingOk=${writingOk}`);
+  }
+
+  // Stale-reference guard: no mode may point at `_shared.md` for a writing
+  // section — those references must target `_writing.md` now, or the writing
+  // guidance silently vanishes for that mode. This is what byte-preservation
+  // alone can't catch.
+  const writingRefRe = /_shared\.md[^.\n]{0,40}(Voice DNA|Writing Style|Professional Writing)|(Voice DNA|Writing Style|Professional Writing)[^.\n]{0,40}_shared\.md/;
+  const stale = [];
+  for (const f of readdirSync(join(ROOT, 'modes'), { recursive: true }).filter(p => typeof p === 'string' && p.endsWith('.md'))) {
+    const src = readFile(`modes/${f.split(/[\\/]/).join('/')}`);
+    if (writingRefRe.test(src)) stale.push(f);
+  }
+  if (stale.length === 0) {
+    pass('no mode references _shared.md for a writing section — all writing refs point at _writing.md (#1710)');
+  } else {
+    fail(`modes still reference _shared.md for writing sections (should be _writing.md): ${stale.join(', ')}`);
+  }
+}
+
 // --- _custom.md must be READ, not just written (#1388): Sources of Truth row +
 // honor rule in _shared.md, and an explicit pre-generation read in pdf.md ---
 const pdfModeCustom = readFile('modes/pdf.md');
