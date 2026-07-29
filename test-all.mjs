@@ -201,6 +201,7 @@ const scripts = [
   // portals file that would trigger a live remote sweep during tests.
   { name: 'verify-portals.mjs --file .tmp-test-missing-portals.yml', expectExit: 0 },
   { name: 'update-system.mjs check', expectExit: 0 },
+  { name: 'seed-fixture.mjs --self-test', expectExit: 0 },
   { name: 'archive-posting.mjs --help', expectExit: 0 },
 ];
 
@@ -208,7 +209,10 @@ const scriptTmp = mkdtempSync(join(ROOT, '.tmp-script-test-'));
 try {
   const copyDirSync = (src, dest, exclude = []) => {
     const name = src.split(/[\\/]/).pop();
-    if (exclude.includes(name)) return;
+    // Exclude only top-level workspace dirs (data/, reports/, node_modules, …).
+    // Match by basename ONLY at the repo root so nested fixture subdirs such as
+    // test-fixtures/upgrade/state-*/data and .../reports still get copied.
+    if (dirname(src) === ROOT && exclude.includes(name)) return;
     const stat = statSync(src);
     if (stat.isDirectory()) {
       mkdirSync(dest, { recursive: true });
