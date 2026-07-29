@@ -59,6 +59,7 @@ config/benchmarks.yml
 portals.yml
 modes/_profile.md
 modes/_custom.md
+modes/_brief.md
 .update-dismissed
 .update-lock
 .manifesto-noted
