@@ -10002,6 +10002,62 @@ try {
     fail(`templates/states.yml lost canonical status id(s): ${missingStates.join(', ')} — BREAKING for the web status mapping`);
   }
 
+  // 55.3b Every web status list must carry every canonical state. states.yml is
+  // the source of truth; the web keeps SIX hardcoded copies (title-case canonical
+  // lists + UPPERCASE tab/stage lists). `Hired` (#2050) had silently drifted out
+  // of ALL of them — a landed job was unsettable, uncounted in the funnel, and a
+  // gray "unknown" dot (#2249). Cross-check each so a future core state can't
+  // vanish from the dashboard again. The analytics funnel intentionally omits
+  // SKIP (not a funnel stage), so it's excluded there.
+  const stateLabels = [...statesSrc.matchAll(/^\s+label:\s*"?([A-Za-z]+)"?\s*$/gm)].map((m) => m[1]);
+  const webStatusLists = [
+    { file: 'web/src/lib/format.ts', re: /CANONICAL_STATES\s*=\s*\[([\s\S]*?)\]/, upper: false, exclude: [] },
+    { file: 'web/src/app/actions/registry.ts', re: /CANON_STATUS\s*=\s*\[([\s\S]*?)\]/, upper: false, exclude: [] },
+    { file: 'web/src/app/actions/registry.ts', re: /TAB_VALUES\s*=\s*\[([\s\S]*?)\]/, upper: true, exclude: [] },
+    { file: 'web/src/components/pipeline-view.tsx', re: /TABS\s*=\s*\[([\s\S]*?)\]/, upper: true, exclude: [] },
+    { file: 'web/src/app/analytics/page.tsx', re: /STAGES[^=]*=\s*\[([\s\S]*?)\];/, upper: true, exclude: ['SKIP'] },
+  ];
+  if (stateLabels.length > 0) {
+    const drift = [];
+    for (const { file, re, upper, exclude } of webStatusLists) {
+      const p = join(ROOT, file);
+      if (!existsSync(p)) continue;
+      const block = readFileSync(p, 'utf-8').match(re)?.[1] ?? '';
+      const present = new Set([...block.matchAll(/"([A-Za-z]+)"/g)].map((m) => m[1]));
+      const want = (upper ? stateLabels.map((l) => l.toUpperCase()) : stateLabels).filter((l) => !exclude.includes(l));
+      const missing = want.filter((l) => !present.has(l));
+      if (missing.length) drift.push(`${file} (${missing.join(', ')})`);
+    }
+    if (drift.length === 0) {
+      pass('every web status list covers all canonical states from states.yml (#2249)');
+    } else {
+      fail(`web status list(s) missing canonical state(s) — dashboard can't set/count them (#2249): ${drift.join(' | ')}`);
+    }
+
+    // The assistant preamble also enumerates the states in PROSE (the setStatus
+    // list + the filterPipeline tab enum). Those drift the same way — the AI
+    // couldn't offer to set/filter by Hired — so check them too (#2249).
+    const assistantPath = join(ROOT, 'web', 'src', 'app', 'api', 'assistant', 'route.ts');
+    if (existsSync(assistantPath)) {
+      const src = readFileSync(assistantPath, 'utf-8');
+      const proseChecks = [
+        { name: 'setStatus canonical-states list', text: src.match(/Canonical states:\s*([^.]*)\./)?.[1] ?? '', upper: false },
+        { name: 'filterPipeline tab enum', text: src.match(/tab ∈\s*([^;]*);/)?.[1] ?? '', upper: true },
+      ];
+      const proseDrift = [];
+      for (const { name, text, upper } of proseChecks) {
+        const want = upper ? stateLabels.map((l) => l.toUpperCase()) : stateLabels;
+        const missing = want.filter((l) => !new RegExp(`\\b${l}\\b`).test(text));
+        if (missing.length) proseDrift.push(`${name} (${missing.join(', ')})`);
+      }
+      if (proseDrift.length === 0) {
+        pass('assistant preamble prose enumerates every canonical state (#2249)');
+      } else {
+        fail(`assistant preamble missing canonical state(s) in prose (#2249): ${proseDrift.join(' | ')}`);
+      }
+    }
+  }
+
   // 55.4 report format blocks (modes/oferta.md → web report parser)
   const ofertaSrc = readFileSync(join(ROOT, 'modes', 'oferta.md'), 'utf-8');
   const REPORT_BLOCKS = ['Block A', 'Block B', 'Block C', 'Block D', 'Block E', 'Block F', 'Block G'];
