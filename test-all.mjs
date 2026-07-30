@@ -5829,6 +5829,146 @@ try {
     fail('parseDate validation wrong');
   }
 
+  // extractContacts — recorded outreach is usually a NAME (LinkedIn produces no
+  // email), so an email-only parser reports contacts: [] for rows that do have a
+  // human attached. "no contact" then reads identically to "contact with no
+  // email on file", which inverts the meaning of the field.
+  {
+    const nameOnly = cadence.extractContacts('reached out to recruiter Julia Masera (LinkedIn)');
+    if (nameOnly.length === 1 && nameOnly[0].name === 'Julia Masera' && nameOnly[0].email === null) {
+      pass('extractContacts finds a name-only contact with no email on file');
+    } else {
+      fail(`extractContacts name-only got ${JSON.stringify(nameOnly)}`);
+    }
+    if (nameOnly[0] && nameOnly[0].channel === 'linkedin') {
+      pass('extractContacts carries the channel through when the notes name one');
+    } else {
+      fail(`extractContacts should report channel 'linkedin', got ${JSON.stringify(nameOnly[0])}`);
+    }
+
+    const emailed = cadence.extractContacts('Emailed Jane Doe at jane.doe@acme.com');
+    if (emailed.length === 1 && emailed[0].email === 'jane.doe@acme.com' && emailed[0].channel === 'email') {
+      pass('extractContacts still resolves an email contact (regression)');
+    } else {
+      fail(`extractContacts email-case got ${JSON.stringify(emailed)}`);
+    }
+
+    if (cadence.extractContacts('On-archetype fit; no submission yet').length === 0) {
+      pass('extractContacts reports no contact when the notes carry none');
+    } else {
+      fail('extractContacts should find nothing in notes with no outreach');
+    }
+
+    // A bare capitalized word pair must not be mistaken for a contact — only a
+    // named outreach verb qualifies, or the field fills with company names.
+    if (cadence.extractContacts('Strong fit for Acme Corp; Series B').length === 0) {
+      pass('extractContacts does not treat a capitalized company name as a contact');
+    } else {
+      fail(`extractContacts false-positived on a company name: ${JSON.stringify(cadence.extractContacts('Strong fit for Acme Corp; Series B'))}`);
+    }
+
+    // MULTIPLICITY: two contacts in one note, reached on DIFFERENT channels.
+    // A whole-note channel scan tags both with whichever channel word appears
+    // first, so the second contact is silently attributed to the wrong channel.
+    {
+      const two = cadence.extractContacts('Messaged recruiter Asha Beirne on LinkedIn; called hiring manager Bob Smith');
+      const asha = two.find(c => c.name === 'Asha Beirne');
+      const bob = two.find(c => c.name === 'Bob Smith');
+      if (two.length === 2 && asha && bob) {
+        pass('extractContacts finds both contacts when one note names two people');
+      } else {
+        fail(`extractContacts two-contact case got ${JSON.stringify(two)}`);
+      }
+      if (asha?.channel === 'linkedin' && bob?.channel === 'phone') {
+        pass('extractContacts derives each contact channel from its own statement, not the whole note');
+      } else {
+        fail(`per-contact channel wrong: asha=${JSON.stringify(asha?.channel)} bob=${JSON.stringify(bob?.channel)}`);
+      }
+    }
+
+    // MERGE: one outreach statement naming a person AND their email is ONE
+    // contact, not an email-only contact plus a separate name-only duplicate.
+    {
+      const merged = cadence.extractContacts('contacted Jane Doe at jane.doe@acme.com');
+      if (merged.length === 1 && merged[0].name === 'Jane Doe' && merged[0].email === 'jane.doe@acme.com') {
+        pass('extractContacts merges a name and email from the same outreach statement');
+      } else {
+        fail(`extractContacts merge-case got ${JSON.stringify(merged)}`);
+      }
+    }
+
+    // DEDUP: the same address repeated in a note is one contact, not two.
+    {
+      const repeated = cadence.extractContacts('emailed jane.doe@acme.com; followed up jane.doe@acme.com');
+      if (repeated.length === 1) {
+        pass('extractContacts deduplicates a repeated email address');
+      } else {
+        fail(`extractContacts repeated-email got ${JSON.stringify(repeated)}`);
+      }
+      // Address case must not defeat the dedup.
+      const cased = cadence.extractContacts('emailed Jane.Doe@Acme.com; then jane.doe@acme.com again');
+      if (cased.length === 1) {
+        pass('extractContacts deduplicates emails case-insensitively');
+      } else {
+        fail(`extractContacts case-variant email got ${JSON.stringify(cased)}`);
+      }
+    }
+
+    // The same person named twice across statements stays one contact.
+    {
+      const dup = cadence.extractContacts('messaged recruiter Ryan Hill; recruiter Ryan Hill replied');
+      if (dup.length === 1 && dup[0].name === 'Ryan Hill') {
+        pass('extractContacts does not double-count a person named in two statements');
+      } else {
+        fail(`extractContacts repeated-name got ${JSON.stringify(dup)}`);
+      }
+    }
+
+    // LATE BRIDGE: a name-only and an email-only record can be recorded
+    // separately, then a later statement names BOTH and proves they are one
+    // person. Leaving two records behind reports two contacts where the note
+    // itself says there is one.
+    {
+      const bridged = cadence.extractContacts('recruiter Ann Lee; emailed ann.lee@acme.com; contacted Ann Lee at ann.lee@acme.com');
+      if (bridged.length === 1 && bridged[0].name === 'Ann Lee' && bridged[0].email === 'ann.lee@acme.com') {
+        pass('extractContacts coalesces name-only and email-only records once a later statement bridges them');
+      } else {
+        fail(`extractContacts late-bridge got ${JSON.stringify(bridged)}`);
+      }
+    }
+
+    // A hyphenated or apostrophed name is still a name. Dropping it reports
+    // "no contact" for a row that names a person, which is the exact silence
+    // this parser exists to remove.
+    {
+      const punct = cadence.extractContacts('reached out to recruiter Mary-Jane O’Brien (LinkedIn)');
+      if (punct.length === 1 && punct[0].name === 'Mary-Jane O’Brien') {
+        pass('extractContacts handles hyphenated and apostrophed names');
+      } else {
+        fail(`extractContacts punctuated-name got ${JSON.stringify(punct)}`);
+      }
+    }
+
+    // An email with no name attached still yields a contact (name null).
+    {
+      const bare = cadence.extractContacts('sent CV to careers@acme.com');
+      if (bare.length === 1 && bare[0].email === 'careers@acme.com' && bare[0].name === null) {
+        pass('extractContacts keeps a bare email contact with no name');
+      } else {
+        fail(`extractContacts bare-email got ${JSON.stringify(bare)}`);
+      }
+    }
+
+    // The summary printer reads contacts[0].email directly; a name-only contact
+    // must not surface as a literal "null" in that column.
+    const label = cadence.contactLabel(cadence.extractContacts('messaged recruiter Asha Beirne')[0]);
+    if (label === 'Asha Beirne') {
+      pass('contactLabel shows the name when the contact has no email');
+    } else {
+      fail(`contactLabel should fall back to the name, got ${JSON.stringify(label)}`);
+    }
+  }
+
   // parseAppliedDate — extracts the real submission date from notes (the
   // tracker `date` column is the evaluation date), case-insensitive.
   if (cadence.parseAppliedDate('Applied 2026-06-09 via Personio; raised part-time') === '2026-06-09') {
