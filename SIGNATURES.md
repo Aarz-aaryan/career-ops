@@ -100,3 +100,4 @@ public commit with a stated reason.
 - @changeable-alcohol | X | 2026-07-29 | id:108211470 | src:https://github.com/santifer/career-ops/discussions/2287 | n:52
 - @marz1307 | Marvis Osazuwa | 2026-07-29 | "Building on it instead of around it." | id:62819238 | src:https://github.com/santifer/career-ops/pull/2311 | n:53
 - @kylekkkk61 | kylewu | 2026-07-30 | "I will be graduated next year, and I believe this can help me find a job." | id:102206550 | src:https://github.com/santifer/career-ops/discussions/2334 | n:54
+- @LuswetiNick | Nicholas Lusweti | 2026-07-30 | id:179443452 | src:https://github.com/santifer/career-ops/discussions/2345 | n:55
