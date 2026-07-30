@@ -2092,6 +2092,7 @@ func (m PipelineModel) scoreStyle(score float64) lipgloss.Style {
 
 func (m PipelineModel) statusColorMap() map[string]lipgloss.Color {
 	return map[string]lipgloss.Color{
+		"hired":     m.theme.Green, // terminal success — never uncoloured (default) like an unknown status
 		"interview": m.theme.Green,
 		"offer":     m.theme.Green,
 		"applied":   m.theme.Sky,
