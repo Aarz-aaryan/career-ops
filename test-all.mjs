@@ -5858,6 +5858,256 @@ try {
   } else {
     fail('parseAppliedDate should not match the date inside "reapplied"');
   }
+  // An estimated apply date is written "Applied ~YYYY-MM-DD". Without tolerating
+  // the tilde the note is skipped and the cadence silently falls back to the
+  // evaluation date — the same wrong-age failure the notes lookup exists to fix.
+  if (cadence.parseAppliedDate('Applied ~2026-06-09 (date estimated)') === '2026-06-09') {
+    pass('parseAppliedDate tolerates an estimated "Applied ~YYYY-MM-DD" date');
+  } else {
+    fail(`parseAppliedDate should tolerate "~", got ${JSON.stringify(cadence.parseAppliedDate('Applied ~2026-06-09 (date estimated)'))}`);
+  }
+  if (cadence.parseAppliedDate('reapplied ~2026-06-09 after rejection') === null) {
+    pass('parseAppliedDate still refuses "reapplied" when a tilde is present');
+  } else {
+    fail('parseAppliedDate must not match inside "reapplied" even with a tilde');
+  }
+  // A malformed value must be rejected, not silently truncated to a plausible
+  // date. Truncating "2026-06-091" to "2026-06-09" would be reported as a
+  // measured application date and quietly shift the whole cadence — worse than
+  // the honest evaluation-date fallback, because nothing marks it as a guess.
+  const trailingJunk = [
+    ['Applied 2026-06-091', 'a trailing digit'],
+    ['Applied ~2026-06-091', 'a trailing digit after a tilde'],
+    ['Applied 2026-06-09-foo', 'a hyphenated suffix'],
+    ['Applied 2026-06-09foo', 'an unseparated word suffix'],
+    ['Applied 2026-06-09_v2', 'an underscore suffix'],
+    ['Applied 2026-06-09-2026-06-10', 'an ambiguous date range'],
+  ];
+  for (const [notes, label] of trailingJunk) {
+    if (cadence.parseAppliedDate(notes) === null) {
+      pass(`parseAppliedDate rejects ${label} instead of truncating (${notes})`);
+    } else {
+      fail(`parseAppliedDate should reject ${label}, got ${JSON.stringify(cadence.parseAppliedDate(notes))} from ${JSON.stringify(notes)}`);
+    }
+  }
+  // A leading digit is the mirror-image malformation and must fail the same way.
+  if (cadence.parseAppliedDate('Applied 12026-06-09') === null) {
+    pass('parseAppliedDate rejects a leading extra digit');
+  } else {
+    fail(`parseAppliedDate should reject "Applied 12026-06-09", got ${JSON.stringify(cadence.parseAppliedDate('Applied 12026-06-09'))}`);
+  }
+  // Rejecting a malformed candidate must not swallow a valid one later in the
+  // note — the scan has to continue past the bad match, not stop at it.
+  if (cadence.parseAppliedDate('Applied 2026-06-091 (typo); Applied 2026-06-17 for real') === '2026-06-17') {
+    pass('parseAppliedDate skips a malformed date and takes the next valid one');
+  } else {
+    fail(`parseAppliedDate should skip the malformed date, got ${JSON.stringify(cadence.parseAppliedDate('Applied 2026-06-091 (typo); Applied 2026-06-17 for real'))}`);
+  }
+  // A date can match the token shape and still not exist. These must not be
+  // returned as MEASURED application dates: parseDate() rolls them over
+  // (2026-06-31 -> 2026-07-01), so an impossible date silently becomes a real
+  // but wrong one and shifts the cadence by days. The honest
+  // evaluation-date fallback is strictly better than a fabricated date.
+  const impossibleDates = [
+    ['Applied 2026-06-31', 'a 31st in a 30-day month'],
+    ['Applied 2026-02-30', 'a 30th in February'],
+    ['Applied 2026-02-29', 'a 29th of February in a non-leap year'],
+    ['Applied 2026-13-01', 'a 13th month'],
+    ['Applied 2026-00-10', 'a zero month'],
+    ['Applied 2026-06-00', 'a zero day'],
+  ];
+  const VALIDATE = { requireValidCalendarDate: true };
+  for (const [notes, label] of impossibleDates) {
+    if (cadence.parseAppliedDate(notes, VALIDATE) === null) {
+      pass(`parseAppliedDate rejects ${label} when calendar validation is requested (${notes})`);
+    } else {
+      fail(`parseAppliedDate should reject ${label}, got ${JSON.stringify(cadence.parseAppliedDate(notes, VALIDATE))} from ${JSON.stringify(notes)}`);
+    }
+  }
+  // Validation is OPT-IN. followup-seed.mjs depends on receiving the raw
+  // candidate so it can throw INVALID_DATE and make the user fix the typo;
+  // filtering unconditionally would turn that loud, fixable error into a
+  // silent wrong answer.
+  if (cadence.parseAppliedDate('Applied 2026-06-31') === '2026-06-31') {
+    pass('parseAppliedDate returns the raw candidate by default so callers can reject it loudly');
+  } else {
+    fail(`parseAppliedDate default mode must not swallow an impossible date, got ${JSON.stringify(cadence.parseAppliedDate('Applied 2026-06-31'))}`);
+  }
+  // A real leap day must still be accepted — the validity check must not
+  // over-reject.
+  if (cadence.parseAppliedDate('Applied 2024-02-29', VALIDATE) === '2024-02-29') {
+    pass('parseAppliedDate accepts a real leap day under validation');
+  } else {
+    fail(`parseAppliedDate should accept 2024-02-29, got ${JSON.stringify(cadence.parseAppliedDate('Applied 2024-02-29', VALIDATE))}`);
+  }
+  // The continued-scan contract applies to calendar-invalid candidates too.
+  if (cadence.parseAppliedDate('Applied 2026-06-31; corrected: Applied 2026-06-30', VALIDATE) === '2026-06-30') {
+    pass('parseAppliedDate skips an impossible date and takes the next valid one');
+  } else {
+    fail(`parseAppliedDate should skip the impossible date, got ${JSON.stringify(cadence.parseAppliedDate('Applied 2026-06-31; corrected: Applied 2026-06-30', VALIDATE))}`);
+  }
+  // isRealCalendarDate is exported so callers share one definition of validity.
+  if (cadence.isRealCalendarDate('2024-02-29') && !cadence.isRealCalendarDate('2026-02-29') && !cadence.isRealCalendarDate('nope')) {
+    pass('isRealCalendarDate distinguishes a real leap day from an impossible one');
+  } else {
+    fail('isRealCalendarDate mis-classifies a calendar date');
+  }
+  // Date.UTC() maps years 0-99 onto 1900-1999, so a literal ISO year below
+  // 0100 would be validated against the wrong year entirely.
+  if (cadence.isRealCalendarDate('0096-02-29') && !cadence.isRealCalendarDate('0097-02-29')) {
+    pass('isRealCalendarDate preserves a literal ISO year below 0100');
+  } else {
+    fail(`isRealCalendarDate mishandles a sub-0100 year: 0096-02-29=${cadence.isRealCalendarDate('0096-02-29')} 0097-02-29=${cadence.isRealCalendarDate('0097-02-29')}`);
+  }
+  // And the source must degrade to the fallback, not report a fabricated date.
+  {
+    const r = cadence.resolveAppliedDate({ date: '2026-06-01', notes: 'Applied 2026-06-31' });
+    if (r.appliedDate === '2026-06-01' && r.appDateSource === 'evaluation-date-fallback') {
+      pass('resolveAppliedDate falls back when the notes date is not a real calendar date');
+    } else {
+      fail(`resolveAppliedDate impossible-date case got ${JSON.stringify(r)}`);
+    }
+  }
+  if (cadence.parseAppliedDate('Reapplied 2026-06-09; applied 2026-06-17') === '2026-06-17') {
+    pass('parseAppliedDate skips a "reapplied" match and takes the next valid one');
+  } else {
+    fail(`parseAppliedDate should skip "reapplied" and continue, got ${JSON.stringify(cadence.parseAppliedDate('Reapplied 2026-06-09; applied 2026-06-17'))}`);
+  }
+  // Two valid dates: the first still wins (already covered for a status date;
+  // this pins it for two literal "applied" mentions).
+  if (cadence.parseAppliedDate('Applied 2026-06-09, then applied 2026-07-01 to a second req') === '2026-06-09') {
+    pass('parseAppliedDate keeps the first of two "applied" dates');
+  } else {
+    fail(`parseAppliedDate should keep the first applied date, got ${JSON.stringify(cadence.parseAppliedDate('Applied 2026-06-09, then applied 2026-07-01 to a second req'))}`);
+  }
+  // Reverse ordering: a later malformed candidate must not disturb the earlier
+  // valid match the scan already found.
+  if (cadence.parseAppliedDate('Applied 2026-06-09; Applied 2026-06-171 (typo)') === '2026-06-09') {
+    pass('parseAppliedDate keeps a valid first date despite a later malformed one');
+  } else {
+    fail(`parseAppliedDate should keep the valid first date, got ${JSON.stringify(cadence.parseAppliedDate('Applied 2026-06-09; Applied 2026-06-171 (typo)'))}`);
+  }
+  // Boundary characters that legitimately terminate a date must keep matching —
+  // a boundary guard that also rejects these would break real tracker notes.
+  const validTerminators = [
+    ['Applied 2026-06-09', 'end of string'],
+    ['Applied 2026-06-09.', 'a period'],
+    ['Applied 2026-06-09; noted', 'a semicolon'],
+    ['Applied 2026-06-09)', 'a closing paren'],
+    ['Applied 2026-06-09\nvia Personio', 'a newline'],
+  ];
+  for (const [notes, label] of validTerminators) {
+    if (cadence.parseAppliedDate(notes) === '2026-06-09') {
+      pass(`parseAppliedDate still matches a date terminated by ${label}`);
+    } else {
+      fail(`parseAppliedDate should match with ${label}, got ${JSON.stringify(cadence.parseAppliedDate(notes))} from ${JSON.stringify(notes)}`);
+    }
+  }
+  // Nullish notes must not throw (the tracker's Notes cell can be absent).
+  if (cadence.parseAppliedDate(null) === null && cadence.parseAppliedDate(undefined) === null) {
+    pass('parseAppliedDate returns null for nullish notes');
+  } else {
+    fail('parseAppliedDate should return null for null/undefined notes');
+  }
+
+  // resolveAppliedDate — reports WHICH date the cadence is measured from, so a
+  // consumer can tell a real application date from the evaluation-date proxy.
+  // Without it a fallback age is indistinguishable from a measured one.
+  {
+    const measured = cadence.resolveAppliedDate({ date: '2026-06-01', notes: 'Applied 2026-06-09 via Personio' });
+    if (measured.appliedDate === '2026-06-09' && measured.appDateSource === 'notes') {
+      pass('resolveAppliedDate reports source "notes" when the apply date is recorded');
+    } else {
+      fail(`resolveAppliedDate notes-case got ${JSON.stringify(measured)}`);
+    }
+
+    const inferred = cadence.resolveAppliedDate({ date: '2026-06-01', notes: 'On-archetype fit; no submission yet' });
+    if (inferred.appliedDate === '2026-06-01' && inferred.appDateSource === 'evaluation-date-fallback') {
+      pass('resolveAppliedDate flags the evaluation-date proxy as a fallback, not a measured date');
+    } else {
+      fail(`resolveAppliedDate fallback-case got ${JSON.stringify(inferred)}`);
+    }
+
+    const estimated = cadence.resolveAppliedDate({ date: '2026-06-01', notes: 'Applied ~2026-06-09' });
+    if (estimated.appliedDate === '2026-06-09' && estimated.appDateSource === 'notes') {
+      pass('resolveAppliedDate treats an estimated "~" apply date as a recorded date, not a fallback');
+    } else {
+      fail(`resolveAppliedDate estimated-case got ${JSON.stringify(estimated)}`);
+    }
+
+    // A malformed note must degrade to the honest fallback, not to a truncated
+    // date wearing the "notes" provenance label.
+    const malformed = cadence.resolveAppliedDate({ date: '2026-06-01', notes: 'Applied 2026-06-091 (typo)' });
+    if (malformed.appliedDate === '2026-06-01' && malformed.appDateSource === 'evaluation-date-fallback') {
+      pass('resolveAppliedDate falls back rather than trusting a truncated apply date');
+    } else {
+      fail(`resolveAppliedDate malformed-case got ${JSON.stringify(malformed)}`);
+    }
+  }
+
+  // analyze() output contract: every emitted entry must carry appDateSource, and
+  // the value must match how the date was actually obtained. The unit tests above
+  // only cover the helper — this pins the field on the JSON consumers read, which
+  // is where a silently-inferred age would actually do damage.
+  {
+    // realpath: on macOS the tmpdir is a symlink, and followup-cadence.mjs's
+    // CLI guard compares import.meta.url (realpath-resolved) against argv[1].
+    // A symlinked path silently suppresses main() and yields empty stdout.
+    const e2eTmp = realpathSync(mkdtempSync(join(tmpdir(), 'co-cadence-e2e-')));
+    try {
+      copyFileSync(join(ROOT, 'followup-cadence.mjs'), join(e2eTmp, 'followup-cadence.mjs'));
+      copyFileSync(join(ROOT, 'tracker-parse.mjs'), join(e2eTmp, 'tracker-parse.mjs'));
+      copyFileSync(join(ROOT, 'tracker-aliases.json'), join(e2eTmp, 'tracker-aliases.json'));
+      symlinkSync(join(ROOT, 'node_modules'), join(e2eTmp, 'node_modules'), 'dir');
+      mkdirSync(join(e2eTmp, 'data'), { recursive: true });
+      writeFileSync(join(e2eTmp, 'data', 'applications.md'), [
+        '# Applications Tracker',
+        '',
+        '| # | Date | Company | Role | Score | Status | PDF | Report | Notes |',
+        '|---|------|---------|------|-------|--------|-----|--------|-------|',
+        '| 901 | 2026-06-01 | ExactCo | Head of AI | 4.5/5 | Applied | ✅ | [901](reports/901-exactco-2026-06-01.md) | Applied 2026-06-09 via Personio |',
+        '| 902 | 2026-06-02 | EstimateCo | Head of AI | 4.4/5 | Applied | ✅ | [902](reports/902-estimateco-2026-06-02.md) | Applied ~2026-06-10 (date estimated) |',
+        '| 903 | 2026-06-03 | FallbackCo | Head of AI | 4.3/5 | Applied | ✅ | [903](reports/903-fallbackco-2026-06-03.md) | On-archetype fit; no apply date recorded |',
+        '| 904 | 2026-06-04 | TypoCo | Head of AI | 4.2/5 | Applied | ✅ | [904](reports/904-typoco-2026-06-04.md) | Applied 2026-06-091 typo in the tracker |',
+        '',
+      ].join('\n'), 'utf-8');
+
+      const e2eOut = execFileSync(NODE, [join(e2eTmp, 'followup-cadence.mjs')], {
+        cwd: e2eTmp,
+        encoding: 'utf-8',
+        timeout: 30000,
+        env: { ...process.env, CAREER_OPS_PROFILE: '' },
+      });
+      const e2e = JSON.parse(e2eOut.trim());
+      const byNum = new Map((e2e.entries || []).map(entry => [entry.num, entry]));
+
+      const e2eCases = [
+        [901, '2026-06-09', 'notes', 'an exact "Applied YYYY-MM-DD" note'],
+        [902, '2026-06-10', 'notes', 'an estimated "Applied ~YYYY-MM-DD" note'],
+        [903, '2026-06-03', 'evaluation-date-fallback', 'notes with no apply date'],
+        [904, '2026-06-04', 'evaluation-date-fallback', 'a malformed apply date in the notes'],
+      ];
+      for (const [num, expectedDate, expectedSource, label] of e2eCases) {
+        const entry = byNum.get(num);
+        if (entry && entry.appliedDate === expectedDate && entry.appDateSource === expectedSource) {
+          pass(`analyze() emits appDateSource "${expectedSource}" for ${label}`);
+        } else {
+          fail(`analyze() entry #${num} (${label}) got ${JSON.stringify(entry && { appliedDate: entry.appliedDate, appDateSource: entry.appDateSource })}`);
+        }
+      }
+
+      const missingSource = (e2e.entries || []).filter(entry => !['notes', 'evaluation-date-fallback'].includes(entry.appDateSource));
+      if ((e2e.entries || []).length === 4 && missingSource.length === 0) {
+        pass('analyze() stamps every emitted entry with a known appDateSource');
+      } else {
+        fail(`analyze() emitted ${(e2e.entries || []).length} entries, ${missingSource.length} without a known appDateSource`);
+      }
+    } catch (e2eErr) {
+      fail(`analyze() appDateSource end-to-end check crashed: ${e2eErr.message}`);
+    } finally {
+      rmSync(e2eTmp, { recursive: true, force: true });
+    }
+  }
 
   // Status normalization (strips bold + trailing date, lowercases, maps aliases)
   if (cadence.normalizeStatus('**Applied** 2026-05-01') === 'applied') {

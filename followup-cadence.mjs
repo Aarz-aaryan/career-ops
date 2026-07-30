@@ -120,10 +120,74 @@ export function parseDate(dateStr) {
 // "APPLIED ..."). Prefer that so cadence reflects when the application actually
 // went out, not when the role was evaluated. Returns the first such date, or
 // null when the notes don't carry one (caller falls back to the date column).
-export function parseAppliedDate(notes) {
+//
+// The optional `~` accepts an estimated date ("Applied ~2026-06-09"), which is
+// how an apply date reconstructed after the fact gets written. Skipping those
+// silently fell back to the evaluation date — the exact wrong-age failure this
+// lookup exists to prevent. The leading \b still refuses "reapplied".
+//
+// The trailing (?![\w-]) is the mirror of that leading \b: without it a
+// malformed value ("2026-06-091", "2026-06-09-2026-06-10") is truncated to a
+// plausible-looking date and then reported as a *measured* apply date. That is
+// worse than no match at all — the evaluation-date fallback is at least labelled
+// as inferred, whereas a truncated date is indistinguishable from a real one.
+// Rejecting the bad candidate lets the scan continue to a later valid date.
+//
+// The token shape is necessary but not sufficient: "2026-06-31" and
+// "2026-02-30" match it and are not real days.
+//
+// Whether that should be rejected here depends on the caller, so it is opt-in:
+//   - followup-seed.mjs WANTS the raw candidate. It validates the date itself
+//     and throws INVALID_DATE so a typo gets corrected rather than silently
+//     absorbed — pinning a follow-up off a wrong date is worse than refusing.
+//     Filtering here unconditionally would make that impossible date invisible
+//     to it and turn a loud, fixable error into a silent wrong answer.
+//   - the cadence report wants it skipped, because parseDate() rolls an
+//     impossible date over (2026-06-31 becomes 2026-07-01), so it would become
+//     a real but WRONG date labelled `notes` — i.e. measured, not inferred.
+//     Falling back to the evaluation date is honest by comparison, and one bad
+//     row must not fail a whole report.
+//
+// @param {string} notes
+// @param {{requireValidCalendarDate?: boolean}} [options]
+export function parseAppliedDate(notes, options = {}) {
   if (!notes) return null;
-  const m = String(notes).match(/\bapplied\s+(\d{4}-\d{2}-\d{2})/i);
-  return m ? m[1] : null;
+  const validateCalendar = options.requireValidCalendarDate === true;
+  for (const m of String(notes).matchAll(/\bapplied\s+~?(\d{4}-\d{2}-\d{2})(?![\w-])/gi)) {
+    if (!validateCalendar || isRealCalendarDate(m[1])) return m[1];
+  }
+  return null;
+}
+
+// True only when YYYY-MM-DD names a day that exists. Round-tripping through a
+// UTC Date and comparing the parts back catches out-of-range months/days as
+// well as month-length and leap-year violations, which a range check misses.
+export function isRealCalendarDate(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(iso ?? ''))) return false;
+  const [y, mo, d] = iso.split('-').map(Number);
+  if (mo < 1 || mo > 12 || d < 1) return false;
+  // setUTCFullYear rather than Date.UTC: Date.UTC maps years 0-99 onto
+  // 1900-1999, which would reject a literal ISO year below 0100 (0096-02-29 is
+  // a real leap day). The absolute setter keeps the year as written.
+  const dt = new Date(0);
+  dt.setUTCFullYear(y, mo - 1, d);
+  dt.setUTCHours(0, 0, 0, 0);
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === mo - 1 && dt.getUTCDate() === d;
+}
+
+// Which date the cadence is measured from, and where it came from. A caller
+// cannot otherwise tell a real application date from the evaluation-date proxy,
+// so an inferred age reads exactly like a measured one — and acting on that
+// silently-wrong number is what pushes a live application into "cold".
+export function resolveAppliedDate(app) {
+  // requireValidCalendarDate: an impossible date in the notes must degrade to
+  // the labelled fallback rather than be reported as a measured date. One bad
+  // row must not fail the whole report, so this skips rather than throws —
+  // unlike followup-seed.mjs, which refuses to pin a follow-up off a bad date.
+  const fromNotes = parseAppliedDate(app?.notes, { requireValidCalendarDate: true });
+  return fromNotes
+    ? { appliedDate: fromNotes, appDateSource: 'notes' }
+    : { appliedDate: app?.date ?? null, appDateSource: 'evaluation-date-fallback' };
 }
 
 export function daysBetween(d1, d2) {
@@ -311,7 +375,9 @@ export function analyzeFromContent(trackerContent, followupsContent = '') {
     if (!ACTIONABLE_STATUSES.includes(normalized)) continue;
 
     // Prefer the "Applied YYYY-MM-DD" date from notes; fall back to the column.
-    const appliedDate = parseAppliedDate(app.notes) || app.date;
+    // appDateSource travels with the entry so a consumer can tell a measured
+    // age from one inferred off the evaluation date.
+    const { appliedDate, appDateSource } = resolveAppliedDate(app);
     const appDate = parseDate(appliedDate);
     if (!appDate) continue;
 
@@ -351,6 +417,7 @@ export function analyzeFromContent(trackerContent, followupsContent = '') {
       num: app.num,
       date: app.date,
       appliedDate,
+      appDateSource,
       company: app.company,
       // Intermediary channel (#1596): agency name when the application went
       // through an intermediary, null for a direct application (the tracker's
