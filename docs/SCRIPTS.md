@@ -508,6 +508,24 @@ and probes those companies via the ATS providers instead of (or in addition
 to) the directory walk. Other flags: `--verbose`, `--json`, `--include-undated`,
 `--shuffle`.
 
+### DNS pacing
+
+A full sweep resolves one hostname per Workday and iCIMS tenant — 13,889 distinct hostnames across the current datasets (3,781 Workday + 10,108 iCIMS), against 3 for Greenhouse, Lever and Ashby combined. Those lookups are irreducible (nothing to cache: every hostname is distinct), and issued unpaced they trip the per-client rate limit on a resolver like Pi-hole, which then refuses queries for the whole machine — the scan reports thousands of misleading `fetch failed` lines while the boards themselves are fine (#2229).
+
+Uncached, non-coalesced lookups are therefore paced at **400 per minute** by default. The token is spent *before* `dns.lookup()` runs, so a name answered locally — from `/etc/hosts`, say — still costs one; the ceiling meters what the process asks to resolve, not what leaves the machine.
+
+How many upstream queries that becomes depends on the OS resolver: `dns.lookup()` delegates to `getaddrinfo`, which may answer without any query at all, but on a typical glibc host with `autoSelectFamily` it emits an A **and** an AAAA query — roughly 800 queries/minute, measured against a Pi-hole. That is under a stock Pi-hole's 1,000/minute with headroom for the rest of the machine; size it against your own resolver's limit.
+
+Cache hits and lookups that coalesce onto an in-flight one are free, so only uncached, non-coalesced lookup keys count against the ceiling — a hostname not in the cache, or a cached one requested with different resolver options (the cache key is hostname plus `family`/`all`/`hints`/`verbatim`).
+
+```bash
+CAREER_OPS_DNS_LOOKUPS_PER_MIN=800 npm run scan:full   # raise the ceiling
+CAREER_OPS_DNS_LOOKUPS_PER_MIN=0 npm run scan:full     # no pacing (pre-#2229 behaviour)
+CAREER_OPS_NO_DNS_CACHE=1 npm run scan:full            # no DNS cache AND no pacing
+```
+
+The cost is real: a full Workday + iCIMS sweep becomes DNS-bound at roughly 35 minutes. Raise the ceiling if your resolver has the budget — but if you see `fetch failed` in bulk from one ATS section, suspect the resolver before the boards.
+
 **Exit codes:** `0` scan completed, `1` configuration error (no portals.yml, unknown `--ats` source) or fatal scan error.
 
 ---
