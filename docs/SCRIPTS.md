@@ -28,6 +28,7 @@ All scripts live in the project root as `.mjs` modules. Most are exposed via
 | `npm run extract` | `browser-extract.mjs` | Headless read-only page extractor (opt-in `scan.extractor: cli`) — compact JSON for scan/JD |
 | `npm run scan` | `scan.mjs` | Zero-token portal scanner |
 | `npm run scan:full` | `scan-ats-full.mjs` | Reverse ATS discovery scanner |
+| `npm run company:funded` | `company-funded.mjs` | Review-first discovery of recently funded companies |
 | `npm run validate:portals` | `validate-portals.mjs` | Validate portals.yml shape before scanning |
 | `npm run tracker` | `tracker.mjs` | SQLite derived index over applications.md — sync/query/history/export |
 | `npm run find` | `find.mjs` | Resolve a report#/tracker#/company query to its full pipeline identity |
@@ -554,6 +555,28 @@ CAREER_OPS_NO_DNS_CACHE=1 npm run scan:full            # no DNS cache AND no pac
 The cost is real: a full Workday + iCIMS sweep becomes DNS-bound at roughly 35 minutes. Raise the ceiling if your resolver has the budget — but if you see `fetch failed` in bulk from one ATS section, suspect the resolver before the boards.
 
 **Exit codes:** `0` scan completed, `1` configuration error (no portals.yml, unknown `--ats` source) or fatal scan error.
+
+---
+
+## company:funded
+
+Review-first discovery for companies that recently raised funding. It reads structured public RSS/API sources and prints a candidate report for manual review. It never edits `portals.yml` and does not probe company websites.
+
+```bash
+npm run company:funded -- --dry-run --limit 20
+npm run company:funded -- --dry-run --limit 20 --months 3 --json
+npm run company:funded -- --dry-run --sort score --limit 20
+npm run company:funded -- --sources techcrunch,prnewswire,guardian,hn
+npm run company:funded -- --self-test
+```
+
+Defaults: last 3 months, `--sort date`, sources `techcrunch,prnewswire,guardian,hn`. `--sort score` ranks by source and funding-detail confidence instead.
+
+Runs without `--dry-run` write JSON under `output/` and a Markdown report under `reports/`.
+
+Source diagnostics are included in JSON output and surfaced in human output when a source has errors, is blocked, returns no items, or when no candidates are found.
+
+**Exit codes:** `0` discovery completed, `1` invalid arguments or fatal runtime error.
 
 ---
 
