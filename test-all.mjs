@@ -11246,6 +11246,64 @@ try {
     }
   }
 
+  // 55.3c the web's hand-copied cadence baseline must match the core's defaults.
+  // web/src/lib/followups.ts keeps CADENCE_DEFAULTS "kept IDENTICAL to
+  // DEFAULT_CADENCE" by comment alone — the same wish that let states.ts's
+  // FALLBACK drift (#2282). Web keys carry a `_days` suffix (except
+  // applied_max_followups); compare values under that mapping. Until #2369
+  // replaces the copy with the --json cadenceConfig, CI is the invariant.
+  {
+    const coreCad = readFileSync(join(ROOT, 'followup-cadence.mjs'), 'utf-8')
+      .match(/export const DEFAULT_CADENCE = \{([\s\S]*?)\};/)?.[1] ?? '';
+    const webCadPath = join(ROOT, 'web', 'src', 'lib', 'followups.ts');
+    if (coreCad && existsSync(webCadPath)) {
+      const webCad = readFileSync(webCadPath, 'utf-8')
+        .match(/CADENCE_DEFAULTS[^=]*=\s*\{([\s\S]*?)\};/)?.[1] ?? '';
+      const pairs = (block) => Object.fromEntries(
+        [...block.matchAll(/([a-z_]+):\s*(\d+)/g)].map((m) => [m[1], Number(m[2])]));
+      const core = pairs(coreCad);
+      const web = pairs(webCad);
+      const cadDrift = [];
+      for (const [k, v] of Object.entries(core)) {
+        const webKey = k === 'applied_max_followups' ? k : `${k}_days`;
+        if (!(webKey in web)) cadDrift.push(`${webKey} missing in web`);
+        else if (web[webKey] !== v) cadDrift.push(`${webKey}=${web[webKey]} vs core ${k}=${v}`);
+      }
+      if (Object.keys(web).length !== Object.keys(core).length) {
+        cadDrift.push(`key count ${Object.keys(web).length} vs core ${Object.keys(core).length}`);
+      }
+      if (cadDrift.length === 0) {
+        pass('web CADENCE_DEFAULTS matches core DEFAULT_CADENCE under the _days mapping (#2369)');
+      } else {
+        fail(`web cadence baseline drifted from followup-cadence.mjs (#2369): ${cadDrift.join(' | ')}`);
+      }
+    }
+  }
+
+  // 55.3d the web onboarding banner's prereq list must match doctor.mjs.
+  // doctorState() in web/src/lib/career-ops.ts hand-copies USER_LAYER_PREREQS
+  // as a deliberate fast-path (server components can't execFile doctor per
+  // render) — if the core gains a fifth prereq, the banner silently stops
+  // asking for it and the user believes they're configured. Same mechanism as
+  // #2282, different symptom (career-ops-ui's census, 31-jul).
+  {
+    const corePrereqBlock = readFileSync(join(ROOT, 'doctor.mjs'), 'utf-8')
+      .match(/const USER_LAYER_PREREQS = \[([\s\S]*?)\n\];/)?.[1] ?? '';
+    const corePrereqs = [...corePrereqBlock.matchAll(/path:\s*'([^']+)'/g)].map((m) => m[1]);
+    const webDoctorPath = join(ROOT, 'web', 'src', 'lib', 'career-ops.ts');
+    if (corePrereqs.length > 0 && existsSync(webDoctorPath)) {
+      const webPrereqBlock = readFileSync(webDoctorPath, 'utf-8')
+        .match(/const prereqs[^=]*=\s*\[([\s\S]*?)\n\s*\];/)?.[1] ?? '';
+      const webPrereqs = new Set([...webPrereqBlock.matchAll(/\[\s*"([^"]+)"/g)].map((m) => m[1]));
+      const missingPrereqs = corePrereqs.filter((p) => !webPrereqs.has(p));
+      if (missingPrereqs.length === 0 && webPrereqs.size === corePrereqs.length) {
+        pass('web doctorState prereqs match doctor.mjs USER_LAYER_PREREQS (#2369)');
+      } else {
+        fail(`web onboarding prereqs drifted from doctor.mjs (#2369): missing=[${missingPrereqs.join(', ')}] webCount=${webPrereqs.size} coreCount=${corePrereqs.length}`);
+      }
+    }
+  }
+
   // 55.4 report format blocks (modes/oferta.md → web report parser)
   const ofertaSrc = readFileSync(join(ROOT, 'modes', 'oferta.md'), 'utf-8');
   const REPORT_BLOCKS = ['Block A', 'Block B', 'Block C', 'Block D', 'Block E', 'Block F', 'Block G'];
