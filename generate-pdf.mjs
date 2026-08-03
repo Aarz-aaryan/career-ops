@@ -34,7 +34,10 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { randomUUID } from 'node:crypto';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PDF_PAGE_MARGIN = '0.6in';
+// Default page margin for templates that don't define their own @page rule.
+// Aaryan's spec (verified 2026-07-24): Top 0.3" / Bottom 0.3" / Left 0.4" / Right 0.4".
+// CSS shorthand order: top right bottom left.
+const PDF_PAGE_MARGIN = '0.3in 0.4in 0.3in 0.4in';
 
 // Ensure output directory exists (fresh setup)
 mkdirSync(resolve(__dirname, 'output'), { recursive: true });
@@ -290,7 +293,7 @@ export function repoRelativeManifestPath(pathValue) {
   return rel.split(sep).join('/');
 }
 
-export function injectPrintPageCss(html, format = 'a4') {
+export function injectPrintPageCss(html, format = 'letter') {
   const normalizedFormat = String(format || 'a4').toLowerCase();
   const pageSize = normalizedFormat === 'letter' ? 'Letter' : 'A4';
   const pageStyle = `<style id="career-ops-page-setup">\n@page { size: ${pageSize}; margin: ${PDF_PAGE_MARGIN}; }\n</style>`;
@@ -358,7 +361,13 @@ async function generatePDF() {
   const args = process.argv.slice(2);
 
   // Parse arguments
-  let inputPath, outputPath, format = 'a4', reportNum = '', allowReorder = false;
+  // Round-26 fix: change default page format from A4 to Letter. v9 gold-standard
+  // reference PDF uses US Letter (612pt wide). A4 (595pt) is 17pt narrower, which
+  // causes 145-149 char cv.md bullets to either wrap to 2 lines (Distribution
+  // Standards bullet 3, Aarz bullet 2) or be truncated mid-word by the normalizer
+  // (CCI bullets 1 and 2). The 17pt extra width on Letter is exactly the gap
+  // needed for cv.md's longest 149-char bullets to fit on 1 line.
+  let inputPath, outputPath, format = 'letter', reportNum = '', allowReorder = false;
   let maxPages = 2, maxPagesInput = '2', strictPages = false;
 
   for (const arg of args) {
@@ -520,7 +529,8 @@ export async function inlineLocalFonts(html) {
  * @returns {Promise<{outputPath: string, pageCount: number, size: number}>}
  */
 export async function renderHtmlToPdf(html, outputPath, opts = {}) {
-  const format = opts.format || 'a4';
+  // Round-26: default to 'letter' (was 'a4') — see line 364 comment for full rationale.
+  const format = opts.format || 'letter';
   const baseDir = opts.baseDir || process.cwd();
   const reportNum = opts.reportNum || '';
   const inputPath = opts.inputPath || '';
@@ -553,12 +563,10 @@ export async function renderHtmlToPdf(html, outputPath, opts = {}) {
     // Generate PDF
     const pdfBuffer = await page.pdf({
       printBackground: true,
-      margin: {
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0',
-      },
+      // Do NOT pass margin here — it would override the @page rule in CSS.
+      // We rely on `preferCSSPageSize: true` + the template's @page { margin: ... }
+      // block to control page margins. Templates that don't define @page get the
+      // default injected style at `injectPrintPageCss()` (see PDF_PAGE_MARGIN).
       preferCSSPageSize: true,
     });
 
