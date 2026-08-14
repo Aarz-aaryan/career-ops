@@ -150,7 +150,37 @@ async function runDiscovered(filter = null) {
       fail(`${f.slice(ROOT.length + 1)} calls finish() — only test-all.mjs may print the global summary; discovered suites use pass/fail and return`);
       continue;
     }
-    await import(pathToFileURL(f).href);
+    // A throw at import time is the fourth member of the family this loop
+    // already guards against, and the most expensive: unguarded, one suite
+    // that cannot even load takes down the WHOLE run, so every later section
+    // never executes and the global summary never prints. From outside it
+    // does not read as "one test failed", it reads as "career-ops crashes on
+    // my machine".
+    //
+    // It is not hypothetical and it is not rare. Three instances in one day:
+    // a fixture inheriting global commit signing (#2754, ~3400 assertions
+    // lost), `tests/intake.test.mjs` calling symlinkSync unguarded on a
+    // Windows box without Developer Mode, which is the DEFAULT configuration
+    // (#2828, reported as 56% of the checks hidden), and a lock timeout in a
+    // spawned child. Each was fixed one at a time; this is the class.
+    //
+    // Every one of those is environment-shaped, so the person who hits it is
+    // a contributor on a machine unlike CI — exactly the person least able to
+    // tell "the suite is broken" from "I broke it", and the one whose first
+    // contribution it costs.
+    //
+    // Reporting it as a failed suite keeps the run red (the loading failure
+    // IS a failure) while letting the other ~90 suites report. What was a
+    // silent decapitation becomes one named line.
+    try {
+      await import(pathToFileURL(f).href);
+    } catch (err) {
+      fail(`${rel} — suite failed to load: ${err?.constructor?.name}: ${String(err?.message ?? err).split('\n')[0].slice(0, 200)}`);
+      // The first stack frame usually names the offending call, which is the
+      // difference between "it threw" and "it threw at symlinkSync:187".
+      const frame = String(err?.stack ?? '').split('\n').find((l) => l.trim().startsWith('at '));
+      if (frame) console.log(`      ${frame.trim().slice(0, 160)}`);
+    }
   }
 }
 
