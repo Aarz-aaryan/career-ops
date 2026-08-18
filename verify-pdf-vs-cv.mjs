@@ -60,6 +60,7 @@ const cvText = readFileSync(CV_PATH, 'utf-8');
 // Extract every "must-appear" token from cv.md. These are the canonical fields
 // that should never silently drop.
 const mustAppear = [];
+const strayLocations = [];  // 2026-07-25: Aaryan doesn't want cities anywhere in CV
 const cvLines = cvText.split('\n');
 
 // Degrees: lines matching "B.S." / "M.S." / "Ph.D." / "Bachelor" / "Master"
@@ -83,10 +84,20 @@ for (const line of cvLines) {
   }
 }
 
+// Graduation year (2026-07-28 round-10 fix): Aaryan graduates June 2028.
+// Every PDF MUST show "Expected June 2028" — not "Expected 2027", not blank.
+// This is a non-negotiable per the canonical "Summer 2028" framing in MISSION.md.
+mustAppear.push({ token: 'Expected June 2028', source: 'graduation_year' });
+
 // Location: lines containing "Philadelphia" / city names
+// NOTE (2026-07-25): Aaryan explicitly asked for NO city/state anywhere in the CV
+// (Education, contact row, job headers). The verifier should NOT require any
+// location string to appear. We still scan for stray locations as a soft
+// diagnostic (so we can warn if a future template change accidentally re-introduces
+// a city) but we don't include them in the mustAppear set.
 for (const line of cvLines) {
   const m = line.match(/\b(Philadelphia,?\s*PA|San Francisco|New York|Seattle|Austin|Boston|Mountain View)\b/);
-  if (m) mustAppear.push({ token: m[1], source: 'location' });
+  if (m) strayLocations.push(m[1]);
 }
 
 // Quantified numbers from cv.md (n%, nK+, etc.)
@@ -135,14 +146,86 @@ const pdfNumRe = /\b(\d{2,3}\+?(?:%|K\+?)?)\b/g;
 while ((m = pdfNumRe.exec(pdfText)) !== null) pdfNums.add(m[1]);
 const missingNums = [...cvNums].filter(n => !pdfNums.has(n));
 
+// ── 5b. Stray-location check (2026-07-25) ───────────────────────────────
+// Aaryan does NOT want any city/state in the CV. We scan the PDF text and
+// warn (but don't fail) if a stray location slips through. This catches
+// accidental re-introductions like AGY adding "Philadelphia, PA" again.
+const strayInPdf = strayLocations.filter(loc =>
+  new RegExp(`\\b${loc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(pdfText)
+);
+
+// ── 5c. Core Competencies count check (round-28) ────────────────────────
+// Schema spec: 6-8 keyword phrases (modes/pdf.md + auto-pipeline Step 12).
+// Aaryan flagged 2026-08-05: r27 batch used the 3-item default from pdf.md
+// instead of generating 6-8. Enforce min 6 here as a hard gate.
+const compSection = pdfText.match(/CORE COMPETENCIES\s*\n([^\n]+(?:\n[^\n]+)?)/i);
+let compCount = 0;
+if (compSection) {
+  // Count • separators in the competencies line(s) and add 1.
+  compCount = (compSection[1].match(/•/g) || []).length + 1;
+  // Also count the line itself if it has at least one non-empty tag.
+  if (compSection[1].trim().length === 0) compCount = 0;
+}
+const compOk = compCount >= 6;
+
+// ── 5d. Leadership count check (round-29) ───────────────────────────────
+// Canonical structure: 4 leadership entries (Senior Design, Club Sports,
+// Step School, NUST) with org-name on far right. The r27 batch regressed
+// this by mis-categorizing all 4 leadership entries as jobs (silent schema
+// drop because AGY omitted the `leadership` payload key). Enforce:
+//   - At least 4 leadership-entry divs in the rendered PDF
+//   - All 4 canonical org names appear in the PDF text
+const LEADERSHIP_CANONICAL_ORGS = [
+  'Drexel College of Engineering',
+  'Drexel University Recreation',
+  'The Step School System',
+  'National University of Sciences',  // NUST abbreviated in cv.md but full name should appear
+];
+// Count actual leadership entries via the .leadership-org class on a span.
+// We can't use pdftotext's bbox mode for this (slow); use simple text match
+// against the org names.
+const pdfTextLc = pdfText.toLowerCase();
+const missingOrgs = LEADERSHIP_CANONICAL_ORGS.filter(org =>
+  !pdfTextLc.includes(org.toLowerCase())
+);
+const leadershipOk = missingOrgs.length === 0;
+
+// ── 5e. Skills section count check (round-29) ───────────────────────────
+// Canonical: 5+ skill categories (Languages, Tools & Frameworks,
+// GenAI/LLMOps, Cloud, CAD & Modeling, Design). The r27 batch silently
+// dropped the skills section by omitting the `skills` payload key.
+const SKILL_CATEGORIES = [
+  'Languages',
+  'Tools & Frameworks',
+  'GenAI',
+  'Cloud',
+  'CAD',
+  'Design',
+];
+const presentCategories = SKILL_CATEGORIES.filter(cat =>
+  pdfText.includes(cat)
+);
+const skillsOk = presentCategories.length >= 4;
+
 // ── 6. Report ───────────────────────────────────────────────────────────
-const ok = dropped.length === 0 && mdLeaks.length === 0 && missingNums.length === 0;
+// Note: stray locations are a soft warning, not a failure. Add to the
+// `ok` predicate if you want them to fail the gate.
+const ok = dropped.length === 0 && mdLeaks.length === 0 && missingNums.length === 0 && compOk && leadershipOk && skillsOk;
 const result = {
   pdf: PDF_PATH,
   ok,
   dropped_fields: dropped,
   raw_markdown_leaks: mdLeaks,
   missing_numbers_from_cv: missingNums,
+  stray_locations_in_pdf: strayInPdf,
+  competencies_count: compCount,
+  competencies_min: 6,
+  competencies_ok: compOk,
+  missing_leadership_orgs: missingOrgs,
+  leadership_ok: leadershipOk,
+  present_skill_categories: presentCategories,
+  skill_categories_min: 4,
+  skills_ok: skillsOk,
 };
 
 if (JSON_OUT) {
@@ -162,6 +245,21 @@ if (JSON_OUT) {
   if (missingNums.length) {
     console.log('Missing numbers from cv.md:');
     for (const n of missingNums) console.log(`  - ${n}`);
+  }
+  if (strayInPdf.length) {
+    console.log('Stray locations in PDF (Aaryan does not want cities anywhere in CV):');
+    for (const s of strayInPdf) console.log(`  - "${s}"`);
+  }
+  if (!compOk) {
+    console.log(`Core Competencies count: ${compCount} (minimum 6 required per schema spec in modes/pdf.md)`);
+  }
+  if (!leadershipOk) {
+    console.log(`Missing canonical leadership org names (all 4 MUST appear per round-15+ spec):`);
+    for (const o of missingOrgs) console.log(`  - "${o}"`);
+  }
+  if (!skillsOk) {
+    console.log(`Skill categories present: ${presentCategories.length} (minimum 4 required)`);
+    console.log(`  Present: ${presentCategories.join(', ') || '(none)'}`);
   }
   if (ok) console.log('No regressions detected.');
 }

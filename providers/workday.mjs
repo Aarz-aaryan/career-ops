@@ -198,7 +198,7 @@ export default {
    * origin/referer clears it without needing per-tenant config (same fix
    * as providers/glints.mjs's firewall).
    *
-   * @param {{ name?: string, api?: string, careers_url?: string, max_pages?: number }} entry
+   * @param {{ name?: string, api?: string, careers_url?: string, max_pages?: number, search_text?: string }} entry
    * @param {{ fetchJson: (url: string, opts?: object) => Promise<any>, sinceMs?: number, maxPages?: number }} ctx
    * @returns {Promise<Array<{title: string, url: string, company: string, location: string, postedAt?: number}>>}
    */
@@ -218,7 +218,10 @@ export default {
         referer: `${ep.jobBase}/`,
       },
     };
-    const makeBody = (offset) => JSON.stringify({ limit: PAGE_SIZE, offset, searchText: '', appliedFacets: {} });
+    // search_text from entry allows per-tenant searchText injection (e.g. 'intern').
+    // Default empty string = full board (post title-filtering downstream).
+    const searchText = typeof entry?.search_text === 'string' ? entry.search_text : '';
+    const makeBody = (offset) => JSON.stringify({ limit: PAGE_SIZE, offset, searchText, appliedFacets: {} });
     const sinceMs = typeof ctx?.sinceMs === 'number' ? ctx.sinceMs : null;
 
     const first = await fetchPageWithRetry(ctx, ep.api, { ...postOpts, body: makeBody(0) });

@@ -35,6 +35,56 @@ If `data/blacklist.md` exists, check the posting's company against it before run
 
 On a hit, **stop before Step 1** and surface the candidate's own recorded decision: tell them which entry matched and quote their recorded reason ("{Company} is on your blacklist (since {Since}): *{Reason}*. Do you still want me to evaluate it?"). Wait for an explicit answer — never silently refuse, never silently proceed. The candidate's call always wins (same HITL spirit as the score < 4.0 rule): an explicit yes continues to Step 1 as normal; anything else stops the pipeline here, and if the entry came from `data/pipeline.md`, mark it `- [x] ~~Company | Role~~ — blacklisted`. A blacklist entry never changes any score.
 
+## Step 0.7 — Visa eligibility gate (round-44/45)
+
+**Read `config/profile.yml` → `preferences.sponsorship_required_internship` / `sponsorship_required_fulltime`.** The current Aaryan profile is:
+- `sponsorship_required_internship: false` (CPT/OPT covers it — international students on F1 are explicitly eligible for internship roles)
+- `sponsorship_required_fulltime: true` (H-1B sponsorship needed for full-time post-grad)
+
+For the **internship pipeline** (the only mode this cron runs), `sponsorship_required_internship` is the gate. Since it's currently `false`, the only disqualifying condition in this gate is **citizenship / security clearance** — postings that explicitly exclude F1 holders regardless of sponsorship posture.
+
+Scan the JD text (preferring US Citizenship / Work Authorization section, then "Requirements", "Eligibility", "Qualifications") for ANY of these HARD-DISQUALIFYING patterns (these exclude F1 visa holders even with OPT/CPT):
+
+```
+# Citizenship / residency required (always hard-disqualifying for F1, even with OPT)
+us citizen
+us citizenship
+u\.?s\.? citizen
+united states citizenship
+american citizen
+u\.?s\.? national
+permanent resident (often paired with: green card, gc holder)
+green card (sometimes listed as "GC holder", "GC EAD")
+
+# Security clearance (almost always disqualifying for international students)
+secret clearance
+top secret clearance
+ts/sci clearance
+security clearance (when paired with "required", "must have", "current")
+ts sci
+sci clearance
+polygraph
+q clearance
+l clearance
+```
+
+**Do NOT flag on anti-sponsorship language alone.** Even when an internship JD says "must be authorized to work" or "will not sponsor," that's a soft concern for OPT/CPT-eligible F1 holders — not a hard disqualifier. The recruiter screen is where this gets verified; auto-rejecting would drop otherwise strong matches.
+
+**On a HIT (citizenship / clearance)**, the pipeline does NOT auto-reject — it surfaces the eligibility concern as a flag in the A-G evaluation Block G and the row's `Notes` (col 138). Why not auto-reject: some defense-adjacent postings have explicit citizenship requirements due to ITAR/EAR, but Aaryan still benefits from seeing them flagged + scored (the dealbreakers gate in `_custom.md` plus the sponsorship script in `_profile.md` are the final say).
+
+**Track the result in the existing `US Citizen?` (col 130) AND `Notes` (col 138):**
+- Default for a sponsorship-silent posting (interviews eligibility) → col 130 = `"F1 visa — no sponsorship needed (CPT/OPT eligible)"`
+- Confirmed citizenship required → col 130 = `"NO (citizenship required)"` + Notes flagged "JD requires citizenship — confirm sponsorship posture before applying"
+- Confirmed clearance required → col 130 = `"NO (clearance required)"` + Notes flagged "JD requires security clearance — confirm eligibility before applying"
+- Posting mentions "sponsorship provided" / "OPT/CPT supported" → col 130 = `"F1 visa — no sponsorship needed (CPT/OPT eligible)"` (confirms eligible, no concern)
+
+**Notes (col 138) default text** for sponsorship-silent postings:
+> "F1 visa international student (Drexel B.S. ECE, June 2028). For internships: no sponsorship needed — CPT during current co-op rotations and OPT for Summer 2028 cover full work authorization. JD is sponsorship-silent; verify posture during recruiter screen."
+
+For flagged postings, prepend `"FLAGGED: citizenship required"` or `"FLAGGED: clearance required"` to the standard note.
+
+This gate runs ONCE per pipeline run (caches the result on the row), avoids burning LLM tokens on postings that clearly exclude F1 holders via citizenship/clearance, and gives Aaryan the accurate OPT/CPT framing on every other posting.
+
 ## Step 1 — A-G Evaluation
 
 Execute the same as the `oferta` mode (read `modes/oferta.md` for all A-F blocks + Block G Posting Legitimacy). Read `modes/_custom.md` → Evaluation Rules, if it exists, and apply its override here. Default (if absent or silent): standard A-G evaluation.

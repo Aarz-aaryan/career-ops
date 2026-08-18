@@ -10,7 +10,7 @@
   single-column layout.
 
   Custom user-layer extension to career-ops v1.22.0:
-    - {{LEADERSHIP}} substitution token (added in build-cv-html.mjs)
+    - LEADERSHIP substitution token (added in build-cv-html.mjs)
     - stripEmptySections pattern for LEADERSHIP and CERTIFICATIONS
       (added in cv-sections-core.mjs)
     - Career-ops runs in detached HEAD, so the upstream code is not affected.
@@ -247,18 +247,17 @@
   }
 
   .job ul li {
-    /* Aaryan preference (2026-07-25 round-9): bullets must use the FULL line
-       width naturally — REAL words, NOT CSS stretching (text-align-last:
-       justify breaks word spacing and makes bullets look "scattered"). The
-       fix is CONTENT, not CSS: write each bullet at 125-140 chars so it
-       wraps to 2 lines BOTH close to full width. No justify tricks. No
-       nowrap (that creates the "cut in half" look). No expanding char-spacing
-       to fill — that breaks readability. */
+    /* Aaryan preference (2026-07-31 round-13): bullets must be ONE LINE each
+       and fill the line width naturally. No wrap. Rewrite bullets to ~125-130
+       chars at 9.25pt EB Garamond so they fit on 1 line at 530pt width.
+       Removed 2-line wrap assumption from round-9 (line-break was visible).
+       No justify tricks. No nowrap (creates overflow). Just content-fitting. */
     position: relative;
     padding-left: 0.16in;
-    margin-bottom: 0.05in;
-    line-height: 1.28;
+    margin-bottom: 0.04in;
+    line-height: 1.24;
     font-size: 9.25pt;
+    text-align: left;
     hyphens: auto;
   }
 
@@ -321,12 +320,42 @@
 
   .project-desc {
     font-size: 9.25pt;
-    line-height: 1.26;
+    line-height: 1.24;
     margin-top: 0.012in;
-    text-align: justify;
-    text-justify: inter-word;
+    text-align: left;
     hyphens: auto;
     -webkit-hyphens: auto;
+  }
+
+  /* Aaryan preference (2026-08-01 round-15c): bullet vertical-alignment.
+     Experience section has .job ul { padding-left: 0.15in } which adds 10.8pt
+     indent before bullets. PROJECTS + LEADERSHIP need the SAME indent so all
+     section bullets share one left-alignment column.
+
+     Measurement: experience bullets xMin=39.3, project/leadership bullets
+     xMin=28.5 (11pt offset). Fix: add padding-left:0.15in to .project ul
+     and .leadership-list to push them to the same xMin=39.3. */
+  .project ul {
+    list-style: none;
+    padding-left: 0.15in;
+    margin: 0;
+  }
+  .project ul li {
+    position: relative;
+    padding-left: 0.16in;
+    margin-bottom: 0.04in;
+    line-height: 1.24;
+    font-size: 9.25pt;
+    text-align: left;
+    hyphens: auto;
+  }
+  .project ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: 0;
+    top: -0.02in;
+    color: #000;
+    font-size: 10pt;
   }
 
   .project-tech {
@@ -336,7 +365,55 @@
     margin-top: 0.005in;
   }
 
-  /* ---------- Leadership (bulleted role/org) ---------- */
+  /* ---------- Leadership (formatted like Experience: title + role + bullets) ---------- */
+  .leadership-entry {
+    margin-bottom: 0.07in;
+  }
+  .leadership-entry:last-child {
+    margin-bottom: 0;
+  }
+  .leadership-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+  }
+  .leadership-title {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.75pt;
+    font-weight: 700;
+  }
+  .leadership-title-wrap {
+    flex: 1;
+  }
+  .leadership-org {
+    font-style: italic;
+    font-size: 9.25pt;
+    color: #222;
+    /* Org sits on the far right of the header (matches work-experience
+       company/period layout). The title-wrap flexes; org stays right-aligned. */
+    margin-left: auto;
+    text-align: right;
+  }
+  .leadership-period {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.25pt;
+    font-style: italic;
+    color: #222;
+    white-space: nowrap;
+    margin-left: 0.1in;
+  }
+  .leadership-role {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.25pt;
+    font-style: italic;
+    color: #222;
+    margin-top: 0.012in;
+    margin-bottom: 0.04in;
+  }
+  .leadership-org {
+    font-style: italic;
+  }
   .leadership-list {
     list-style: none;
     padding-left: 0.15in;
@@ -345,9 +422,10 @@
   .leadership-list li {
     position: relative;
     padding-left: 0.16in;
-    margin-bottom: 0.011in;
-    line-height: 1.26;
+    margin-bottom: 0.04in;
+    line-height: 1.24;
     font-size: 9.25pt;
+    text-align: left;
   }
   .leadership-list li::before {
     content: "\2022";
@@ -356,10 +434,7 @@
     top: -0.02in;
     color: #000;
     font-size: 10pt;
-    line-height: 1.3;
   }
-  .leadership-role { font-weight: 700; }
-  .leadership-org { font-style: italic; }
 
   /* ---------- Skills (bulleted category list) ---------- */
   .skills-list {
@@ -404,6 +479,12 @@
     margin: 0;
     padding: 0;
   }
+  /* Round-23 (2026-08-01): REMOVED break-inside: avoid. Round-23b discovered
+     this breaks the v9 layout — v9 has Projects flowing naturally across
+     pages 1-2 (CCI-Bot+Drexel Bench on page 1, Aarz on page 2). Forcing
+     Skills to start fresh on page 2 caused all 3 projects to compress onto
+     page 1, making page 2 sparse. Letting Projects flow naturally matches
+     v9 layout and keeps Aarz on page 2. */
   .skill-item {
     display: block;
     break-inside: avoid;
@@ -469,11 +550,11 @@
     {{LEADERSHIP}}
   </div>
 
-  <!-- SKILLS -->
   <div class="section">
     <div class="section-title">{{SECTION_SKILLS}}</div>
     {{SKILLS}}
   </div>
+
 
   <!-- Certifications section intentionally omitted:
        per Aaryan 2026-07-24 ("get rid of the certifications section
