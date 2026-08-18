@@ -462,14 +462,29 @@ function buildProjects(entries, max = 145) {
       : '';
     // Aaryan preference (2026-07-31 round-13): project bullets like Experience —
     // one line each, fill width. If bullets[] is provided, render as a <ul>;
-    // otherwise fall back to a single description (legacy support).
+    // otherwise split description into sentences and render as <ul> (round-38
+    // canonical — fixes cron AGY that was emitting single-paragraph descriptions
+    // instead of bullet arrays, breaking the project formatting in PDFs).
     let body = '';
     if (Array.isArray(e.bullets) && e.bullets.filter(Boolean).length > 0) {
       const raw = e.bullets.filter(Boolean);
       const { out: items } = normalizeBullets(raw, max);
       body = `\n    <ul>\n${items.map(b => `      <li>${escapeHtml(b)}</li>`).join('\n')}\n    </ul>`;
     } else if (e.description) {
-      body = `\n    <div class="project-desc">${escapeHtml(e.description)}</div>`;
+      // Split single-paragraph description into bullet sentences. The AGY cron
+      // was emitting one long description string per project instead of a bullets
+      // array — splitting on sentence boundaries (period+space) recovers the
+      // canonical 3-4 bullet layout for project sections.
+      const sentences = e.description
+        .split(/(?<=\.)\s+(?=[A-Z])/g)
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+      if (sentences.length >= 2) {
+        const { out: items } = normalizeBullets(sentences, max);
+        body = `\n    <ul>\n${items.map(b => `      <li>${escapeHtml(b)}</li>`).join('\n')}\n    </ul>`;
+      } else {
+        body = `\n    <div class="project-desc">${escapeHtml(e.description)}</div>`;
+      }
     }
     const tech = e.tech
       ? `\n    <div class="project-tech">${escapeHtml(e.tech)}</div>`
@@ -730,6 +745,14 @@ function renderReport(payload) {
 // Merge a payload into the template and return the final HTML (throws on any
 // unresolved {{PLACEHOLDER}} so a malformed payload fails loudly, not silently).
 function renderHtml(template, payload) {
+  // Round-29 pre-flight: hard-fail if canonical sections are missing.
+  // Aaryan (2026-08-05): "I see that the leadership section is completely gone.
+  // I want you to look into the complete pipeline in detail and fix it from the
+  // root." The r27 batch silently dropped leadership and skills because the
+  // AGY-produced JSON omitted those keys, and stripEmptySections then dropped
+  // the section HTML. This pre-flight makes that failure LOUD.
+  assertCanonicalPayload(payload);
+
   const { substitutions, candidate } = renderReport(payload);
 
   // The contact row and photo carry conditional markup (dropped separators /
@@ -751,6 +774,65 @@ function renderHtml(template, payload) {
   }
   return html;
 }
+
+// Round-29: assert that the payload contains the canonical sections expected
+// for a 1-page + 2-page CV. A missing leadership or skills array means the
+// AGY auto-pipeline did not read cv.md correctly (r27 batch regression).
+// We hard-fail loudly here so the bug is caught at the JSON → HTML boundary
+// rather than silently dropping the section in stripEmptySections().
+function assertCanonicalPayload(payload) {
+  const errors = [];
+
+  // Leadership: must be an array with >=4 entries (canonical from cv.md).
+  if (!Array.isArray(payload.leadership) || payload.leadership.length < 4) {
+    errors.push(
+      `payload.leadership missing or <4 entries ` +
+      `(got ${Array.isArray(payload.leadership) ? payload.leadership.length : 'undefined'}; ` +
+      `expected >=4 per cv.md round-23+ canonical). ` +
+      `AGY auto-pipeline must read cv.md's "## Leadership" section verbatim.`
+    );
+  }
+
+  // Skills: must be an array with >=4 categories.
+  if (!Array.isArray(payload.skills) || payload.skills.length < 4) {
+    errors.push(
+      `payload.skills missing or <4 categories ` +
+      `(got ${Array.isArray(payload.skills) ? payload.skills.length : 'undefined'}; ` +
+      `expected >=4 per cv.md "## Technical Skills"). ` +
+      `AGY auto-pipeline must read cv.md's "## Technical Skills" section verbatim.`
+    );
+  }
+
+  // Competencies: must have >=6 keyword tags (schema spec).
+  if (!Array.isArray(payload.competencies) || payload.competencies.length < 6) {
+    errors.push(
+      `payload.competencies missing or <6 tags ` +
+      `(got ${Array.isArray(payload.competencies) ? payload.competencies.length : 'undefined'}; ` +
+      `expected 6-8 per modes/pdf.md). ` +
+      `AGY auto-pipeline must generate 6-8 JD-tailored competency tags.`
+    );
+  }
+
+  // Experience: must have >=4 entries (canonical: SIG, Exelon Tech Services,
+  // Exelon Distribution Standards, Drexel CCI / Visionii, etc).
+  if (!Array.isArray(payload.experience) || payload.experience.length < 4) {
+    errors.push(
+      `payload.experience missing or <4 entries ` +
+      `(got ${Array.isArray(payload.experience) ? payload.experience.length : 'undefined'}; ` +
+      `expected >=4). Check cv.md "## Work Experience" was read.`
+    );
+  }
+
+  if (errors.length > 0) {
+    throw new Error(
+      'Round-29 pre-flight failed — payload is missing canonical sections.\n' +
+      'This is a structural bug in the AGY auto-pipeline that produced this JSON.\n' +
+      'Read modes/pdf.md MUST-INCLUDE rules and ensure cv.md sections are being parsed.\n' +
+      'Errors:\n  - ' + errors.join('\n  - ')
+    );
+  }
+}
+
 
 function countBullets(payload) {
   const ex = Array.isArray(payload.experience)
@@ -814,7 +896,26 @@ async function main() {
 
   const absInput = resolve(inputPath);
   const absOutput = resolve(outputPath);
-  const templatePath = templateArg ? resolve(templateArg) : TEMPLATE_PATH;
+  // Round-43 fix: auto-resolve the configured template (cv.template from
+  // config/profile.yml) when no explicit templateArg is passed. Without
+  // this, omitting the third arg silently falls back to cv-template.html
+  // (ATS-stripped base template) — which produces ~64KB PDFs without the
+  // canonical Harvard leadership/org-at-far-right layout Aaryan spent
+  // rounds 13-28 perfecting. The cron (2026-08-14) was silently emitting
+  // 64KB PDFs because AGY wasn't passing the third arg.
+  let templatePath;
+  if (templateArg) {
+    templatePath = resolve(templateArg);
+  } else {
+    try {
+      const { resolveTemplate } = await import('./cv-templates.mjs');
+      templatePath = resolveTemplate('cv');
+      console.error(`[build-cv-html] Auto-resolved template from config: ${templatePath}`);
+    } catch (err) {
+      console.error(`[build-cv-html] resolveTemplate failed (${err.message}); falling back to ${TEMPLATE_PATH}`);
+      templatePath = TEMPLATE_PATH;
+    }
+  }
 
   if (!existsSync(absInput)) {
     console.error(`Input file not found: ${absInput}`);

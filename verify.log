@@ -1,0 +1,30 @@
+
+📊 Checking 37 entries in applications.md
+
+✅ All statuses are canonical
+⚠️  Possible duplicates: #4, #4 (Stripe — Forward Deployed AI Accelerator, Marketing)
+⚠️  Possible duplicates: #14, #19 (databricks — PhD GenAI Research Scientist Intern)
+❌ #19: Report not found: ../reports/019-databricks-2026-07-23.md
+✅ All scores valid
+✅ All rows properly formatted
+⚠️  1 pending TSVs in tracker-additions/ (not merged)
+✅ No bold in scores
+✅ No stale reservation sentinels
+⚠️  Duplicate reports for same company+role: 004-stripe-2026-07-23.md, 006-stripe-2026-07-24.md
+⚠️  Duplicate reports for same company+role: 014-databricks-2026-08-05.md, 019-databricks-2026-08-07.md
+⚠️  Duplicate reports for same company+role: 026-deepgram-2026-08-08.md, 032-deepgram-2026-08-09.md
+⚠️  Duplicate reports for same company+role: 027-datarobot-2026-08-08.md, 031-datarobot-2026-08-09.md
+⚠️  Orphan report — no tracker row references #9: reports/009-nvidia-openshell-2026-08-01.md
+⚠️  Orphan report — no tracker row references #11: reports/011-stripe-radar-2026-08-01.md
+⚠️  Orphan report — no tracker row references #12: reports/012-anthropic-rl-data-2026-08-01.md
+⚠️  Orphan report — no tracker row references #25: reports/025-cohere-2026-08-08.md
+⚠️  Orphan report — no tracker row references #26: reports/026-deepgram-2026-08-08.md
+⚠️  Orphan report — no tracker row references #27: reports/027-datarobot-2026-08-08.md
+⚠️  Orphan report — no tracker row references #28: reports/028-samsara-nyse-iot-2026-08-08.md
+⚠️  Orphan report — no tracker row references #29: reports/029-unknown-2026-08-08.md
+✅ Via channels consistent
+❌ Duplicate tracker number #4 used by 2 rows: Stripe — Forward Deployed AI Accelerator, Marketing | Stripe — Forward Deployed AI Accelerator, Marketing
+
+==================================================
+📊 Pipeline Health: 2 errors, 15 warnings
+🔴 Pipeline has errors — fix before proceeding

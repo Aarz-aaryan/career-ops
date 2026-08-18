@@ -15,12 +15,27 @@
    - Rest of the world → `a4`
 7. Detect role archetype → adapt framing
 8. Build an internal recruiter-side risk map from the JD using `modes/heuristics/recruiter-side.md`: likely doubts, matching evidence, and which document section should address each doubt
-9. Rewrite Professional Summary by injecting JD keywords + exit narrative bridge ("Built and sold a business. Now applying systems thinking to [JD domain].")
+9. Rewrite Professional Summary using the **3-sentence identity template** (round-25+ canonical). Inject JD keywords into the third sentence but keep sentence 1 and sentence 2 generic across all roles.
+    - **Sentence 1 (Identity — DO NOT CHANGE per JD):** "Drexel ECE/CS student with two prior enterprise AI co-ops at Exelon/Peco, currently AI Co-op at Susquehanna International Group (SIG)."
+    - **Sentence 2 (Co-op achievement — DO NOT CHANGE per JD, NO project name-drops):** "Built and deployed production ML systems at enterprise scale, including real-time inference pipelines and on-prem LLM platforms serving thousands of users."
+    - **Sentence 3 (JD-tailored targeting — VARIES per JD):** "Seeking to apply my expertise in [JD-keywords] to [JD-role/team]."
+    - **STRICT EXCLUSIONS in summary:**
+      - NO project name-drops: Aarz, CCI-Bot, PM-AI, AVIS, Drexel Bench, Visionii, Antigravity MCP, etc. (project names belong in the Projects section, not summary)
+      - NO role-specific identity: "Lead Engineer on X runtime", "Co-author on X paper" (these belong in Projects/Experience, not summary)
+      - NO single-project metrics: "100+ Peco users", "94% accuracy", "73% fewer alarms" (metrics belong in experience bullets, not summary)
+      - NO forward-looking scaffolding: "Heading to SIG...", "Targeting X next" (current state belongs in summary; future plans belong in the targeting sentence only)
+      - NO company-product nouns as identity: "Stripe Radar team" belongs in JD-keywords of sentence 3, not as identity in sentence 1
+    - **Why this matters:** The summary is a 6-second first impression. Aaryan wants it to be a high-level professional identity ("Drexel ECE/CS student, 2 prior Exelon co-ops, now SIG") — NOT a project brag list. Recruiters see the project names in the Projects section below; the summary's job is to anchor identity + targeting.
 10. Select top 3-4 most relevant projects for the job
+    - **Aarz | Autonomous Multi-Agent Orchestration is MUST-INCLUDE** (round-23+ canonical). The 4 bullets + Tools line are verbatim from `cv.md`; only the badge ("Lead Engineer & Architect") may need light rephrasing per JD. This is the most recent + most general-purpose project and ensures page-1 content density on every PDF. Without it, page 2 comes out sparse.
+    - Pick the remaining 1-2 projects from `cv.md`'s CCI-Bot and Drexel Bench based on JD-relevance. If both fit, include both (3 projects total) so the PDF has substantive page-1 content.
+    - **PROJECT ORDER (round-23b):** Render projects in this exact order: 1) JD-most-relevant from {CCI-Bot, Drexel Bench}, 2) other one from {CCI-Bot, Drexel Bench}, 3) **Aarz LAST**. The page-1 natural fill puts CCI-Bot+Drexel Bench on page 1 and Aarz on page 2 — matching the v9 gold-standard PDF layout. Reversing the order causes all 3 projects to compress onto page 1, making page 2 sparse.
 11. Reorder experience bullets by JD relevance and by the risk map: strongest matching evidence first
 12. Build competency grid from JD requirements (6-8 keyword phrases), prioritizing `existing` and `supportedByResume` skills from Step 4 — never a `gap` skill
 13. Inject keywords naturally into existing achievements (NEVER invent)
 14. Apply the six-second clarity gate from `modes/heuristics/recruiter-side.md`: top third must make target role, strongest fit, and proof obvious
+    - **Leadership bullets are MUST-INCLUDE** (round-23+ canonical). Each of the 4 leadership entries in `cv.md` has 2 bullets. Include all 8 bullets verbatim; only the role title may need light rephrasing per JD. This ensures page 2 has substantive content (Skills + Leadership bullets = properly filled 2-page CV).
+    - **Susquehanna International Group (SIG) is MUST-INCLUDE FIRST in experience** (round-24+ canonical). Render SIG at the top of the experience array with dates "September 2026 – Present" and 3 bullets verbatim from `cv.md`. The previous "AI & Automation Intern" dates of "March 2026 – Present" must now render as "March 2026 – September 2026" (the SIG co-op takes over from Sept 2026 onwards).
 15. Read `name` from `config/profile.yml` → normalize to kebab-case lowercase (e.g. "John Doe" → "john-doe") → `{candidate}`
 16. Build the render payload (see the **JSON Input Schema** below) from the tailored content — emit compact structured JSON, **not** full HTML markup — and write it to `/tmp/cv-{candidate}-{company}.json`
 17. Run: `node build-cv-html.mjs /tmp/cv-{candidate}-{company}.json output/cv-{candidate}-{company}.html {template}` — where `{template}` is the path printed by **Selecting the template** below (omit the argument to use the base `cv-template.html`). The script merges the payload into that template, owning every tag, CSS class, and the HTML escaping. Write to `output/` (NOT a temp dir — the recorded HTML is what the dashboard's `D` hotkey regenerates from, so it must survive temp cleanup)
@@ -129,7 +144,7 @@ Write a JSON file with this structure, then run `node build-cv-html.mjs <input.j
     "skills": "Skills"
   },
   "summary": "Personalized summary with JD keywords injected (honest vs cv.md).",
-  "competencies": ["RAG Pipelines", "LLMOps", "Kubernetes & Docker"],
+  "competencies": ["RAG Pipelines", "LLMOps", "Kubernetes & Docker", "Distributed Training", "Production ML Systems", "Inference Systems", "Python", "Linux"],
   "experience": [
     {
       "company": "Company Name",
@@ -137,6 +152,44 @@ Write a JSON file with this structure, then run `node build-cv-html.mjs <input.j
       "location": "Remote",
       "dates": "June 2022 - Present",
       "bullets": ["Achievement bullet with JD keywords injected", "Another quantified-impact bullet"]
+    }
+  ],
+  "leadership": [
+    {
+      "role": "Student Advisor for Senior Design",
+      "org": "Drexel College of Engineering",
+      "dates": "",
+      "bullets": [
+        "Guide senior Design teams through project planning, technical troubleshooting, and milestone delivery as a bridge to faculty advisors.",
+        "Translate technical blockers into faculty-actionable support requests, unblocking 5-7 design teams per term across hardware and software."
+      ]
+    },
+    {
+      "role": "Club Sports Supervisor",
+      "org": "Drexel University Recreation",
+      "dates": "",
+      "bullets": [
+        "Oversee 300+ clubs in their sports operations, coordinating scheduling, facility use, and team logistics for safe athletic programming.",
+        "Manage conflict resolution and event-day operations, ensuring safe play and continuous coverage for 1,500+ student athletes across 40+ clubs."
+      ]
+    },
+    {
+      "role": "Technology & Digital Communications Coordinator",
+      "org": "The Step School System",
+      "dates": "",
+      "bullets": [
+        "Manage technology systems and digital communication channels, supporting outreach initiatives and reliable information flow org-wide.",
+        "Maintain documentation and process hygiene for technology workflows, ensuring consistent content delivery to students, parents, and faculty."
+      ]
+    },
+    {
+      "role": "Engineering Peer Mentor (Software & Electrical)",
+      "org": "National University of Sciences & Technology (NUST)",
+      "dates": "",
+      "bullets": [
+        "Mentor engineering students in software and electrical coursework, providing hands-on technical guidance to strengthen problem-solving.",
+        "Run 1:1 architecture walkthroughs, code reviews, and debug sessions, accelerating mentees' time-to-first-shipped-feature by ~30% per cohort."
+      ]
     }
   ],
   "projects": [
@@ -171,14 +224,15 @@ Write a JSON file with this structure, then run `node build-cv-html.mjs <input.j
 | `candidate.photo_style` | string | Optional photo framing: `rounded` (default), `circle`, or `square`. Read it from `candidate.photo_style` in `config/profile.yml`; invalid values fail before HTML is written. |
 | `sections` | object | Optional localized section titles; any omitted key falls back to the English default shown above. |
 | `summary` | string | Personalized summary with keywords. |
-| `competencies` | string[] | 6-8 keyword phrases → competency tags. |
-| `experience[]` | object | `company`, `role`, `location` (optional), `dates`, `bullets` (reordered, keyword-injected). |
+| `competencies` | string[] | **REQUIRED**. 6-8 keyword phrases → competency tags. Hard-fail if <6. |
+| `experience[]` | object | **REQUIRED** (>=4 entries). `company`, `role`, `location` (optional), `dates`, `bullets` (reordered, keyword-injected). |
+| `leadership[]` | object | **REQUIRED** (>=4 entries per cv.md). `role`, `org`, `dates` (must be EMPTY STRING `""`, round-31), `bullets` (2 each, verbatim from cv.md "## Leadership" section). **Round-29 critical**: must NOT be merged into `experience[]`. The r27 batch silently dropped this key and put 4 leadership entries into `experience[]` — that was the regression. |
 | `projects[]` | object | `name`, `badge` (optional), `tech` (optional), `description` (a `bullets` array is also accepted and joined into the description line). |
-| `education[]` | object | `title` (degree), `org` (institution), `year`, `description` (optional). |
+| `education[]` | object | `title`, `org`, `year`, `description` (optional). |
 | `certifications[]` | object | `title`, `org`, `year`. |
-| `skills[]` | object | `category` + `items` (comma-separated string or string array). |
+| `skills[]` | object | **REQUIRED** (>=4 categories per cv.md "## Technical Skills"). `category` + `items` (comma-separated string or string array). Canonical categories: Languages, Tools & Frameworks, GenAI/LLMOps, Cloud, CAD & Modeling, Design. |
 
-`build-cv-html.mjs` errors out (non-zero exit) if any template placeholder is left unresolved, so a malformed payload fails loudly instead of shipping a broken CV. Run `node build-cv-html.mjs --test` for a self-test render.
+`build-cv-html.mjs` errors out (non-zero exit) if any template placeholder is left unresolved, so a malformed payload fails loudly instead of shipping a broken CV. **Round-29 added an `assertCanonicalPayload()` pre-flight that hard-fails on missing leadership/skills/competencies/experience** — see SKILL.md or the function comment. Run `node build-cv-html.mjs --test` for a self-test render.
 
 ### Profile photo (opt-in, market-specific)
 

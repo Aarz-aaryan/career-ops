@@ -76,16 +76,33 @@ const CONCURRENCY = 10;
 
 // ── Title filter ────────────────────────────────────────────────────
 
-// Compile a lowercased keyword into a matcher. Short all-letter acronyms
-// (2-3 chars: cfo, coo, sdr, bdr, gsi…) match on WORD BOUNDARIES so "COO" no
-// longer matches "Coordinator", "SDR" no longer matches anything mid-word, etc.
-// Multi-word phrases and keywords containing non-letters (".NET", "SAP ",
-// "L&D") keep fast, permissive substring matching.
+// Compile a lowercased keyword into a matcher.
+//
+// ROUND-33 (2026-08-08): Extended word-boundary matching to ALL alpha-only
+// keywords (previously only 2-3 char acronyms used word boundaries; 4+ char
+// keywords like "Senior", "Graduate", "Director" used substring matching,
+// which caused false positives like "Graduate" matching "Undergraduate" and
+// "Senior" matching "Seniority"). Now any keyword consisting purely of
+// letters (a-z) uses word-boundary regex matching; multi-word phrases and
+// keywords with non-letters (".NET", "SAP", "L&D") keep fast substring
+// matching.
+//
+// Examples (ROUND-33 behavior):
+//   "Graduate"     → matches "Graduate Intern" ✓   NOT "Undergraduate Intern" ✗
+//   "Senior"       → matches "Senior Engineer" ✓  NOT "Seniority Model" ✗
+//   "Director"     → matches "Director of Eng" ✓  NOT "Directorial Board" ✗
+//   "Manager"      → matches "Eng Manager" ✓      NOT "Management Trainee" ✗
+//   "PhD"          → matches "PhD Intern" ✓       NOT "SubPhD Role" ✗
+//   "MBA"          → matches "MBA Intern" ✓       NOT "SubMBA Program" ✗
+//   "co-op"        → substring (whitespace) ✓
+//   ".NET"         → substring (special char) ✓
 export function compileKeyword(kw) {
-  if (/^[a-z]{2,3}$/.test(kw)) {
+  // Pure alphabetic keyword (any length): word-boundary regex
+  if (/^[a-z]+$/.test(kw)) {
     const re = new RegExp(`\\b${kw}\\b`);
     return (lower) => re.test(lower);
   }
+  // Multi-word phrase or contains non-letters: substring match
   return (lower) => lower.includes(kw);
 }
 

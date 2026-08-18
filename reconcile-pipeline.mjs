@@ -153,12 +153,17 @@ const lines = readFileSync(PIPELINE_FILE, 'utf-8').split(/\r?\n/);
 const PENDING_RE = /^##\s+(Pendientes|Pending)\s*$/i;
 const PROCESSED_RE = /^##\s+(Procesadas|Processed)\s*$/i;
 const SECTION_RE = /^##\s+/;
-const PENDING_ITEM_RE = /^- \[ \]\s+/;
+const PENDING_ITEM_RE = /^- \[[x ]\]\s+/i;
 
 function lineUrl(body) {
   // "{url} | company | role"  ->  "{url}"
+  let urlPart = body;
   const i = body.indexOf(' |');
-  return (i >= 0 ? body.slice(0, i) : body).trim();
+  if (i >= 0) urlPart = body.slice(0, i);
+  // Remove any trailing `# processed ...`
+  const hashIdx = urlPart.indexOf(' #');
+  if (hashIdx >= 0) urlPart = urlPart.slice(0, hashIdx);
+  return urlPart.trim();
 }
 
 let pendStart = -1, procStart = -1;
