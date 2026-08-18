@@ -29,7 +29,14 @@ const FETCH_TIMEOUT_MS = 30_000;
 function locationIsUS(loc) {
   const l = String(loc || '').toLowerCase();
   if (!l) return false;
-  if (l.includes('us') || l.includes('united states') || l.includes('remote')) return true;
+  if (l.includes('us') || l.includes('united states')) return true;
+  // If it says "remote" but also has a non-US country name, reject it.
+  // Handles "Remote in UK", "Remote in Germany", "Remote in Canada", etc.
+  if (l.includes('remote')) {
+    const nonUS = /\b(uk|united kingdom|germany|france|canada|india|china|spain|italy|netherlands|brazil|mexico|ireland|scotland|wales|poland|portugal|belgium|norway|sweden|finland|denmark|austria|switzerland|japan|korea|singapore|hong kong|australia|new zealand|argentina|chile|colombia|malaysia|philippines|indonesia|vietnam|thailand|taiwan|uae|dubai|saudi|israel|egypt|south africa)\b/i;
+    if (nonUS.test(l)) return false;
+    return true; // "Remote" with no country = US-favorable
+  }
   // Check ALL words in the location string for a state abbreviation.
   // Handles "Milpitas, CA" (city, ST), "San Jose, CA 95134" (city, ST zip), etc.
   const states = new Set(['ca', 'ny', 'tx', 'wa', 'ma', 'il', 'pa', 'fl', 'co', 'ga', 'nc', 'va', 'mi', 'oh', 'az', 'md', 'nj', 'or', 'ut', 'mn']);
@@ -126,7 +133,8 @@ export default {
       if (allowedTerms && !Array.isArray(l.terms) || (allowedTerms && !(l.terms || []).some((t) => allowedTerms.has(t)))) continue;
       if (usOnly) {
         const locs = Array.isArray(l.locations) ? l.locations : [];
-        if (!locs.some(locationIsUS)) continue;
+        // Reject if ANY location is non-US (not just "some are US")
+        if (locs.some(loc => !locationIsUS(loc))) continue;
       }
       if (skipPhD && degreesPreferPhD(l.degrees)) continue;
       out.push(listingToJob(l, entry));
