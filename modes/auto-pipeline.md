@@ -148,3 +148,33 @@ If the final score is >= 4.5, generate a draft of responses for the application 
 Record it in `data/applications.md` with all columns including Report and PDF as ✅.
 
 **If any step fails**, continue with the next ones and mark the failed step as pending in the tracker.
+
+## Step 6 — Write Row to Nextcloud Tables (score >= 4.0)
+
+After generating a PDF (Step 3) and updating the tracker (Step 5), write the row to Nextcloud Tables **before moving to the next job**. Do this while all the data (company, role, score, PDF path) is fresh in context.
+
+**Prerequisite**: The PDF must exist at the path generated in Step 3.
+
+1. **Upload the PDF** (if not already on Nextcloud):
+   ```bash
+   cd /home/Aarz/career-ops
+   bash scripts/upload-to-nextcloud.sh output/<pdf-filename>
+   ```
+   The script prints the Nextcloud WebDAV URL on success — use that for the PDF_URL.
+
+2. **Write the row**:
+   ```bash
+   bash scripts/write_row.sh "$COMPANY" "$ROLE" "$JOB_URL" "$PDF_URL" "$SCORE" "2" "6"
+   ```
+   Where:
+   - `COMPANY` = company name
+   - `ROLE` = full job title
+   - `JOB_URL` = original job posting URL
+   - `PDF_URL` = the Nextcloud WebDAV URL from step 1 (e.g. `http://100.84.224.18:9080/remote.php/dav/files/aaryantahir8918@gmail.com/cv-aaryan-nvidia-swe-2026-08-29.pdf`)
+   - `SCORE` = the final evaluation score
+   - Tier = `2` (always)
+   - Source = `6` (always)
+
+3. **Verify**: The script prints the row ID on success. If it fails, report the error but continue processing remaining jobs.
+
+**IMPORTANT**: Do NOT skip this step or the row will NOT appear in Nextcloud Tables — it will only exist in `data/applications.md`. The cron cannot do this step because it cannot see which PDFs agy generated. Only this Step 6 inside the pipeline (where agy has the full context) can write the row.
