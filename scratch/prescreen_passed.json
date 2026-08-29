@@ -1,0 +1,754 @@
+[
+  {
+    "url": "https://job-boards.greenhouse.io/scaleai/jobs/4708171005",
+    "company": "Scale",
+    "title": "ICML 2026 - University Recruiting",
+    "location": "San Francisco, CA",
+    "line": "- [ ] https://job-boards.greenhouse.io/scaleai/jobs/4708171005 | Scale | ICML 2026 - University Recruiting | San Francisco, CA | posted: 2026-06-26",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/affirm/jobs/7854835003",
+    "company": "Affirm",
+    "title": "Software Engineer II, Fullstack (International)",
+    "location": "Remote UK",
+    "line": "- [ ] https://job-boards.greenhouse.io/affirm/jobs/7854835003 | Affirm | Software Engineer II, Fullstack (International) | Remote UK | posted: 2026-08-13",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.ashbyhq.com/harvey/a194c24f-38ee-4c7e-908b-060a16dfaa9d",
+    "company": "Harvey",
+    "title": "Law School Student Ambassador",
+    "location": "Remote",
+    "line": "- [ ] https://jobs.ashbyhq.com/harvey/a194c24f-38ee-4c7e-908b-060a16dfaa9d | Harvey | Law School Student Ambassador | Remote | posted: 2026-06-25",
+    "status": "active"
+  },
+  {
+    "url": "https://hyperproof.io/job-listings/?gh_jid=4700893005",
+    "company": "Hyperproof",
+    "title": "Software Engineer Intern - AI Developer Productivity",
+    "location": "Remote in USA",
+    "line": "- [ ] https://hyperproof.io/job-listings/?gh_jid=4700893005 | Hyperproof | Software Engineer Intern - AI Developer Productivity | Remote in USA | posted: 2026-06-02",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7537152632018012424/detail",
+    "company": "ByteDance",
+    "title": "Software Development Engineer Intern - Network Automation",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7537152632018012424/detail | ByteDance | Software Development Engineer Intern - Network Automation | Seattle, WA | posted: 2026-06-03",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7535168003103033618/detail",
+    "company": "ByteDance",
+    "title": "Machine Learning Engineer Intern - E-commerce Governance Algorithms",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7535168003103033618/detail | ByteDance | Machine Learning Engineer Intern - E-commerce Governance Algorithms | Seattle, WA | posted: 2026-06-03",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7543005612200970503/detail",
+    "company": "ByteDance",
+    "title": "Machine Learning Engineer Intern - E-Commerce Knowledge Graph - Computer Vision/Multimodal/Natural Language Processing",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7543005612200970503/detail | ByteDance | Machine Learning Engineer Intern - E-Commerce Knowledge Graph - Computer Vision/Multimodal/Natural Language Processing | Seattle, WA | posted: 2026-06-03",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7535953226975054098/detail",
+    "company": "ByteDance",
+    "title": "Machine Learning Engineer Intern - Global E-commerce Risk Control",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7535953226975054098/detail | ByteDance | Machine Learning Engineer Intern - Global E-commerce Risk Control | Seattle, WA | posted: 2026-06-03",
+    "status": "active"
+  },
+  {
+    "url": "http://www.revance.com/careers/job-listings/?gh_jid=8578708002",
+    "company": "Revance",
+    "title": "Data Scientist Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] http://www.revance.com/careers/job-listings/?gh_jid=8578708002 | Revance | Data Scientist Intern | Remote in USA | posted: 2026-06-04",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Content-Management-Automation-Student-Technician--open-to-work-study-and-non-work-study-_R_00046574",
+    "company": "University of Texas at Austin",
+    "title": "Content Management Automation Student Technician",
+    "location": "Austin, TX",
+    "line": "- [ ] https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Content-Management-Automation-Student-Technician--open-to-work-study-and-non-work-study-_R_00046574 | University of Texas at Austin | Content Management Automation Student Technician | Austin, TX | posted: 2026-06-05",
+    "status": "active"
+  },
+  {
+    "url": "https://wayve.firststage.co/jobs?gh_jid=8382427002",
+    "company": "Wayve",
+    "title": "Engineering Intern - Enrichment and Curation",
+    "location": "Sunnyvale, CA",
+    "line": "- [ ] https://wayve.firststage.co/jobs?gh_jid=8382427002 | Wayve | Engineering Intern - Enrichment and Curation | Sunnyvale, CA | posted: 2026-06-06",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://www.tesla.com/careers/search/job/271349",
+    "company": "Tesla",
+    "title": "Energy System Optimization Intern - Energy Optimization Software",
+    "location": "Palo Alto, CA / Fremont, CA / Austin, TX",
+    "line": "- [ ] https://www.tesla.com/careers/search/job/271349 | Tesla | Energy System Optimization Intern - Energy Optimization Software | Palo Alto, CA / Fremont, CA / Austin, TX | posted: 2026-06-07",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://www.picarro.com/company/careers/job-openings/apply?gh_jid=5253032008",
+    "company": "Picarro",
+    "title": "Product Development Intern",
+    "location": "Santa Clara, CA",
+    "line": "- [ ] https://www.picarro.com/company/careers/job-openings/apply?gh_jid=5253032008 | Picarro | Product Development Intern | Santa Clara, CA | posted: 2026-06-09",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://fa-exjq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/SHEIN/job/USA87554940",
+    "company": "SHEIN",
+    "title": "Data Analysis Intern",
+    "location": "United States",
+    "line": "- [ ] https://fa-exjq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/SHEIN/job/USA87554940 | SHEIN | Data Analysis Intern | United States | posted: 2026-06-10 | trust: 85 company_domain_mismatch",
+    "status": "active"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7532238337198622983",
+    "company": "TikTok",
+    "title": "Data Scientist Intern",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7532238337198622983 | TikTok | Data Scientist Intern | Seattle, WA | posted: 2026-06-15",
+    "status": "active"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7532267134924867847",
+    "company": "TikTok",
+    "title": "Data Analyst Intern - TikTok Shop AMS Data Science",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7532267134924867847 | TikTok | Data Analyst Intern - TikTok Shop AMS Data Science | Seattle, WA | posted: 2026-06-15",
+    "status": "active"
+  },
+  {
+    "url": "https://careers-sdsurf.icims.com/jobs/20513/job?mobile=true&needsRedirect=false",
+    "company": "SDSU Research Foundation",
+    "title": "Undergraduate Student - Port Contamination Project",
+    "location": "San Diego, CA",
+    "line": "- [ ] https://careers-sdsurf.icims.com/jobs/20513/job?mobile=true&needsRedirect=false | SDSU Research Foundation | Undergraduate Student - Port Contamination Project | San Diego, CA | posted: 2026-06-16",
+    "status": "active"
+  },
+  {
+    "url": "https://campbellsoup.wd5.myworkdayjobs.com/externalcareers_globalsite/job/USA---Remote/Agentic-AI-Engineer-Co-Op_Req-66015",
+    "company": "The Campbell's Company",
+    "title": "Agentic AI Engineer Co-op",
+    "location": "Remote in USA",
+    "line": "- [ ] https://campbellsoup.wd5.myworkdayjobs.com/externalcareers_globalsite/job/USA---Remote/Agentic-AI-Engineer-Co-Op_Req-66015 | The Campbell's Company | Agentic AI Engineer Co-op | Remote in USA | posted: 2026-06-16",
+    "status": "active"
+  },
+  {
+    "url": "https://www.metacareers.com/jobs/2774289902955470",
+    "company": "Meta",
+    "title": "Research Scientist Intern - State Estimation for Dexterous Manipulation",
+    "location": "Redmond, WA",
+    "line": "- [ ] https://www.metacareers.com/jobs/2774289902955470 | Meta | Research Scientist Intern - State Estimation for Dexterous Manipulation | Redmond, WA | posted: 2026-06-16",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://sonyglobal.wd1.myworkdayjobs.com/SonyGlobalCareers/job/San-Diego/Software-Engineer-Intern_JR-119282",
+    "company": "Sony",
+    "title": "Software Engineer Intern",
+    "location": "San Diego, CA",
+    "line": "- [ ] https://sonyglobal.wd1.myworkdayjobs.com/SonyGlobalCareers/job/San-Diego/Software-Engineer-Intern_JR-119282 | Sony | Software Engineer Intern | San Diego, CA | posted: 2026-06-17",
+    "status": "active"
+  },
+  {
+    "url": "https://navaide.breezy.hr/p/3fe610df21d6/apply",
+    "company": "Navaide",
+    "title": "Technology & Innovation Intern",
+    "location": "Arlington, VA / San Diego, CA",
+    "line": "- [ ] https://navaide.breezy.hr/p/3fe610df21d6/apply | Navaide | Technology & Innovation Intern | Arlington, VA / San Diego, CA | posted: 2026-06-17",
+    "status": "active"
+  },
+  {
+    "url": "https://consensus.com/careers/jobs/?gh_jid=4688215006",
+    "company": "Consensus Cloud Solutions",
+    "title": "Sales Strategy & Analytics Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://consensus.com/careers/jobs/?gh_jid=4688215006 | Consensus Cloud Solutions | Sales Strategy & Analytics Intern | Remote in USA | posted: 2026-06-17",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://veracyte.com/job-detail?gh_jid=5163248007",
+    "company": "Veracyte",
+    "title": "Supply Chain & Data Analytics Intern",
+    "location": "San Bruno, CA / San Diego, CA",
+    "line": "- [ ] https://veracyte.com/job-detail?gh_jid=5163248007 | Veracyte | Supply Chain & Data Analytics Intern | San Bruno, CA / San Diego, CA | posted: 2026-06-18",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://www.tesla.com/careers/search/job/274560",
+    "company": "Tesla",
+    "title": "Data Analytics Intern - People Analytics",
+    "location": "Austin, TX",
+    "line": "- [ ] https://www.tesla.com/careers/search/job/274560 | Tesla | Data Analytics Intern - People Analytics | Austin, TX | posted: 2026-06-23",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/AUSTIN-TX/DSR-Lab-Data-Student-Assistant--Open-to-Work-Study-and-Non-Work-Study-_R_00046913",
+    "company": "University of Texas at Austin",
+    "title": "DSR Lab Data Student Assistant",
+    "location": "Austin, TX",
+    "line": "- [ ] https://utaustin.wd1.myworkdayjobs.com/utstudent/job/AUSTIN-TX/DSR-Lab-Data-Student-Assistant--Open-to-Work-Study-and-Non-Work-Study-_R_00046913 | University of Texas at Austin | DSR Lab Data Student Assistant | Austin, TX | posted: 2026-06-24",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.lever.co/ifm-us/1a09231e-44f2-4c82-a7a1-793bd159d68d/apply",
+    "company": "Institute of Foundation Models",
+    "title": "Inference Optimization Intern - Performance Modeling",
+    "location": "Sunnyvale, CA",
+    "line": "- [ ] https://jobs.lever.co/ifm-us/1a09231e-44f2-4c82-a7a1-793bd159d68d/apply | Institute of Foundation Models | Inference Optimization Intern - Performance Modeling | Sunnyvale, CA | posted: 2026-06-25",
+    "status": "active"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7527077153591675154",
+    "company": "TikTok",
+    "title": "Machine Learning Engineer Intern - Global E-Commerce Content Recommendation",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7527077153591675154 | TikTok | Machine Learning Engineer Intern - Global E-Commerce Content Recommendation | Seattle, WA | posted: 2026-06-15",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/lilasciences/jobs/4289960009",
+    "company": "Lila Sciences",
+    "title": "Next Gen Engineering Co-Op",
+    "location": "Cambridge, MA",
+    "line": "- [ ] https://job-boards.greenhouse.io/lilasciences/jobs/4289960009 | Lila Sciences | Next Gen Engineering Co-Op | Cambridge, MA | posted: 2026-06-25",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.ashbyhq.com/binance.us/c23e9aa3-0daa-4170-a5a7-b03aaa031895/application",
+    "company": "Binance",
+    "title": "Software Engineer Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://jobs.ashbyhq.com/binance.us/c23e9aa3-0daa-4170-a5a7-b03aaa031895/application | Binance | Software Engineer Intern | Remote in USA | posted: 2026-06-25",
+    "status": "active"
+  },
+  {
+    "url": "https://careers-sdsurf.icims.com/jobs/20550/job?mobile=true&needsRedirect=false",
+    "company": "SDSU Research Foundation",
+    "title": "NIWC – Undergraduate Student 2 or 3 - Communications Division Engineering Support",
+    "location": "San Diego, CA",
+    "line": "- [ ] https://careers-sdsurf.icims.com/jobs/20550/job?mobile=true&needsRedirect=false | SDSU Research Foundation | NIWC – Undergraduate Student 2 or 3 - Communications Division Engineering Support | San Diego, CA | posted: 2026-06-22",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/honehealth/jobs/5308958008",
+    "company": "Hone Health",
+    "title": "Data Engineering Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://job-boards.greenhouse.io/honehealth/jobs/5308958008 | Hone Health | Data Engineering Intern | Remote in USA | posted: 2026-07-08",
+    "status": "active"
+  },
+  {
+    "url": "https://pg.wd5.myworkdayjobs.com/1000/job/BOSTON-GO--TECH-CENTER/Purdue-University-R-D-Engineer-Co-op--Purdue-Students-Graduating-in-2028-2029-ONLY_R000155305",
+    "company": "Procter & Gamble (P&G)",
+    "title": "R&D Engineer Co-op",
+    "location": "Boston, MA",
+    "line": "- [ ] https://pg.wd5.myworkdayjobs.com/1000/job/BOSTON-GO--TECH-CENTER/Purdue-University-R-D-Engineer-Co-op--Purdue-Students-Graduating-in-2028-2029-ONLY_R000155305 | Procter & Gamble (P&G) | R&D Engineer Co-op | Boston, MA | posted: 2026-07-13",
+    "status": "active"
+  },
+  {
+    "url": "https://cat.wd5.myworkdayjobs.com/en-US/solarturbines/job/San-Diego-California/XMLNAME-2027--Gas-Turbine-Product-Engineering-Internship_R0000382293",
+    "company": "Solar Turbines",
+    "title": "Gas Turbine Products Engineering Intern",
+    "location": "San Diego, CA",
+    "line": "- [ ] https://cat.wd5.myworkdayjobs.com/en-US/solarturbines/job/San-Diego-California/XMLNAME-2027--Gas-Turbine-Product-Engineering-Internship_R0000382293 | Solar Turbines | Gas Turbine Products Engineering Intern | San Diego, CA | posted: 2026-07-16",
+    "status": "active"
+  },
+  {
+    "url": "https://ensemblehp.wd5.myworkdayjobs.com/ensemblehealthpartnerscareers/job/Remote---Nationwide/Engineering-Excellence-Intern_R048023",
+    "company": "Ensemble Health Partners",
+    "title": "Engineering Excellence Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://ensemblehp.wd5.myworkdayjobs.com/ensemblehealthpartnerscareers/job/Remote---Nationwide/Engineering-Excellence-Intern_R048023 | Ensemble Health Partners | Engineering Excellence Intern | Remote in USA | posted: 2026-07-17",
+    "status": "active"
+  },
+  {
+    "url": "https://ensemblehp.wd5.myworkdayjobs.com/ensemblehealthpartnerscareers/job/Remote---Nationwide/Data-Scientist--AI_R048077",
+    "company": "Ensemble Health Partners",
+    "title": "Data Scientist Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://ensemblehp.wd5.myworkdayjobs.com/ensemblehealthpartnerscareers/job/Remote---Nationwide/Data-Scientist--AI_R048077 | Ensemble Health Partners | Data Scientist Intern | Remote in USA | posted: 2026-07-17",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.eu.lever.co/cirrus/f85c944c-d437-4685-9f04-c7b79ae65ecb/apply",
+    "company": "Cirrus Logic",
+    "title": "AI Business Analytics Co-op Intern",
+    "location": "Austin, TX",
+    "line": "- [ ] https://jobs.eu.lever.co/cirrus/f85c944c-d437-4685-9f04-c7b79ae65ecb/apply | Cirrus Logic | AI Business Analytics Co-op Intern | Austin, TX | posted: 2026-07-20",
+    "status": "active"
+  },
+  {
+    "url": "https://argonne.wd1.myworkdayjobs.com/EDU_PUB/job/Lemont-IL-USA/Business-Systems-Administration-Internship_413528",
+    "company": "Argonne National Laboratory",
+    "title": "Business Systems Administration Internship",
+    "location": "Remote in USA / Woodridge, IL",
+    "line": "- [ ] https://argonne.wd1.myworkdayjobs.com/EDU_PUB/job/Lemont-IL-USA/Business-Systems-Administration-Internship_413528 | Argonne National Laboratory | Business Systems Administration Internship | Remote in USA / Woodridge, IL | posted: 2026-07-04",
+    "status": "active"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7534818364393654535",
+    "company": "TikTok",
+    "title": "Data Engineer Intern - E-commerce",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7534818364393654535 | TikTok | Data Engineer Intern - E-commerce | Seattle, WA | posted: 2026-06-15",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7533369475380070663/detail",
+    "company": "ByteDance",
+    "title": "Software Engineer Intern - Payment Network - Global Payment",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7533369475380070663/detail | ByteDance | Software Engineer Intern - Payment Network - Global Payment | Seattle, WA | posted: 2026-06-04",
+    "status": "active"
+  },
+  {
+    "url": "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Student-Analyst--Data-Analytics-and-Strategy--Career-Management-and-Corporate-Relations--CMCR---Work-Study-Only-_R_00047631",
+    "company": "University of Texas at Austin",
+    "title": "Student Analyst - Data Analytics and Strategy - Career Management and Corporate Relations",
+    "location": "Austin, TX",
+    "line": "- [ ] https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Student-Analyst--Data-Analytics-and-Strategy--Career-Management-and-Corporate-Relations--CMCR---Work-Study-Only-_R_00047631 | University of Texas at Austin | Student Analyst - Data Analytics and Strategy - Career Management and Corporate Relations | Austin, TX | posted: 2026-07-27",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.apple.com/en-us/details/200673612",
+    "company": "Apple",
+    "title": "Applied Data Solutions Program Intern",
+    "location": "Austin, TX",
+    "line": "- [ ] https://jobs.apple.com/en-us/details/200673612 | Apple | Applied Data Solutions Program Intern | Austin, TX | posted: 2026-07-28",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://boards.greenhouse.io/cloudflare/jobs/8089379",
+    "company": "Cloudflare",
+    "title": "Research Engineer Intern",
+    "location": "Austin, TX",
+    "line": "- [ ] https://boards.greenhouse.io/cloudflare/jobs/8089379 | Cloudflare | Research Engineer Intern | Austin, TX | posted: 2026-07-28",
+    "status": "active"
+  },
+  {
+    "url": "https://richemont.wd3.myworkdayjobs.com/richemont/job/BELLEVUE/Business-Analytics-Intern_JR124478-1",
+    "company": "Richemont",
+    "title": "Business Analytics Intern",
+    "location": "Bellevue, WA",
+    "line": "- [ ] https://richemont.wd3.myworkdayjobs.com/richemont/job/BELLEVUE/Business-Analytics-Intern_JR124478-1 | Richemont | Business Analytics Intern | Bellevue, WA | posted: 2026-06-12",
+    "status": "active"
+  },
+  {
+    "url": "https://www.pathai.com/careers/8651564002?gh_jid=8651564002",
+    "company": "PathAI",
+    "title": "Software Engineering Mlops Co-op",
+    "location": "Boston, MA",
+    "line": "- [ ] https://www.pathai.com/careers/8651564002?gh_jid=8651564002 | PathAI | Software Engineering Mlops Co-op | Boston, MA | posted: 2026-07-27",
+    "status": "active"
+  },
+  {
+    "url": "https://richemont.wd3.myworkdayjobs.com/richemont/job/BELLEVUE/Sustainability-Transformation-Analyst-Intern_JR132092",
+    "company": "Richemont",
+    "title": "Sustainability Transformation Analyst Intern",
+    "location": "Bellevue, WA",
+    "line": "- [ ] https://richemont.wd3.myworkdayjobs.com/richemont/job/BELLEVUE/Sustainability-Transformation-Analyst-Intern_JR132092 | Richemont | Sustainability Transformation Analyst Intern | Bellevue, WA | posted: 2026-07-29",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.lever.co/calstart/39565f0d-d10f-458b-b72d-d807420059b8/apply",
+    "company": "CALSTART",
+    "title": "Data Analysis Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://jobs.lever.co/calstart/39565f0d-d10f-458b-b72d-d807420059b8/apply | CALSTART | Data Analysis Intern | Remote in USA | posted: 2026-07-30",
+    "status": "active"
+  },
+  {
+    "url": "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Video-and-Analytics-Intern--Baseball_R_00047706",
+    "company": "University of Texas at Austin",
+    "title": "Video and Analytics Intern - Baseball",
+    "location": "Austin, TX",
+    "line": "- [ ] https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Video-and-Analytics-Intern--Baseball_R_00047706 | University of Texas at Austin | Video and Analytics Intern - Baseball | Austin, TX | posted: 2026-07-30",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.ashbyhq.com/Zello/3453d476-7b75-4938-8cff-502d1575859b/application?embed=true",
+    "company": "Zello",
+    "title": "Analytics Intern",
+    "location": "Austin, TX",
+    "line": "- [ ] https://jobs.ashbyhq.com/Zello/3453d476-7b75-4938-8cff-502d1575859b/application?embed=true | Zello | Analytics Intern | Austin, TX | posted: 2026-07-31",
+    "status": "active"
+  },
+  {
+    "url": "https://pnc.wd5.myworkdayjobs.com/External/job/PA---Pittsburgh-15222/Product-Innovation-Undergraduate-Intern_R230925-1",
+    "company": "PNC Financial Services",
+    "title": "Product Innovation Intern - Retail Product Innovation",
+    "location": "Pittsburgh, PA",
+    "line": "- [ ] https://pnc.wd5.myworkdayjobs.com/External/job/PA---Pittsburgh-15222/Product-Innovation-Undergraduate-Intern_R230925-1 | PNC Financial Services | Product Innovation Intern - Retail Product Innovation | Pittsburgh, PA | posted: 2026-08-03",
+    "status": "active"
+  },
+  {
+    "url": "https://www.tesla.com/careers/search/job/278620",
+    "company": "Tesla",
+    "title": "Cell Engineering Intern - Cell Qualification",
+    "location": "Palo Alto, CA / San Diego, CA",
+    "line": "- [ ] https://www.tesla.com/careers/search/job/278620 | Tesla | Cell Engineering Intern - Cell Qualification | Palo Alto, CA / San Diego, CA | posted: 2026-08-04",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7668383643375257909",
+    "company": "TikTok",
+    "title": "Machine Learning Engineer Intern - Data Search Recommendation Global E-Commerce",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7668383643375257909 | TikTok | Machine Learning Engineer Intern - Data Search Recommendation Global E-Commerce | Seattle, WA | posted: 2026-08-04",
+    "status": "active"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7667934792727906565",
+    "company": "TikTok",
+    "title": "Research Engineer Intern - Agentic Systems & AI Infrastructure - Generalized Architecture",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7667934792727906565 | TikTok | Research Engineer Intern - Agentic Systems & AI Infrastructure - Generalized Architecture | Seattle, WA | posted: 2026-08-03",
+    "status": "active"
+  },
+  {
+    "url": "https://pnc.wd5.myworkdayjobs.com/External/job/PA---Pittsburgh-15222/Data--Modeling--and-Analytics-Undergraduate-Intern_R231526-1",
+    "company": "PNC Financial Services",
+    "title": "Data and Analytics Intern - Modeling",
+    "location": "Pittsburgh, PA",
+    "line": "- [ ] https://pnc.wd5.myworkdayjobs.com/External/job/PA---Pittsburgh-15222/Data--Modeling--and-Analytics-Undergraduate-Intern_R231526-1 | PNC Financial Services | Data and Analytics Intern - Modeling | Pittsburgh, PA | posted: 2026-08-04",
+    "status": "active"
+  },
+  {
+    "url": "https://rb.wd5.myworkdayjobs.com/en-US/FRS/job/Boston-MA/Graduate-Intern---Statistical-Analysis_R-0000032931",
+    "company": "The Federal Reserve System",
+    "title": "Graduate Statistical Analysis Intern - Regional & Community Outreach",
+    "location": "Boston, MA",
+    "line": "- [ ] https://rb.wd5.myworkdayjobs.com/en-US/FRS/job/Boston-MA/Graduate-Intern---Statistical-Analysis_R-0000032931 | The Federal Reserve System | Graduate Statistical Analysis Intern - Regional & Community Outreach | Boston, MA | posted: 2026-08-04",
+    "status": "active"
+  },
+  {
+    "url": "https://lifeattiktok.com/search/7668396597746862341",
+    "company": "TikTok",
+    "title": "Machine Learning Engineer Intern - Search",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://lifeattiktok.com/search/7668396597746862341 | TikTok | Machine Learning Engineer Intern - Search | Seattle, WA | posted: 2026-08-05",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7670330161462364421/detail",
+    "company": "ByteDance",
+    "title": "Student Researcher Intern - AI Foundation Models Infrastructure - Seed Infra",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7670330161462364421/detail | ByteDance | Student Researcher Intern - AI Foundation Models Infrastructure - Seed Infra | Seattle, WA | posted: 2026-08-05",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.jobvite.com/exabeam/job/oRNAAfwy?nl=1&nl=1&fr=false",
+    "company": "Exabeam",
+    "title": "AI Deployment Intern",
+    "location": "Remote in USA",
+    "line": "- [ ] https://jobs.jobvite.com/exabeam/job/oRNAAfwy?nl=1&nl=1&fr=false | Exabeam | AI Deployment Intern | Remote in USA | posted: 2026-08-04",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/TXI-Tech-Intern--Texas-Immersive-Institute--Moody-College-of-Communication--Open-to-Work-Study-_R_00047950",
+    "company": "University of Texas at Austin",
+    "title": "Technology Intern - Texas Immersive Institute - Moody College of Communication",
+    "location": "Austin, TX",
+    "line": "- [ ] https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/TXI-Tech-Intern--Texas-Immersive-Institute--Moody-College-of-Communication--Open-to-Work-Study-_R_00047950 | University of Texas at Austin | Technology Intern - Texas Immersive Institute - Moody College of Communication | Austin, TX | posted: 2026-08-07",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7672391300141877557/detail",
+    "company": "ByteDance",
+    "title": "Agent Evaluation & Evolution Machine Learning Engineer Intern - Applied Machine Learning Ark",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7672391300141877557/detail | ByteDance | Agent Evaluation & Evolution Machine Learning Engineer Intern - Applied Machine Learning Ark | Seattle, WA | posted: 2026-08-11",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7672382828525832501/detail",
+    "company": "ByteDance",
+    "title": "Machine Learning Engineer Intern - AML-Engine-Orchestration",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7672382828525832501/detail | ByteDance | Machine Learning Engineer Intern - AML-Engine-Orchestration | Seattle, WA | posted: 2026-08-11",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7672392998231050549/detail",
+    "company": "ByteDance",
+    "title": "Visual Generation & Multimodal Evaluation Machine Learning Engineer Intern - AML-ARK",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7672392998231050549/detail | ByteDance | Visual Generation & Multimodal Evaluation Machine Learning Engineer Intern - AML-ARK | Seattle, WA | posted: 2026-08-11",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7672394389001816325/detail",
+    "company": "ByteDance",
+    "title": "Data Lake Infrastructure & Data Analytics Research Engineer Intern - Applied Machine Learning Ark",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7672394389001816325/detail | ByteDance | Data Lake Infrastructure & Data Analytics Research Engineer Intern - Applied Machine Learning Ark | Seattle, WA | posted: 2026-08-11",
+    "status": "active"
+  },
+  {
+    "url": "https://apply.deloitte.com/en_US/careers/JobDetail/Consultative-Offerings-Government-Public-Services-Summer-Scholar-Software-Engineering/362448",
+    "company": "Deloitte",
+    "title": "Software Engineering Analyst Intern - Government & Public Services",
+    "location": "Austin, TX",
+    "line": "- [ ] https://apply.deloitte.com/en_US/careers/JobDetail/Consultative-Offerings-Government-Public-Services-Summer-Scholar-Software-Engineering/362448 | Deloitte | Software Engineering Analyst Intern - Government & Public Services | Austin, TX | posted: 2026-08-11",
+    "status": "active"
+  },
+  {
+    "url": "https://apply.deloitte.com/en_US/careers/JobDetail/Consultative-Offerings-Government-Public-Services-Summer-Scholar-AI-and-Data-Engineering/362479",
+    "company": "Deloitte",
+    "title": "AI and Data Engineering Summer Scholar Intern - Government & Public Services",
+    "location": "Austin, TX",
+    "line": "- [ ] https://apply.deloitte.com/en_US/careers/JobDetail/Consultative-Offerings-Government-Public-Services-Summer-Scholar-AI-and-Data-Engineering/362479 | Deloitte | AI and Data Engineering Summer Scholar Intern - Government & Public Services | Austin, TX | posted: 2026-08-11",
+    "status": "active"
+  },
+  {
+    "url": "https://specteraerospace.bamboohr.com/careers/121/",
+    "company": "Specter Aerospace",
+    "title": "Image Processing Co-op",
+    "location": "Boston, MA",
+    "line": "- [ ] https://specteraerospace.bamboohr.com/careers/121/ | Specter Aerospace | Image Processing Co-op | Boston, MA | posted: 2026-08-13",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.bytedance.com/en/position/7673608499872827701/detail",
+    "company": "ByteDance",
+    "title": "Self-Built Engineer Intern - CDN Platform",
+    "location": "Seattle, WA",
+    "line": "- [ ] https://jobs.bytedance.com/en/position/7673608499872827701/detail | ByteDance | Self-Built Engineer Intern - CDN Platform | Seattle, WA | posted: 2026-08-14",
+    "status": "active"
+  },
+  {
+    "url": "https://massgeneralbrigham.wd1.myworkdayjobs.com/mgbexternal/job/20-Shattuck-Street--Boston-Thorn-Research-Building/Student-research-assistant---Global-Health-Equity_RQ4076623",
+    "company": "Mass General Brigham",
+    "title": "Student Research Assistant",
+    "location": "Boston, MA",
+    "line": "- [ ] https://massgeneralbrigham.wd1.myworkdayjobs.com/mgbexternal/job/20-Shattuck-Street--Boston-Thorn-Research-Building/Student-research-assistant---Global-Health-Equity_RQ4076623 | Mass General Brigham | Student Research Assistant | Boston, MA | posted: 2026-08-19",
+    "status": "active"
+  },
+  {
+    "url": "https://alleghenycounty.bamboohr.com/careers/663/",
+    "company": "Allegheny County",
+    "title": "Business Analytics Intern",
+    "location": "Pittsburgh, PA",
+    "line": "- [ ] https://alleghenycounty.bamboohr.com/careers/663/ | Allegheny County | Business Analytics Intern | Pittsburgh, PA | posted: 2026-08-19",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.ashbyhq.com/pivotrobotics/5b7e7074-aace-4b9a-9db8-245c8ad66a69/application?embed=true",
+    "company": "Pivot Robotics",
+    "title": "Robot Operator Internship",
+    "location": "New Boston, OH",
+    "line": "- [ ] https://jobs.ashbyhq.com/pivotrobotics/5b7e7074-aace-4b9a-9db8-245c8ad66a69/application?embed=true | Pivot Robotics | Robot Operator Internship | New Boston, OH | posted: 2026-08-20",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/integrainterns/jobs/5396990008",
+    "company": "Integra FEC",
+    "title": "Research Analyst Intern",
+    "location": "Austin, TX",
+    "line": "- [ ] https://job-boards.greenhouse.io/integrainterns/jobs/5396990008 | Integra FEC | Research Analyst Intern | Austin, TX | posted: 2026-08-20",
+    "status": "active"
+  },
+  {
+    "url": "https://careers.amd.com/jobs/91183?icims=1",
+    "company": "AMD",
+    "title": "Data Analyst Intern/Co-op",
+    "location": "Rochester, NY / Austin, TX / Longmont, CO / Fishkill, NY / Fort Collins, CO / Boxborough, MA",
+    "line": "- [ ] https://careers.amd.com/jobs/91183?icims=1 | AMD | Data Analyst Intern/Co-op | Rochester, NY / Austin, TX / Longmont, CO / Fishkill, NY / Fort Collins, CO / Boxborough, MA | posted: 2026-08-21",
+    "status": "active"
+  },
+  {
+    "url": "https://careers.amd.com/jobs/91170?icims=1",
+    "company": "AMD",
+    "title": "Machine Learning Intern/Co-op - Multiple Teams",
+    "location": "Rochester, NY / Austin, TX / Longmont, CO / Fishkill, NY / Fort Collins, CO / Boxborough, MA",
+    "line": "- [ ] https://careers.amd.com/jobs/91170?icims=1 | AMD | Machine Learning Intern/Co-op - Multiple Teams | Rochester, NY / Austin, TX / Longmont, CO / Fishkill, NY / Fort Collins, CO / Boxborough, MA | posted: 2026-08-21",
+    "status": "active"
+  },
+  {
+    "url": "https://careers.amd.com/jobs/91177?icims=1",
+    "company": "AMD",
+    "title": "Machine Learning Intern/Co-op - Machine Learning - Artificial Intelligence",
+    "location": "San Jose, CA / Santa Clara, CA",
+    "line": "- [ ] https://careers.amd.com/jobs/91177?icims=1 | AMD | Machine Learning Intern/Co-op - Machine Learning - Artificial Intelligence | San Jose, CA / Santa Clara, CA | posted: 2026-08-21",
+    "status": "active"
+  },
+  {
+    "url": "https://careers.amd.com/jobs/91227?icims=1",
+    "company": "AMD",
+    "title": "Product Development Engineer Intern/Co-op",
+    "location": "San Jose, CA / Santa Clara, CA",
+    "line": "- [ ] https://careers.amd.com/jobs/91227?icims=1 | AMD | Product Development Engineer Intern/Co-op | San Jose, CA / Santa Clara, CA | posted: 2026-08-21",
+    "status": "active"
+  },
+  {
+    "url": "https://careers.amd.com/jobs/91181?icims=1",
+    "company": "AMD",
+    "title": "Machine Learning Intern/Co-op - Artificial Intelligence",
+    "location": "Rochester, NY / Austin, TX / Longmont, CO / Fishkill, NY / Fort Collins, CO / Boxborough, MA",
+    "line": "- [ ] https://careers.amd.com/jobs/91181?icims=1 | AMD | Machine Learning Intern/Co-op - Artificial Intelligence | Rochester, NY / Austin, TX / Longmont, CO / Fishkill, NY / Fort Collins, CO / Boxborough, MA | posted: 2026-08-21",
+    "status": "active"
+  },
+  {
+    "url": "https://pg.wd5.myworkdayjobs.com/1000/job/CINCINNATI-GENERAL-OFFICES/Analytics---Insights-Internship_R000157696",
+    "company": "Procter & Gamble",
+    "title": "Analytics & Insights Intern",
+    "location": "Fayetteville, NC / Boston, MA / Cumberland, MD / Virginia Beach, VA / Mason, OH / Minneapolis, MN / Cincinnati, OH",
+    "line": "- [ ] https://pg.wd5.myworkdayjobs.com/1000/job/CINCINNATI-GENERAL-OFFICES/Analytics---Insights-Internship_R000157696 | Procter & Gamble | Analytics & Insights Intern | Fayetteville, NC / Boston, MA / Cumberland, MD / Virginia Beach, VA / Mason, OH / Minneapolis, MN / Cincinnati, OH | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/81241",
+    "company": "BNY",
+    "title": "Data Science Intern - Engineering",
+    "location": "Pittsburgh, PA",
+    "line": "- [ ] https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/81241 | BNY | Data Science Intern - Engineering | Pittsburgh, PA | posted: 2026-08-24 | trust: 85 company_domain_mismatch",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/audaxgroup/jobs/4722880005",
+    "company": "Audax Group",
+    "title": "Data Analyst Co-op - Business Solutions",
+    "location": "Boston, MA",
+    "line": "- [ ] https://job-boards.greenhouse.io/audaxgroup/jobs/4722880005 | Audax Group | Data Analyst Co-op - Business Solutions | Boston, MA | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/audaxgroup/jobs/4722779005",
+    "company": "Audax Group",
+    "title": "Data Engineer Co-op",
+    "location": "Boston, MA",
+    "line": "- [ ] https://job-boards.greenhouse.io/audaxgroup/jobs/4722779005 | Audax Group | Data Engineer Co-op | Boston, MA | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/audaxgroup/jobs/4722801005",
+    "company": "Audax Group",
+    "title": "AI Engineer Co-op",
+    "location": "Boston, MA",
+    "line": "- [ ] https://job-boards.greenhouse.io/audaxgroup/jobs/4722801005 | Audax Group | AI Engineer Co-op | Boston, MA | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/kodiak/jobs/4378548009",
+    "company": "Kodiak Robotics",
+    "title": "Planning Intern - Mission Planning",
+    "location": "Mountain View, CA",
+    "line": "- [ ] https://job-boards.greenhouse.io/kodiak/jobs/4378548009 | Kodiak Robotics | Planning Intern - Mission Planning | Mountain View, CA | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.apple.com/en-us/details/200679789",
+    "company": "Apple",
+    "title": "Design Verification Intern",
+    "location": "Santa Clara, CA",
+    "line": "- [ ] https://jobs.apple.com/en-us/details/200679789 | Apple | Design Verification Intern | Santa Clara, CA | posted: 2026-08-25",
+    "status": "uncertain"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/kodiak/jobs/4377721009",
+    "company": "Kodiak Robotics",
+    "title": "Behavior Planning Intern - Motion Planning",
+    "location": "Mountain View, CA",
+    "line": "- [ ] https://job-boards.greenhouse.io/kodiak/jobs/4377721009 | Kodiak Robotics | Behavior Planning Intern - Motion Planning | Mountain View, CA | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/kodiak/jobs/4378662009",
+    "company": "Kodiak Robotics",
+    "title": "Simulation Intern",
+    "location": "Mountain View, CA",
+    "line": "- [ ] https://job-boards.greenhouse.io/kodiak/jobs/4378662009 | Kodiak Robotics | Simulation Intern | Mountain View, CA | posted: 2026-08-25",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/kodiak/jobs/4378402009",
+    "company": "Kodiak Robotics",
+    "title": "Controls Intern",
+    "location": "Mountain View, CA",
+    "line": "- [ ] https://job-boards.greenhouse.io/kodiak/jobs/4378402009 | Kodiak Robotics | Controls Intern | Mountain View, CA | posted: 2026-08-24",
+    "status": "active"
+  },
+  {
+    "url": "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/job/155522",
+    "company": "Honeywell",
+    "title": "Artificial Intelligence/Machine Learning Intern",
+    "location": "United States",
+    "line": "- [ ] https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/job/155522 | Honeywell | Artificial Intelligence/Machine Learning Intern | United States | posted: 2026-08-25 | trust: 85 company_domain_mismatch",
+    "status": "active"
+  },
+  {
+    "url": "https://ebxr.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/214478",
+    "company": "DTCC",
+    "title": "Data Solutions Intern - Internship Program",
+    "location": "Boston, MA / Tampa, FL",
+    "line": "- [ ] https://ebxr.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/214478 | DTCC | Data Solutions Intern - Internship Program | Boston, MA / Tampa, FL | posted: 2026-08-25 | trust: 85 company_domain_mismatch",
+    "status": "active"
+  },
+  {
+    "url": "https://jobs.ashbyhq.com/maxinsights/afbc425f-9543-460d-8f78-792a8017d060/application?embed=true",
+    "company": "Maxinsights",
+    "title": "Data Operations Intern",
+    "location": "Santa Clara, CA",
+    "line": "- [ ] https://jobs.ashbyhq.com/maxinsights/afbc425f-9543-460d-8f78-792a8017d060/application?embed=true | Maxinsights | Data Operations Intern | Santa Clara, CA | posted: 2026-08-12",
+    "status": "active"
+  },
+  {
+    "url": "https://job-boards.greenhouse.io/whitewatermidstream/jobs/5217853007",
+    "company": "WhiteWater Midstream",
+    "title": "Data Science Intern - Summer 2027",
+    "location": "Austin, TX",
+    "line": "- [ ] https://job-boards.greenhouse.io/whitewatermidstream/jobs/5217853007 | WhiteWater Midstream | Data Science Intern - Summer 2027 | Austin, TX | posted: 2026-08-26",
+    "status": "active"
+  },
+  {
+    "url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Boston-Massachusetts/Summer-Intern-2027---AI_JR26081682",
+    "company": "Manulife Financial",
+    "title": "AI Intern - AI",
+    "location": "Boston, MA",
+    "line": "- [ ] https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Boston-Massachusetts/Summer-Intern-2027---AI_JR26081682 | Manulife Financial | AI Intern - AI | Boston, MA | posted: 2026-08-27",
+    "status": "active"
+  },
+  {
+    "url": "https://rjleegroupinc.applytojob.com/apply/vMYHU0VqAg/Internship-Artificial-Intelligence-Software-Modernization",
+    "company": "RJ Lee Group",
+    "title": "Artificial Intelligence Software Modernization Intern",
+    "location": "Pittsburgh, PA",
+    "line": "- [ ] https://rjleegroupinc.applytojob.com/apply/vMYHU0VqAg/Internship-Artificial-Intelligence-Software-Modernization | RJ Lee Group | Artificial Intelligence Software Modernization Intern | Pittsburgh, PA | posted: 2026-08-27",
+    "status": "active"
+  },
+  {
+    "url": "https://career-schwab.icims.com/jobs/126227/job?mobile=true&needsRedirect=false",
+    "company": "Charles Schwab",
+    "title": "Data Engineering Intern - Data Engineering",
+    "location": "Austin, TX / Westlake, TX / Southlake, TX",
+    "line": "- [ ] https://career-schwab.icims.com/jobs/126227/job?mobile=true&needsRedirect=false | Charles Schwab | Data Engineering Intern - Data Engineering | Austin, TX / Westlake, TX / Southlake, TX | posted: 2026-08-29",
+    "status": "active"
+  },
+  {
+    "url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/NVIDIA-2027-Internships--Software-Engineering_JR2023495",
+    "company": "NVIDIA",
+    "title": "NVIDIA 2027 Internships: Software Engineering",
+    "location": "US, CA, Santa Clara",
+    "line": "- [ ] https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/NVIDIA-2027-Internships--Software-Engineering_JR2023495 | NVIDIA | NVIDIA 2027 Internships: Software Engineering | US, CA, Santa Clara | posted: 2026-08-19",
+    "status": "active"
+  },
+  {
+    "url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/NVIDIA-2027-Internships--Systems-Software-Engineering_JR2023492",
+    "company": "NVIDIA",
+    "title": "NVIDIA 2027 Internships: Systems Software Engineering",
+    "location": "US, CA, Santa Clara",
+    "line": "- [ ] https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/NVIDIA-2027-Internships--Systems-Software-Engineering_JR2023492 | NVIDIA | NVIDIA 2027 Internships: Systems Software Engineering | US, CA, Santa Clara | posted: 2026-08-19",
+    "status": "active"
+  }
+]
