@@ -21,6 +21,8 @@ If the input is a **URL** (not pasted JD text), follow this strategy to extract 
 
 Before running any evaluation, confirm the posting is still live. The Step 0 Playwright snapshot already holds the evidence — judge it now, before spending tokens on the A-G evaluation, the report, or a PDF. A 404/expired page silently served as a static fallback ("position filled", empty shell) otherwise scores a full evaluation against phantom content.
 
+**SimplifyJobs URLs — skip liveness check:** Entries tagged `provider: simplify-jobs` in the pipeline come from the SimplifyJobs listings.json live API. That feed is updated hourly and already filters out closed/inactive postings via `is_visible: true`. The URL is trustworthy without a browser check. Skip the Playwright snapshot for liveness purposes and go straight to JD extraction. (The JD extraction step still reads the actual page content — if it returns nothing useful, the visa/gate steps will catch it.)
+
 1. From the Step 0 snapshot/fetched content, classify the posting:
    - **active posting evidence:** title/role + a real job description or an application/apply path
    - **closed posting evidence:** expired/closed/"no longer accepting applications", missing JD with only nav/footer, hard redirect to a generic careers/search page, or 404/410

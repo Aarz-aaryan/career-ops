@@ -58,6 +58,9 @@ function degreesPreferPhD(degrees) {
 function listingToJob(l, entry) {
   // Simplify URLs are direct ATS URLs (Greenhouse, Ashby, Lever, workday, etc.).
   // They go through is_visible to avoid old/closed postings.
+  // The SimplifyJobs listings.json is a live API — URLs are always current.
+  // We tag them with provider: simplify-jobs so Step 0.5 (liveness gate)
+  // can skip the expensive browser liveness check and go straight to JD extraction.
   return {
     title: l.title || '',
     url: l.url || '',
@@ -66,6 +69,7 @@ function listingToJob(l, entry) {
     postedAt: typeof l.date_posted === 'number' ? l.date_posted * 1000 : undefined,
     category: l.category || '',
     terms: Array.isArray(l.terms) ? l.terms : [],
+    note: 'provider: simplify-jobs',
   };
 }
 
