@@ -1,0 +1,1486 @@
+{
+  "https://job-boards.greenhouse.io/togetherai/jobs/5196805007": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/anthropic/jobs/5400153008": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/anthropic/jobs/5367585008": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/anthropic/jobs/5388612008": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/langchain/9a0ae8b4-af0c-4551-b9cd-284fe67e1935": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mistral.ai/80f8c81d-394f-4892-8f06-97a880563cc7": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cohere/f722247c-291b-44ee-af67-5159b8d5d9b9": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cohere/4a3c3eb2-ae2e-4a86-a677-7bdecbc7d76e": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cohere/96c74af4-b3d7-4960-a666-212ce4debac8": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cursor/1d6dbbb2-a5af-41a6-a70a-ca97690d9313": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cursor/299ce422-0281-4282-aadd-bc22553be0b5": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cursor/6eef7144-f2cc-48a8-b065-01f04e4c70ff": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cursor/0320a8db-cb1b-407b-bd62-b23734b83330": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cursor/9a175381-45e2-42b6-bd64-6c84532365f9": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://job-boards.greenhouse.io/gleanwork/jobs/4711861005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/gleanwork/jobs/4709327005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/xai/jobs/5202187007": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/xai/jobs/5179367007": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/scaleai/jobs/4708171005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/scaleai/jobs/4722512005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/scaleai/jobs/4708221005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/scaleai/jobs/4710484005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7807508003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7809763003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7749755003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7766277003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7813159003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7799346003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7727322003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7819447003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7854835003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/affirm/jobs/7779962003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/harvey/a194c24f-38ee-4c7e-908b-060a16dfaa9d": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://job-boards.greenhouse.io/gitlab/jobs/8688078002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/twilio/jobs/8100236": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/twilio/jobs/8009057": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/twilio/jobs/7954715": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/twilio/jobs/8103253": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/twilio/jobs/8026207": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/twilio/jobs/8026203": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/reddit/jobs/8148431": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/reddit/jobs/8139781": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/reddit/jobs/7997866": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/figma/jobs/6142506004?gh_jid=6142506004": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/figma/jobs/6100023004?gh_jid=6100023004": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/figma/jobs/6102379004?gh_jid=6102379004": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/3c67f712-697d-48d8-b05c-01be896e61da": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/4ef5bf23-cf0e-4b97-a639-11f963c99b88": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/770d5c3f-4e72-4b49-aec4-d444e8ad7a64": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/984da843-107f-4ff6-ad27-07a06700e338": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/07153f7c-7e8b-4283-a879-cb07a224e083": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/fabfc6c5-57b5-49ba-aae9-e7dd5d7030ca": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/fff02c39-1185-427c-bf89-70d7eaa5e3db": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/da07ba71-81fd-47c7-adb1-2b2d1eaed325": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/1bb1f351-41a2-43a5-bac1-259859886cb3": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/2d7f1028-ce9b-49c7-acc8-782714ca1cf4": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/ca300a6d-a2a7-4580-aad7-323fbdfee7b1": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/990397de-c00c-4577-b093-d8c82b4e9145": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/348ac6bf-a5c3-43d1-a14a-5f1a3c8d90fa": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/87e5f8c3-3337-480a-9db2-e4cef5db909b": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/88654e7f-4e23-4e75-8e54-18c10d09b093": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/f6278b60-dd42-4aa8-a3cd-c105f75ae8ae": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/4070d52e-0263-4cd5-9107-052b4ecc1209": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/66288824-8b77-4774-bc57-6825d3e6221e": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/39a709f3-6e9e-45e9-94eb-43a1c2aaaeaf": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/1c48f39f-60ea-4636-87ed-8b4b4f5243e5": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/6b47238e-025a-4350-b270-2f3564002fcc": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/915a325b-55f6-44e2-8314-34ec0d8bb2c9": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/5ebd5f66-75db-4a96-8d39-babc14f1c582": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/0f887fe6-39f4-44f6-8ee5-230c3002f0d7": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/39e06ef9-5e62-425d-81e2-e8690188011f": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/fcb0ed1a-9329-4e8f-8aab-92bb626d8141": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/ca54cd23-2bcc-4327-bcb6-46d81ed414a8": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/eefeb527-4e36-432e-a787-88e4672e29e1": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/d1c6cb87-a44d-4d04-92a8-dc40eccd090e": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/1b86ec8e-fe34-452d-bbff-6619579e7385": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/a0ccedf1-2bb7-4f10-8be8-db50f9ae02c3": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/9248eab6-74e0-4940-98eb-ca09b17da532": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/d2aad13c-6ed0-4905-ae12-8ea2397b190c": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/38e3c4bf-a632-405e-9619-b87382ca2472": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/70aaaafa-fe2f-4409-9a72-c0faf50d7d01": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/3229b152-015f-49ad-9921-9c9de95570c8": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/96de8acb-556e-451b-bc84-7124bb4b0a20": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/0432731c-f229-476e-92b6-d53491e79096": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/a6ab3111-7092-4da2-a7a6-71e01351bfda": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/4c0a6cb6-d365-4e5b-bdff-c093d951026d": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/e961c9df-caa0-4b29-b37c-a3e02c564615": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/099dd6af-b017-4a60-85d5-4c79da3a9ead": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/a23bd45a-e192-460d-bd34-a0f6c4bc6865": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/2bf44c13-a463-4ec7-b152-b8367075246c": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/71838fdf-4476-490c-81b6-4bf0746f6774": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/d1121575-a1a7-47c9-97e6-56c70f441143": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/ec317080-e2d2-4a73-93e6-e0a9ae6fdf96": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/openai/00205d4e-9933-4057-8115-50b08d112ad1": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://job-boards.greenhouse.io/mercury/jobs/6150432004": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/mercury/jobs/6101145004": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8578967002?gh_jid=8578967002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8681191002?gh_jid=8681191002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8594959002?gh_jid=8594959002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8616359002?gh_jid=8616359002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8657011002?gh_jid=8657011002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8614188002?gh_jid=8614188002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/chime/jobs/8607195002?gh_jid=8607195002": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/robinhood/jobs/8008723?t=gh_src=&gh_jid=8008723": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/robinhood/jobs/8077370?t=gh_src=&gh_jid=8077370": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/robinhood/jobs/8067604?t=gh_src=&gh_jid=8067604": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/robinhood/jobs/8088444?t=gh_src=&gh_jid=8088444": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/notion/1fc309c8-da20-4ff2-84c7-8b863ece2b0a": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/notion/def3f337-5593-491c-b34d-e0b53f2a5cac": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/notion/a9d4a192-d31c-48d2-8156-e2a75d98eec1": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/notion/e3d8dc06-da05-4e9d-a143-2e9c51fa3d51": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/notion/ca74504a-9b91-4ce3-b0df-97919b46e749": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/suno/dba162e0-97f1-4efe-b4ff-c7d671a01b11": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cognition/13fdacf7-b4dc-4b9a-ac43-addc87de79ec": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cognition/e8086415-62bc-4cc0-96a4-84bb56182d35": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cerebras/80775253-7fba-4a3b-87ee-0e70ce8e995c": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cerebras/c0d8fa46-fd9e-49b5-80c9-040bbd0da916": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cerebras/63b9c135-ce5d-4898-8e4d-9422d39e4ca6": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/cerebras/f25b9677-32fa-41ed-84d1-0ed704a98533": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/plaid/f214bf6c-2008-4eab-8943-03f5d03088c2": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/anyscale/8691daef-bfe5-4d01-871f-cf2226ba0c82": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/anyscale/01aef589-e268-4b22-b513-d1f9f076210f": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/anyscale/81c3c26a-71e3-4c4c-a88e-88c538a169be": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/ae344099-3fde-4027-bfde-f953db8b4728": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/e106399e-d85e-4af2-9bc8-6a0e144f318f": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/a778f283-d596-4fa9-a81e-93161eb5399c": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/7cee578f-799c-46ad-8951-cb0b724d619a": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/160c8177-765b-4bdc-a5be-5f646dccc98a": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/a0afa08a-5448-4432-bc61-a5fe3a73b4de": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/a217f1a6-c63c-4dfb-81c3-ecc0c5d44f98": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/3750ee8a-64d1-46ac-b4f9-6a823f949034": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/aac13ab1-a746-437a-8c56-daf6e8b6c542": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/99d667bf-90de-4bc7-88f1-5fca1a3ec01b": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/59c997bf-7ec3-4631-bc4a-3dc5dbe30f28": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/mercor/f6035e89-f820-482c-9500-efb70226b134": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/ramp/42527ca9-03b9-499e-a5c4-18e4245af138": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/ramp/f1b3ca8d-d55f-4159-9a3b-f69ad0d981bc": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/ramp/b614563f-3ce6-4dca-b5ba-0e5a6c8bda27": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://jobs.ashbyhq.com/kong/62c40a30-88e8-4254-b4bb-bd16fb9cb805/application": {
+    "status": "expired",
+    "reason": "Ashby posting not listed on the board — removed/unlisted"
+  },
+  "https://jobs.ashbyhq.com/kong/1de58755-b134-4223-9caf-54ee7f376a5b/application": {
+    "status": "expired",
+    "reason": "Ashby posting not listed on the board — removed/unlisted"
+  },
+  "https://leidos.wd5.myworkdayjobs.com/External/job/6314-RemoteTeleworker-US/Data-Architecture-and-Governance-Intern_R-00184376": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://leidos.wd5.myworkdayjobs.com/External/job/6314-RemoteTeleworker-US/AI-ML-Observability-Intern_R-00178279": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/queracomputinginc/jobs/5239489008": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/ispottv/jobs/4702457005": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/nationalpublicradioinc/jobs/4701925005": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/earnin/jobs/7980784": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Content-Management-Automation-Student-Technician--open-to-work-study-and-non-work-study-_R_00046574": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/base-power/fbb553e1-5fb8-49a1-b5a5-9c7dde6b4406/application": {
+    "status": "expired",
+    "reason": "Ashby posting not listed on the board — removed/unlisted"
+  },
+  "https://gevernova.wd5.myworkdayjobs.com/only_confidential_executive_recruiting/job/Remote/Grid-Automation---Software-Intern_R5041709": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/ispottv/jobs/4703297005": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/arine/jobs/6026856004": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/offerup/jobs/8004171": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://campbellsoup.wd5.myworkdayjobs.com/externalcareers_globalsite/job/USA---Remote/Agentic-AI-Engineer-Co-Op_Req-66015": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/flagright.com/cdc0b71f-fb24-49bf-babe-de63bdaacb7e/application": {
+    "status": "expired",
+    "reason": "Ashby posting not listed on the board — removed/unlisted"
+  },
+  "https://sonyglobal.wd1.myworkdayjobs.com/SonyGlobalCareers/job/San-Diego/Software-Engineer-Intern_JR-119282": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://hcmportal.wd5.myworkdayjobs.com/en-US/Search/job/US---UPS-CORPORATE-OFFICES-GACOR/Summer-2026-Buildings---Systems-Engineering--BaSE--Intern---Information-Systems-Intern_R26015318": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/iherb/jobs/7776154003": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://boards.greenhouse.io/bugcrowd/jobs/8016582": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://leidos.wd5.myworkdayjobs.com/External/job/6314-RemoteTeleworker-US/Data-Analytics-Intern_R-00185665": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://jobs.ashbyhq.com/gen-digital/0818d1f1-e3c0-4a8a-afb8-72dd1265a13d/application": {
+    "status": "expired",
+    "reason": "Ashby posting not listed on the board — removed/unlisted"
+  },
+  "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/AUSTIN-TX/DSR-Lab-Data-Student-Assistant--Open-to-Work-Study-and-Non-Work-Study-_R_00046913": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/lilasciences/jobs/4287004009": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/pointc/jobs/5236086008": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/lilasciences/jobs/4289960009": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/binance.us/c23e9aa3-0daa-4170-a5a7-b03aaa031895/application": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://job-boards.greenhouse.io/twosixtechnologies/jobs/6105290004": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://boards.greenhouse.io/cloudflare/jobs/8047201": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://nrel.wd5.myworkdayjobs.com/NLR/job/Remote/XMLNAME--Associate-Undergraduate--Intern---Carbon-Management-and-Large-Energy-Systems_R14405": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/honehealth/jobs/5308958008": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/Ontic/20af94c6-329e-45f5-b02b-4be582b5dee3/application": {
+    "status": "expired",
+    "reason": "Ashby posting not listed on the board — removed/unlisted"
+  },
+  "https://pg.wd5.myworkdayjobs.com/1000/job/BOSTON-GO--TECH-CENTER/Purdue-University-R-D-Engineer-Co-op--Purdue-Students-Graduating-in-2028-2029-ONLY_R000155305": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://snhu.wd503.myworkdayjobs.com/External_Career_Site/job/Remote/Student---Online-Data-Analytics-Eco-Rep_R0014463": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://cincinnatichildrens.wd5.myworkdayjobs.com/careersatcincinnatichildrens/job/Remote/Student-II---Software-Engineering_JR223357": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://cincinnatichildrens.wd5.myworkdayjobs.com/careersatcincinnatichildrens/job/Remote/Student-II---AI-ML-Governance_JR223360": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://cat.wd5.myworkdayjobs.com/en-US/solarturbines/job/San-Diego-California/XMLNAME-2027--Gas-Turbine-Product-Engineering-Internship_R0000382293": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://cincinnatichildrens.wd5.myworkdayjobs.com/careersatcincinnatichildrens/job/Remote/Student-II---Data-Management_JR223363": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://ensemblehp.wd5.myworkdayjobs.com/ensemblehealthpartnerscareers/job/Remote---Nationwide/Engineering-Excellence-Intern_R048023": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://ensemblehp.wd5.myworkdayjobs.com/ensemblehealthpartnerscareers/job/Remote---Nationwide/Data-Scientist--AI_R048077": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://argonne.wd1.myworkdayjobs.com/EDU_PUB/job/Lemont-IL-USA/Business-Systems-Administration-Internship_413528": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://leidos.wd5.myworkdayjobs.com/External/job/San-Diego-CA/Signal-Processing-Technical-Intern_R-00187499": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/goldenpetbrands/jobs/4713182005": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://job-boards.greenhouse.io/lilasciences/jobs/4288399009": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Student-Analyst--Data-Analytics-and-Strategy--Career-Management-and-Corporate-Relations--CMCR---Work-Study-Only-_R_00047631": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/cloudflare/jobs/8089379": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://richemont.wd3.myworkdayjobs.com/richemont/job/BELLEVUE/Business-Analytics-Intern_JR124478-1": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://richemont.wd3.myworkdayjobs.com/richemont/job/BELLEVUE/Sustainability-Transformation-Analyst-Intern_JR132092": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/Video-and-Analytics-Intern--Baseball_R_00047706": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/Zello/3453d476-7b75-4938-8cff-502d1575859b/application?embed=true": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://pnc.wd5.myworkdayjobs.com/External/job/PA---Pittsburgh-15222/Product-Innovation-Undergraduate-Intern_R230925-1": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://boards.greenhouse.io/cloudflare/jobs/8104138": {
+    "status": "expired",
+    "reason": "ATS API 404 — posting removed"
+  },
+  "https://pnc.wd5.myworkdayjobs.com/External/job/PA---Pittsburgh-15222/Data--Modeling--and-Analytics-Undergraduate-Intern_R231526-1": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://rb.wd5.myworkdayjobs.com/en-US/FRS/job/Boston-MA/Graduate-Intern---Statistical-Analysis_R-0000032931": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://utaustin.wd1.myworkdayjobs.com/utstudent/job/UT-MAIN-CAMPUS/TXI-Tech-Intern--Texas-Immersive-Institute--Moody-College-of-Communication--Open-to-Work-Study-_R_00047950": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://saintleo.wd503.myworkdayjobs.com/SLU/job/University-Campus/XMLNAME-2026-2027-FWS-Student-Worker--Institutional-Research_R4728": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://massgeneralbrigham.wd1.myworkdayjobs.com/mgbexternal/job/20-Shattuck-Street--Boston-Thorn-Research-Building/Student-research-assistant---Global-Health-Equity_RQ4076623": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/pivotrobotics/5b7e7074-aace-4b9a-9db8-245c8ad66a69/application?embed=true": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://job-boards.greenhouse.io/integrainterns/jobs/5396990008": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://pg.wd5.myworkdayjobs.com/1000/job/CINCINNATI-GENERAL-OFFICES/Analytics---Insights-Internship_R000157696": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/audaxgroup/jobs/4722880005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/audaxgroup/jobs/4722779005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/audaxgroup/jobs/4722801005": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/kodiak/jobs/4378548009": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/morsecorpcoop/jobs/7967776003": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/kodiak/jobs/4377721009": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/kodiak/jobs/4378662009": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://job-boards.greenhouse.io/kodiak/jobs/4378402009": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://jobs.ashbyhq.com/maxinsights/afbc425f-9543-460d-8f78-792a8017d060/application?embed=true": {
+    "status": "active",
+    "reason": "Ashby posting is listed on the board (live)"
+  },
+  "https://job-boards.greenhouse.io/whitewatermidstream/jobs/5217853007": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://leidos.wd5.myworkdayjobs.com/External/job/6314-RemoteTeleworker-US/Software-Engineering---AI-Intern_R-00190648": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://bah.wd1.myworkdayjobs.com/bah_jobs/job/San-Diego-CA/University---2027-Summer-Games-Data-Scientist-Intern---San-Diego--CA_R0248045": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Boston-Massachusetts/Summer-Intern-2027---AI_JR26081682": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://leidos.wd5.myworkdayjobs.com/External/job/San-Diego-CA/Data-Science-Intern_R-00190740": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://visa.wd5.myworkdayjobs.com/Visa/job/US---Bellevue-WA/Software-Engineer---Sr-Consultant-level_REF085157W": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://workday.wd5.myworkdayjobs.com/Workday/job/USAVAReston/Analytics-Sr-Software-Engineer--US-Federal-_JR-0105493": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://workday.wd5.myworkdayjobs.com/Workday/job/USAVAReston/Sr-Full-Stack-Software-Engineer----US-Federal-_JR-0105397": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://workday.wd5.myworkdayjobs.com/Workday/job/USAVAReston/Software-Engineer-Integration-Platform--US-Federal-_JR-0105501": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://workday.wd5.myworkdayjobs.com/Workday/job/USAVAReston/Software-Engineer---DevOps--US-Federal-_JR-0105502": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers/job/New-York-City-New-York/Vice-President--Software-Engineering_R-286632": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/System-Software-Engineer--Engineering-Workflow-Platform_JR2018371": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/System-Software-Engineer---Performance-Verification-Infrastructure_JR2021574": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Software-Engineer--Performance-Lab-and-Tools_JR2024097": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/GPU-Development-Tools-System-Software-Engineer_JR2015871-1": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/System-Software-Engineer--Distributed-Systems_JR2013472": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Systems-Software-Engineer---AI-and-Cloud_JR2024087": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/NVIDIA-2027-Internships--Software-Engineering_JR2023495": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/NVIDIA-2027-Internships--Systems-Software-Engineering_JR2023492": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/System-Software-Engineer---GeForce-NOW-Low-Latency-Streaming_JR2021605": {
+    "status": "active",
+    "reason": "ATS API returns the posting (live)"
+  },
+  "https://stripe.com/jobs/search?gh_jid=8130578": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://stripe.com/jobs/search?gh_jid=8107302": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://stripe.com/jobs/search?gh_jid=8089353": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://databricks.com/company/careers/open-positions/job?gh_jid=8617901002": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.roblox.com/jobs/8097701?gh_jid=8097701": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8097701?gh_jid=8097701"
+  },
+  "https://careers.roblox.com/jobs/8083944?gh_jid=8083944": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8083944?gh_jid=8083944"
+  },
+  "https://careers.roblox.com/jobs/8115917?gh_jid=8115917": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8115917?gh_jid=8115917"
+  },
+  "https://careers.roblox.com/jobs/8113334?gh_jid=8113334": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8113334?gh_jid=8113334"
+  },
+  "https://careers.roblox.com/jobs/8131689?gh_jid=8131689": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8131689?gh_jid=8131689"
+  },
+  "https://careers.roblox.com/jobs/8060254?gh_jid=8060254": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8060254?gh_jid=8060254"
+  },
+  "https://careers.roblox.com/jobs/8123004?gh_jid=8123004": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8123004?gh_jid=8123004"
+  },
+  "https://careers.roblox.com/jobs/8080438?gh_jid=8080438": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://careers.roblox.com/jobs/8080438?gh_jid=8080438"
+  },
+  "https://www.mongodb.com/careers/job/?gh_jid=8089124": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.mongodb.com/careers/job/?gh_jid=8089124\" is interrupted by another navigation to \"chrome-error://chromewebdata/\""
+  },
+  "https://www.mongodb.com/careers/job/?gh_jid=8089859": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.mongodb.com/careers/job/?gh_jid=8089859\" is interrupted by another navigation to \"https://www.mongodb.com/careers/jobs/8089124\""
+  },
+  "https://www.mongodb.com/careers/job/?gh_jid=8069776": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.mongodb.com/careers/job/?gh_jid=8069776\" is interrupted by another navigation to \"https://www.mongodb.com/careers/jobs/8089859\""
+  },
+  "https://www.mongodb.com/careers/job/?gh_jid=8119841": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.mongodb.com/careers/job/?gh_jid=8119841\" is interrupted by another navigation to \"https://www.mongodb.com/careers/jobs/8069776\""
+  },
+  "https://www.okta.com/company/careers/opportunity/8139374?gh_jid=8139374": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.okta.com/company/careers/opportunity/8139374?gh_jid=8139374\" is interrupted by another navigation to \"https://www.mongodb.com/careers/jobs/8119841\""
+  },
+  "https://www.samsara.com/company/careers/roles/8036387?gh_jid=8036387": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.samsara.com/company/careers/roles/8036387?gh_jid=8036387\" is interrupted by another navigation to \"https://www.okta.com/company/careers/customer-first/software-engineer-ii-frontend-agentic-ai-8139374/\""
+  },
+  "https://www.samsara.com/company/careers/roles/8042387?gh_jid=8042387": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.samsara.com/company/careers/roles/8042387?gh_jid=8042387\" is interrupted by another navigation to \"https://www.samsara.com/company/careers/roles/8036387?gh_jid=8036387\""
+  },
+  "https://www.samsara.com/company/careers/roles/8050373?gh_jid=8050373": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.samsara.com/company/careers/roles/8050373?gh_jid=8050373\" is interrupted by another navigation to \"https://www.samsara.com/company/careers/roles/8042387?gh_jid=8042387\""
+  },
+  "https://www.pinterestcareers.com/jobs/?gh_jid=8015490": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.pinterestcareers.com/jobs/?gh_jid=8015490\" is interrupted by another navigation to \"https://www.samsara.com/company/careers/roles/8050373?gh_jid=8050373\""
+  },
+  "https://www.coinbase.com/careers/positions/8164730?gh_jid=8164730": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.coinbase.com/careers/positions/8164730?gh_jid=8164730\" is interrupted by another navigation to \"https://www.pinterestcareers.com/jobs/8015490/security-software-engineer-ii-detection-and-response/\""
+  },
+  "https://www.coinbase.com/careers/positions/8092485?gh_jid=8092485": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.coinbase.com/careers/positions/8092485?gh_jid=8092485\" is interrupted by another navigation to \"https://www.coinbase.com/careers/positions/8164730?gh_jid=8164730\""
+  },
+  "https://www.coinbase.com/careers/positions/8100066?gh_jid=8100066": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.coinbase.com/careers/positions/8100066?gh_jid=8100066\" is interrupted by another navigation to \"https://www.coinbase.com/careers/positions/8092485?gh_jid=8092485\""
+  },
+  "https://www.coinbase.com/careers/positions/8024814?gh_jid=8024814": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.coinbase.com/careers/positions/8024814?gh_jid=8024814\" is interrupted by another navigation to \"https://www.coinbase.com/careers/positions/8100066?gh_jid=8100066\""
+  },
+  "https://www.coinbase.com/careers/positions/8165441?gh_jid=8165441": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.coinbase.com/careers/positions/8165441?gh_jid=8165441\" is interrupted by another navigation to \"https://www.coinbase.com/careers/positions/8024814?gh_jid=8024814\""
+  },
+  "https://www.asana.com/jobs/apply/7961475?gh_jid=7961475": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.asana.com/jobs/apply/7961475?gh_jid=7961475\" is interrupted by another navigation to \"https://www.coinbase.com/careers/positions/8165441?gh_jid=8165441\""
+  },
+  "https://www.asana.com/jobs/apply/7964275?gh_jid=7964275": {
+    "status": "uncertain",
+    "reason": "navigation error: page.goto: Navigation to \"https://www.asana.com/jobs/apply/7964275?gh_jid=7964275\" is interrupted by another navigation to \"https://asana.com/jobs/apply/7961475?gh_jid=7961475\""
+  },
+  "https://trimble.wd1.myworkdayjobs.com/en-US/TrimbleCareers/job/US---Remote-OH/PX-Systems---Automation-Intern_R56390": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://careers-walterpmoore.icims.com/jobs/4125/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://careers-sdsurf.icims.com/jobs/20457/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://amat.wd1.myworkdayjobs.com/External/job/Santa-ClaraCA/Data-Scientist-Year-Round-Intern---BS-MS-degree--Santa-Clara--CA-_R2619446": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://external-telecom-teldta.icims.com/jobs/29417/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://hyperproof.io/job-listings/?gh_jid=4700893005": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://jobs.smartrecruiters.com/Intelerad/744000129859159": {
+    "status": "expired",
+    "reason": "pattern matched: this job has expired"
+  },
+  "https://jobs.bytedance.com/en/position/7537152632018012424/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7535168003103033618/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7543005612200970503/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7535953226975054098/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers-cotiviti.icims.com/jobs/19386/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://situsamc.wd1.myworkdayjobs.com/SitusAMC/job/Remote/Intern---AI-Software-Development-Team_JR02562": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://ameresco.wd5.myworkdayjobs.com/en-US/Ameresco/job/United-States---Massachusetts---Boston/AI-Agent-Integration-and-Powered-Land-Origination-Co-op_R3837": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://jobs.lever.co/lendbuzz/07a1f425-fe31-4028-b902-235c4de32a47/apply": {
+    "status": "expired",
+    "reason": "HTTP 404"
+  },
+  "http://www.revance.com/careers/job-listings/?gh_jid=8578708002": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://fa-ewjt-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/job/15243": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://boards.greenhouse.io/embed/job_app?token=7906470": {
+    "status": "expired",
+    "reason": "HTTP 404"
+  },
+  "https://austintexas.wd5.myworkdayjobs.com/COA_Careers/job/AUS-Information-Systems-Building-IS/Austin-Aviation--Veteran-Intern--IT--Hire-in-Process-please-do-not-apply--By-Invitation-Only_JR104108": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://wayve.firststage.co/jobs?gh_jid=8382427002": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://www.tesla.com/careers/search/job/271349": {
+    "status": "uncertain",
+    "reason": "HTTP 403 (access blocked, likely anti-bot)"
+  },
+  "https://ironmountain.wd5.myworkdayjobs.com/iron-mountain-jobs/job/US--FL--Remote/Summer-2026-INTERN---Machine-Learning_J0103465": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://jobs.smartrecruiters.com/HarvardUniversity/3743990013515566": {
+    "status": "expired",
+    "reason": "pattern matched: this job has expired"
+  },
+  "https://hdep.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX/job/8096": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://vrtx.wd501.myworkdayjobs.com/vertex_careers/job/Boston-MA/Vertex-Fall-Co-op-2026--AI-and-Governance_REQ-28615-1": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://www.picarro.com/company/careers/job-openings/apply?gh_jid=5253032008": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://fa-ewjt-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/job/15428": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://fa-exjq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/SHEIN/job/USA73475043": {
+    "status": "expired",
+    "reason": "insufficient content — likely nav/footer only"
+  },
+  "https://fa-exjq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/SHEIN/job/USA08128269": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://fa-exjq-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/SHEIN/job/USA87554940": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://centific.wd1.myworkdayjobs.com/Centific_Global/job/Remote-Work-USA/SDE-Intern_JR107453-1": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://www.metacareers.com/jobs/1760132191666571": {
+    "status": "expired",
+    "reason": "HTTP 404"
+  },
+  "https://ultra.wd3.myworkdayjobs.com/uiccareers/job/Austin-TX-United-States/Software-Engineer-Intern_REQ-12111": {
+    "status": "expired",
+    "reason": "insufficient content — likely nav/footer only"
+  },
+  "https://ultra.wd3.myworkdayjobs.com/ultra-careers/job/Austin-TX-United-States/Software-Engineer-Intern_REQ-12111-1": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://lifeattiktok.com/search/7532238337198622983": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://lifeattiktok.com/search/7532267134924867847": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs-bylight.icims.com/jobs/11083/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://careers-sdsurf.icims.com/jobs/20513/job?mobile=true&needsRedirect=false": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://fa-ewjt-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/job/15791": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://www.metacareers.com/jobs/2774289902955470": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://trellix.wd1.myworkdayjobs.com/en-US/EnterpriseCareers/job/Remote-United-States/Business-Operations---AI-Data-Analyst-Intern_JR0037670": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://navaide.breezy.hr/p/3fe610df21d6/apply": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://consensus.com/careers/jobs/?gh_jid=4688215006": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://veracyte.com/job-detail?gh_jid=5163248007": {
+    "status": "uncertain",
+    "reason": "redirected to https://www.veracyte.com/company/careers/ — job id \"5163248007\" missing from final URL"
+  },
+  "https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers/job/USA---Remote/Intelligence-Launch-Intern---Summer-2026--Remote-_R26263": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://careers-beyondsoft.icims.com/jobs/10912/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://edxn.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_5001/job/26107": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://external-telecom-teldta.icims.com/jobs/29516/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://apply.workable.com/connectprep/j/E4655645B8/apply": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://www.tesla.com/careers/search/job/274560": {
+    "status": "uncertain",
+    "reason": "HTTP 403 (access blocked, likely anti-bot)"
+  },
+  "https://jobs.lever.co/ifm-us/1a09231e-44f2-4c82-a7a1-793bd159d68d/apply": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://external-telecom-teldta.icims.com/jobs/29561/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://lifeattiktok.com/search/7527077153591675154": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers-sdsurf.icims.com/jobs/20550/job?mobile=true&needsRedirect=false": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers/job/USA---Remote/Intelligence-Intern---Fall-2026--Remote-_R29214": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://intel.wd1.myworkdayjobs.com/en-us/external/job/US-Texas-Austin/DTCO-Data-Engineer-Intern_JR0285341": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://relx.wd3.myworkdayjobs.com/LexisNexisLegal/job/Home-based-Washington-DC/Editorial-Data-Reporting-Intern_R112971-1": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://avaap.wd501.myworkdayjobs.com/AvaapCareers/job/United-States-of-America/Student-Reporting---AMS_JR1132": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://jobs.lever.co/nextgenfed/35e13d92-343a-4c17-9789-1a6a9cff2bc6/apply": {
+    "status": "expired",
+    "reason": "HTTP 404"
+  },
+  "https://careersenus-itt-inc.icims.com/jobs/17182/job?mobile=true&needsRedirect=false": {
+    "status": "expired",
+    "reason": "HTTP 410"
+  },
+  "https://amainc.wd12.myworkdayjobs.com/ama_careers/job/Mountain-View-CA/Intern---Aerothermodynamics_R-100702": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://viavisolutions.wd1.myworkdayjobs.com/careers/job/Home-Office-USA/SW-Development-Intern-Data-Analytics_260004919-1": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://jobs.eu.lever.co/cirrus/f85c944c-d437-4685-9f04-c7b79ae65ecb/apply": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://lifeattiktok.com/search/7534818364393654535": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.smartrecruiters.com/BoschGroup/744000139649345": {
+    "status": "expired",
+    "reason": "pattern matched: this job has expired"
+  },
+  "https://austintexas.wd5.myworkdayjobs.com/COA_Careers/job/AUS-Information-Systems-Building-IS/Austin-Aviation--IT-Business-Systems-Analyst---Undergraduate-Intern_JR104583": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://theirc.wd1.myworkdayjobs.com/en-US/External_Careers/job/San-Diego-CA-USA/Fall-2026--Data-Integration---Reporting-Intern--Unpaid-_JR00004327": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://jobs.bytedance.com/en/position/7533369475380070663/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.kodak.com/job/USA-Marketing-Analytics-Intern-CA/1412894200/?ats=successfactors": {
+    "status": "expired",
+    "reason": "pattern matched: position has been filled"
+  },
+  "https://jobs.apple.com/en-us/details/200673612": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://www.pathai.com/careers/8651564002?gh_jid=8651564002": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://rockwellautomation.wd1.myworkdayjobs.com/External_Rockwell_Automation/job/Austin-Texas-United-States/Intern--Applied-AI_R26-5631-2": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://jobs.lever.co/calstart/39565f0d-d10f-458b-b72d-d807420059b8/apply": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://austintexas.wd5.myworkdayjobs.com/COA_Careers/job/Fire-Headquarters/Business-Intelligence-Internship_JR104636": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://austintexas.wd5.myworkdayjobs.com/COA_Careers/job/Fire-Headquarters/Research-Analyst-Internship_JR104634": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://www.tesla.com/careers/search/job/278620": {
+    "status": "uncertain",
+    "reason": "HTTP 403 (access blocked, likely anti-bot)"
+  },
+  "https://apply.careers.microsoft.com/careers/job/1970393556922929": {
+    "status": "expired",
+    "reason": "pattern matched: no longer accepting applications"
+  },
+  "https://apply.careers.microsoft.com/careers/job/1970393556922931": {
+    "status": "expired",
+    "reason": "pattern matched: no longer accepting applications"
+  },
+  "https://lifeattiktok.com/search/7668383643375257909": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://lifeattiktok.com/search/7667934792727906565": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://lifeattiktok.com/search/7668396597746862341": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7670330161462364421/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.jobvite.com/exabeam/job/oRNAAfwy?nl=1&nl=1&fr=false": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://empower.wd12.myworkdayjobs.com/PanAgora/job/MA-Boston---PanAgora/Intern--Dynamic_R0061449": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://apply.workable.com/healthcorpsorg/j/DD52981B55/apply": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://jobs.bytedance.com/en/position/7672391300141877557/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7672382828525832501/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7672392998231050549/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7672394389001816325/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://apply.deloitte.com/en_US/careers/JobDetail/Consultative-Offerings-Government-Public-Services-Summer-Scholar-Software-Engineering/362448": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://apply.deloitte.com/en_US/careers/JobDetail/Consultative-Offerings-Government-Public-Services-Summer-Scholar-AI-and-Data-Engineering/362479": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://newbalance.wd1.myworkdayjobs.com/careers/job/Sports-Research-Lab-Brighton-MA/Sports-Research-Engineer-Intern_R40740": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://dickssportinggoods.wd1.myworkdayjobs.com/en-US/DSG/job/06083-GameChanger/Data-Engineering-Co-Op_202630722": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://specteraerospace.bamboohr.com/careers/121/": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.pnnl.gov/jobs/11986?icims=1": {
+    "status": "expired",
+    "reason": "HTTP 404"
+  },
+  "https://jobs.bytedance.com/en/position/7673608499872827701/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://lifeattiktok.com/search/7674880292247406901": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.bytedance.com/en/position/7675376319236311349/detail": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.smartrecruiters.com/BoschGroup/744000144370279": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://alleghenycounty.bamboohr.com/careers/663/": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://ats.rippling.com/ampersand-biomedicines/jobs/be3f5479-379e-4d48-9bd1-82a69b2dcfd3": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://centific.wd1.myworkdayjobs.com/Centific_Global/job/Redmond-Washington/Software-Engineer_JR108257-1": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://careers.amd.com/jobs/91183?icims=1": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.amd.com/jobs/91170?icims=1": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.amd.com/jobs/91177?icims=1": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.amd.com/jobs/91227?icims=1": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://careers.amd.com/jobs/91181?icims=1": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://availity.wd1.myworkdayjobs.com/availity_careers_us/job/Remote---United-States/Software-Engineering-Intern_R0008436": {
+    "status": "expired",
+    "reason": "pattern matched: the page you are looking for doesn.t exist"
+  },
+  "https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/81241": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://jobs.apple.com/en-us/details/200679789": {
+    "status": "uncertain",
+    "reason": "content present but no visible apply control found"
+  },
+  "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/39743": {
+    "status": "expired",
+    "reason": "insufficient content — likely nav/footer only"
+  },
+  "https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/job/155522": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://ebxr.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/214478": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://egua.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/25529": {
+    "status": "expired",
+    "reason": "pattern matched: job (is )?no longer available"
+  },
+  "https://rjleegroupinc.applytojob.com/apply/vMYHU0VqAg/Internship-Artificial-Intelligence-Software-Modernization": {
+    "status": "active",
+    "reason": ""
+  },
+  "https://career-schwab.icims.com/jobs/126227/job?mobile=true&needsRedirect=false": {
+    "status": "active",
+    "reason": ""
+  }
+}
