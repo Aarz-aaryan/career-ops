@@ -4,10 +4,21 @@
 // Backward-compatible: with no config and no named files, resolves the base
 // templates/cv-template.html (name "standard"), identical to prior behavior.
 
-import { readdirSync, readFileSync, existsSync } from 'fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
+// js-yaml v4+ uses named exports only (no default export).
+// Earlier round-9 code used `import yaml from 'js-yaml'` which fails under
+// newer Node + js-yaml versions, breaking cv-templates.mjs and forcing
+// build-cv-html.mjs to fall back to cv-template.html (losing all round-13-23
+// template tweaks — PDFs come out 62KB instead of 280KB).
+import * as yaml from 'js-yaml';
+const _yamlLoad = yaml.load || yaml.default?.load;
+function yamlLoad(text) {
+  if (_yamlLoad) return _yamlLoad(text);
+  // Last-resort fallback: try .default again at runtime.
+  return yaml.default?.load ? yaml.default.load(text) : yaml.load(text);
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_TEMPLATES_DIR = resolve(__dirname, 'templates');
@@ -114,7 +125,7 @@ export function loadProfileDefault(kind, { profilePath = DEFAULT_PROFILE_PATH } 
   if (!existsSync(profilePath)) return null;
   let doc;
   try {
-    doc = yaml.load(readFileSync(profilePath, 'utf-8')) || {};
+    doc = yamlLoad(readFileSync(profilePath, 'utf-8')) || {};
   } catch {
     return null;
   }
