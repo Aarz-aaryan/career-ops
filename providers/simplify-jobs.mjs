@@ -130,7 +130,7 @@ export default {
       if (visibleOnly && !l.is_visible) continue;
       if (activeOnly && !l.active) continue;
       if (allowedCats && !allowedCats.has(l.category)) continue;
-      if (allowedTerms && !Array.isArray(l.terms) || (allowedTerms && !(l.terms || []).some((t) => allowedTerms.has(t)))) continue;
+      if (allowedTerms && (!Array.isArray(l.terms) || !(l.terms || []).some((t) => allowedTerms.has(t)))) continue;
       if (usOnly) {
         const locs = Array.isArray(l.locations) ? l.locations : [];
         // Reject if ANY location is non-US (not just "some are US")
