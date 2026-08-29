@@ -1,0 +1,586 @@
+<!-- career-ops-template
+name: Harvard FAS Starter
+description: Starter template mirroring Harvard Mignone Center for Career Success bullet-point resume (US industry 1-2 pages, ATS-clean). Customize fonts, colors, spacing before shipping. See ../references/custom-template-authoring-2026-07-23.md for the full recipe.
+-->
+<!DOCTYPE html>
+<!-- IMPORTANT: keep descriptive comments above <html> minimal — build-cv-html.mjs
+     does NOT strip HTML comments, and verbose ones leak into the rendered PDF. -->
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{NAME}} — Resume</title>
+<style><head>
+  <meta charset="utf-8">
+  <title>Muhammad Aaryan Tahir</title>
+  <style>
+  @font-face {
+    font-family: 'EB Garamond';
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+    src: format('truetype') url('./fonts/EBGaramond-Regular.ttf');
+  }
+  @font-face {
+    font-family: 'EB Garamond';
+    font-style: italic;
+    font-weight: 400;
+    font-display: block;
+    src: format('truetype') url('./fonts/EBGaramond-Italic.ttf');
+  }
+  @font-face {
+    font-family: 'EB Garamond';
+    font-style: normal;
+    font-weight: 700;
+    font-display: block;
+    src: format('truetype') url('./fonts/EBGaramond-Bold.ttf');
+  }
+
+  @page {
+    size: letter;
+    margin: 0.3in 0.4in 0.3in 0.4in;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: 'EB Garamond', 'Garamond', 'Cormorant Garamond', 'Liberation Serif', 'Times New Roman', serif;
+    font-size: 9.25pt;
+    line-height: 1.18;
+    color: #111;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Identity block ---------- */
+  .identity-block {
+    text-align: center;
+    margin-bottom: 0.06in;
+  }
+
+  .name {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 22pt;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    color: #000;
+    line-height: 1.0;
+    margin-bottom: 0.025in;
+  }
+
+  /* The .contact-row block in the body is replaced wholesale by
+     build-cv-html.mjs at render time (searches for the literal
+     &lt;div class="contact-row"&gt;...&lt;/div&gt; pattern via buildContactRow). */
+  .contact-row {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    color: #222;
+    line-height: 1.4;
+  }
+
+  .contact-row a {
+    color: #1a73e8;
+    text-decoration: underline;
+  }
+
+  .contact-row .separator {
+    color: #777;
+    margin: 0 0.06in;
+  }
+
+  /* Professional Summary */
+  .summary-section {
+    margin-top: 0.05in;
+  }
+  .summary-text {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    line-height: 1.32;
+    text-align: justify;
+    margin-top: 0.02in;
+    color: #1a1a1a;
+  }
+
+  /* Core Competencies — keyword tags inline */
+  .competencies-section {
+    margin-top: 0.04in;
+  }
+  .competencies-list {
+    margin-top: 0.02in;
+    line-height: 1.45;
+  }
+  .competencies-list .competency-tag {
+    display: inline;
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.25pt;
+    color: #1a1a1a;
+  }
+  .competencies-list .competency-tag + .competency-tag::before {
+    content: ' • ';
+    color: #777;
+    margin: 0 0.05in;
+  }
+
+  /* ---------- Sections ---------- */
+  .section {
+    margin-top: 0.04in;
+  }
+
+  .section-title {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #000;
+    border-bottom: 0.4pt solid #000;
+    padding-bottom: 0.005in;
+    margin-bottom: 0.025in;
+    page-break-after: avoid;
+  }
+
+  /* ---------- Education ---------- */
+  .edu-item {
+    margin-bottom: 0.03in;
+    page-break-inside: avoid;
+  }
+
+  .edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.2in;
+  }
+
+  .edu-title {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    font-weight: 700;
+  }
+
+  .edu-org {
+    font-style: normal;
+    margin-left: 0.05in;
+  }
+
+  .edu-year {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    font-style: italic;
+    text-align: right;
+    flex-shrink: 0;
+    white-space: nowrap;
+    color: #333;
+  }
+
+  .edu-desc {
+    font-size: 9.25pt;
+    line-height: 1.28;
+    margin-top: 0.005in;
+  }
+
+  .edu-location {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9pt;
+    font-style: italic;
+    color: #555;
+    margin-top: 0.005in;
+  }
+
+  /* ---------- Work experience ---------- */
+  .job {
+    margin-bottom: 0.06in;
+    page-break-inside: avoid;
+  }
+
+  .job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.2in;
+  }
+
+  .job-company {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .job-period {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    font-style: italic;
+    color: #333;
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .job-role {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.25pt;
+    font-style: italic;
+    color: #222;
+    margin-top: 0.012in;
+    margin-bottom: 0.04in;
+  }
+
+  .job-location {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9pt;
+    color: #555;
+  }
+
+  .job ul {
+    list-style: none;
+    padding-left: 0.15in;
+    margin-top: 0.02in;
+  }
+
+  .job ul li {
+    /* Aaryan preference (2026-07-31 round-13): bullets must be ONE LINE each
+       and fill the line width naturally. No wrap. Rewrite bullets to ~125-130
+       chars at 9.25pt EB Garamond so they fit on 1 line at 530pt width.
+       Removed 2-line wrap assumption from round-9 (line-break was visible).
+       No justify tricks. No nowrap (creates overflow). Just content-fitting. */
+    position: relative;
+    padding-left: 0.16in;
+    margin-bottom: 0.04in;
+    line-height: 1.24;
+    font-size: 9.25pt;
+    text-align: left;
+    hyphens: auto;
+  }
+
+  .job ul li:last-child {
+    margin-bottom: 0;
+  }
+
+  .job ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: 0;
+    top: -0.02in;
+    color: #000;
+    font-size: 10pt;
+  }
+
+  /* ---------- Projects ---------- */
+  .project {
+    margin-bottom: 0.05in;
+    page-break-inside: avoid;
+  }
+
+  /* Aaryan preference (2026-07-25): badge ("Full Stack Developer") goes on the
+     FAR RIGHT of the project header, same way job-period does for experience.
+     Use flexbox to push the title to the left and the badge to the right. */
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+  }
+
+  .project-title {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.5pt;
+    font-weight: 700;
+  }
+
+  .project-badge {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 9.25pt;
+    color: #333;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Right-aligned badge (e.g. "Full Stack Developer" appears far right). */
+  .project-badge-right {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 9.25pt;
+    color: #333;
+    text-align: right;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .project-desc {
+    font-size: 9.25pt;
+    line-height: 1.24;
+    margin-top: 0.012in;
+    text-align: left;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  /* Aaryan preference (2026-08-01 round-15c): bullet vertical-alignment.
+     Experience section has .job ul { padding-left: 0.15in } which adds 10.8pt
+     indent before bullets. PROJECTS + LEADERSHIP need the SAME indent so all
+     section bullets share one left-alignment column.
+
+     Measurement: experience bullets xMin=39.3, project/leadership bullets
+     xMin=28.5 (11pt offset). Fix: add padding-left:0.15in to .project ul
+     and .leadership-list to push them to the same xMin=39.3. */
+  .project ul {
+    list-style: none;
+    padding-left: 0.15in;
+    margin: 0;
+  }
+  .project ul li {
+    position: relative;
+    padding-left: 0.16in;
+    margin-bottom: 0.04in;
+    line-height: 1.24;
+    font-size: 9.25pt;
+    text-align: left;
+    hyphens: auto;
+  }
+  .project ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: 0;
+    top: -0.02in;
+    color: #000;
+    font-size: 10pt;
+  }
+
+  .project-tech {
+    font-style: italic;
+    font-size: 8.75pt;
+    color: #444;
+    margin-top: 0.005in;
+  }
+
+  /* ---------- Leadership (formatted like Experience: title + role + bullets) ---------- */
+  .leadership-entry {
+    margin-bottom: 0.07in;
+  }
+  .leadership-entry:last-child {
+    margin-bottom: 0;
+  }
+  .leadership-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+  }
+  .leadership-title {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.75pt;
+    font-weight: 700;
+  }
+  .leadership-title-wrap {
+    flex: 1;
+  }
+  .leadership-org {
+    font-style: italic;
+    font-size: 9.25pt;
+    color: #222;
+    /* Org sits on the far right of the header (matches work-experience
+       company/period layout). The title-wrap flexes; org stays right-aligned. */
+    margin-left: auto;
+    text-align: right;
+  }
+  .leadership-period {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.25pt;
+    font-style: italic;
+    color: #222;
+    white-space: nowrap;
+    margin-left: 0.1in;
+  }
+  .leadership-role {
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9.25pt;
+    font-style: italic;
+    color: #222;
+    margin-top: 0.012in;
+    margin-bottom: 0.04in;
+  }
+  .leadership-org {
+    font-style: italic;
+  }
+  .leadership-list {
+    list-style: none;
+    padding-left: 0.15in;
+    margin: 0;
+  }
+  .leadership-list li {
+    position: relative;
+    padding-left: 0.16in;
+    margin-bottom: 0.04in;
+    line-height: 1.24;
+    font-size: 9.25pt;
+    text-align: left;
+  }
+  .leadership-list li::before {
+    content: "\2022";
+    position: absolute;
+    left: 0;
+    top: -0.02in;
+    color: #000;
+    font-size: 10pt;
+  }
+
+  /* ---------- Skills (bulleted category list) ---------- */
+  .skills-list {
+    list-style: none;
+    padding-left: 0.15in;
+    margin: 0;
+  }
+  .skills-list li {
+    position: relative;
+    padding-left: 0.16in;
+    margin-bottom: 0.011in;
+    line-height: 1.24;
+    font-size: 9.25pt;
+  }
+  .skills-list li::before {
+    content: "\2022";
+    position: absolute;
+    left: 0;
+    top: -0.02in;
+    color: #000;
+    font-size: 10pt;
+    line-height: 1.3;
+  }
+  /* ---------- Skills (compact 3-column layout) ----------
+     Aaryan preference (2026-07-25): pack same content into fewer lines.
+     Layout: 3-column CSS multi-column. Short categories (Languages, Cloud,
+     CAD & Modeling, Design) share rows. Long categories (Tools & Frameworks,
+     GenAI/LLMOps) take ~1-3 lines within a single column due to break-inside.
+
+     Why columns (not flex-wrap): flex-wrap w/ min-width forces single-row
+     when content is wide; columns gives true newspaper-style flow with no
+     overlap, balanced across columns, and avoids awkward break points.
+     Why 3 columns: with 6 categories × ~50 chars avg, 3 columns gives 3
+     rows total instead of 6. Line-height 1.18 keeps each row tight.
+     Page width = 8.5in - 0.4in L - 0.4in R = 7.7in usable.
+     3 columns @ 0.15in column-gap = each column ≈ 2.467in wide.
+  */
+  .skills-grid {
+    column-count: 3;
+    column-gap: 0.15in;
+    column-fill: balance;
+    margin: 0;
+    padding: 0;
+  }
+  /* Round-23 (2026-08-01): REMOVED break-inside: avoid. Round-23b discovered
+     this breaks the v9 layout — v9 has Projects flowing naturally across
+     pages 1-2 (CCI-Bot+Drexel Bench on page 1, Aarz on page 2). Forcing
+     Skills to start fresh on page 2 caused all 3 projects to compress onto
+     page 1, making page 2 sparse. Letting Projects flow naturally matches
+     v9 layout and keeps Aarz on page 2. */
+  .skill-item {
+    display: block;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin: 0 0 0.025in 0;
+    font-family: 'EB Garamond', 'Garamond', serif;
+    font-size: 9pt;
+    line-height: 1.2;
+  }
+  .skill-category {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  
+/* === ROUND-13 to ROUND-23 canonical fixes (Aaryan resume tweaks) === */
+/* Round-15 F16: leadership org on far right (margin-left:auto on .leadership-org with .leadership-title-wrap as flex sibling — never nested) */
+.leadership-entry { display: flex; flex-direction: column; margin-bottom: 0.08in; page-break-inside: avoid; }
+.leadership-header { display: flex; justify-content: space-between; align-items: baseline; }
+.leadership-title-wrap { display: flex; flex: 1; align-items: baseline; }
+.leadership-org { margin-left: auto; font-style: italic; }
+
+/* Round-15: project ul MUST have list-style:none — browsers render double bullets otherwise */
+.project ul { list-style: none; padding-left: 0.15in; }
+.project ul li { padding-left: 0.16in; }
+.project ul li::before { content: "•"; margin-right: 0.08in; color: #555; }
+
+/* Round-15: experience bullets — 1-line, 120-130 char target */
+.job ul { list-style: none; padding-left: 0.16in; }
+.job ul li { padding-left: 0.05in; }
+.job ul li::before { content: "•"; margin-right: 0.08in; color: #555; }
+
+/* Round-22: conservative normalizer (125-140 char bullets, no CSS stretching) */
+/* Bullets come pre-normalized from build-cv-html.mjs — CSS doesn't stretch */
+
+/* Round-13: section header ALL-CAPS underline */
+.section-title {
+  font-family: 'EB Garamond', 'Garamond', 'Liberation Serif', serif;
+  font-size: 11pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 0.5pt solid #000;
+  padding-bottom: 0.02in;
+  margin-top: 0.10in;
+  margin-bottom: 0.05in;
+}
+
+/* Page geometry: 0.3in T/B, 0.4in L/R (round-1 narrow margins) */
+@page { size: letter; margin: 0.3in 0.4in 0.3in 0.4in; }
+
+</style>
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="identity-block">
+    <div class="name">{{NAME}}</div>
+  </div>
+  <!-- CONTACT ROW — anchor for build-cv-html.mjs CONTACT_ROW_RE regex -->
+  <div class="contact-row"></div>
+
+  <!-- PROFESSIONAL SUMMARY -->
+  <div class="section">
+    <div class="section-title">{{SECTION_SUMMARY}}</div>
+    <div class="summary-text">{{SUMMARY_TEXT}}</div>
+  </div>
+
+  <!-- CORE COMPETENCIES -->
+  <div class="section">
+    <div class="section-title">{{SECTION_COMPETENCIES}}</div>
+    <div class="competencies-grid">{{COMPETENCIES}}</div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section">
+    <div class="section-title">{{SECTION_EDUCATION}}</div>
+    {{EDUCATION}}
+  </div>
+
+  <!-- WORK EXPERIENCE -->
+  <div class="section">
+    <div class="section-title">{{SECTION_EXPERIENCE}}</div>
+    {{EXPERIENCE}}
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="section">
+    <div class="section-title">{{SECTION_PROJECTS}}</div>
+    {{PROJECTS}}
+  </div>
+
+  <!-- CERTIFICATIONS -->
+  <div class="section">
+    <div class="section-title">{{SECTION_CERTIFICATIONS}}</div>
+    <div class="cert-table">{{CERTIFICATIONS}}</div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <div class="section-title">{{SECTION_SKILLS}}</div>
+    {{SKILLS}}
+  </div>
+</div>
+</body>
+</html>
