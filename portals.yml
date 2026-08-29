@@ -1,0 +1,740 @@
+scan_history:
+  recheck_after_days: 14
+location_filter:
+  always_allow:
+  - United States
+  - USA
+  - Remote
+  allow:
+  - Remote
+  - United States
+  - USA
+  - Cambridge
+  - Boston
+  - New York
+  - Mountain View
+  - Sunnyvale
+  - Cupertino
+  - San Francisco
+  - Seattle
+  - Redmond
+  - Bellevue
+  - Santa Clara
+  - Pittsburgh
+  - Austin
+  - Los Angeles
+  - San Diego
+  block: []
+salary_filter:
+  min: 40000
+  max: 0
+  currency: USD
+max_posting_age_days: 90
+title_filter:
+  positive:
+  # Core intern/co-op/new-grad signals — must be present in job title
+  - Intern
+  - Internship
+  - Co-op
+  - Coop
+  - Summer 2028
+  - Class of 2028
+  - ML Intern
+  - AI Intern
+  - SWE Intern
+  - Engineering Intern
+  # ROUND-48: Modern AI-startup entry tracks added. OpenAI/Mistral/LangChain post
+  # "New Grad", "Early Career", "University Grad" as intern-track equivalents for
+  # Summer 2028 grads. Without these, the scanner was killing all entries from
+  # those companies' Ashby boards.
+  - New Grad
+  - New Graduate
+  - University Grad
+  - University Graduate
+  - Graduating
+  - Class of 2027
+  - Early Career
+  - Entry Level
+  - Entry-Level
+  # ROUND-51: Broader entry-level catch — many AI startups title roles as
+  # "Software Engineer I/II/III" without "Intern" in the title. Also catches
+  # "University Hire", "Student Engineer", "University Program".
+  - Software Engineer
+  - University
+  - Student
+  - 2027
+  - 2028
+  negative:
+  - Senior
+  - Staff
+  - Principal
+  - Director
+  - Manager
+  - Lead
+  - Head of
+  - VP
+  - Junior
+  # "New Grad" moved to positive (round-48) — see comment above
+  - PhD
+  - PhD Intern
+  - Research Intern
+  # "Graduate" kept negative — blocks "Graduate Engineer" generic roles but
+  # "New Grad" / "University Grad" (positive) covers the entry-level intent.
+  - MBA
+  - Postdoc
+  - Postdoctoral
+  - Doctoral
+  - Master
+  - Master's
+  - MS Intern
+  - MS Research
+  - MS Program
+  - PhD Student
+  - Grad Student
+  - Master Student
+  - Graduate Degree
+  - Graduate Program
+  - Graduate Hiring
+  - PhD Required
+  - PhD Candidate
+  - Advanced Degree
+  - Returning Professional
+  - Experienced Hire
+  - .NET
+  - PHP
+  - Ruby
+  - iOS
+  - Android
+  - Embedded
+  - Firmware
+  - FPGA
+  - ASIC
+  - Blockchain
+  - Web3
+  - Crypto
+  - Salesforce
+  - SAP
+  - Oracle EBS
+  - Prop Trader
+  - Quantitative Researcher
+  - Quant Researcher
+  - Weapons
+  - Defense Contractor
+  - Aerospace Defense
+visa_filter:
+  enabled: false
+trust_filter:
+  enabled: true
+content_filter:
+  positive:
+  - Intern
+  - Internship
+  - Co-op
+  - Coop
+  - Summer 2028
+  - Class of 2028
+  negative: []
+tracked_companies:
+- name: NVIDIA
+  careers_url: https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite
+  scan_method: workday
+  notes: Workday CXS endpoint. WD tenant=NVIDIAExternalCareerSite, wd_server=wd5
+  max_pages: 50
+  enabled: true
+  
+- name: Google
+  careers_url: https://www.google.com/about/careers/applications/jobs/results
+  scan_method: websearch
+  scan_query: site:google.com/about/careers "intern" "AI" OR "Machine Learning" OR
+    "Software"
+  notes: "No public ATS API. Branded careers page only \u2014 websearch required.\
+    \ NVIDIA-class salary."
+  enabled: true
+- name: Microsoft
+  careers_url: https://jobs.careers.microsoft.com/global/en/search
+  scan_method: websearch
+  scan_query: site:jobs.careers.microsoft.com "intern" "AI" OR "Machine Learning"
+    OR "Software Engineer"
+  notes: "No public ATS API. Branded careers page only \u2014 websearch required."
+  enabled: true
+- name: Amazon
+  careers_url: https://www.amazon.jobs
+  scan_method: websearch
+  scan_query: site:amazon.jobs "intern" "AI" OR "Machine Learning" OR "Software Development
+    Engineer"
+  notes: Amazon Jobs portal. SDE Intern I, II roles common. ~$53/hr Summer 2028.
+  enabled: true
+  api: https://www.amazon.jobs
+  amazon:
+    base_query: intern
+    loc_query: United States
+    result_limit: 100
+- name: OpenAI
+  careers_url: https://jobs.ashbyhq.com/openai
+  api: https://api.ashbyhq.com/posting-api/job-board/openai?includeCompensation=true
+  notes: "OpenAI careers (Ashby board). ROUND-48: scan_method websearch removed — Ashby API direct, 746 jobs, no word-boundary intern hits (Cooperative AI is OpenAI's intern-track name; tracked as 'new grad' / 'engineer' jobs in board). Auto-detects via Ashby provider."
+  enabled: true
+- name: Cohere
+  careers_url: https://jobs.ashbyhq.com/cohere
+  api: https://api.ashbyhq.com/posting-api/job-board/cohere?includeCompensation=true
+  notes: "Cohere (Ashby). ROUND-48: scan_method websearch removed — Ashby API direct, 144 jobs, 3 legit intern roles historically. Canada-based. Auto-detects via Ashby provider."
+  enabled: true
+- name: LangChain
+  careers_url: https://jobs.ashbyhq.com/langchain
+  api: https://api.ashbyhq.com/posting-api/job-board/langchain?includeCompensation=true
+  notes: 'LangChain (Ashby). ROUND-48: scan_method websearch removed — Ashby API direct, 107 jobs, 0 word-boundary intern hits. Worth re-checking Sep-Nov 2026 when 2028 cycle opens. Auto-detects via Ashby provider.'
+  enabled: true
+- name: Mistral
+  careers_url: https://jobs.ashbyhq.com/mistral.ai
+  api: https://api.ashbyhq.com/posting-api/job-board/mistral.ai?includeCompensation=true
+  notes: "Mistral (Ashby, slug=with-dot). ROUND-48: scan_method websearch removed — Ashby API direct, 164 jobs, 1 word-boundary intern hit historically (AI Data Solutions Intern). Auto-detects via Ashby provider."
+  enabled: true
+- name: Pinecone
+  careers_url: https://jobs.ashbyhq.com/pinecone
+  api: https://api.ashbyhq.com/posting-api/job-board/pinecone?includeCompensation=true
+  notes: "Pinecone (Ashby). ROUND-48: scan_method websearch removed — Ashby API direct, 8 jobs, 0 word-boundary intern hits. Small org — re-check Sep-Nov. Auto-detects via Ashby provider."
+  enabled: true
+- name: Together
+  careers_url: https://www.together.ai/careers
+  api: https://boards-api.greenhouse.io/v1/boards/togetherai/jobs
+  scan_method: greenhouse
+  notes: "Together AI (Greenhouse, slug=togetherai \u2014 not together-ai). ROUND-34:\
+    \ 59 jobs, 2 legit intern roles \u2014 Frontier Agents Intern (Fall 2026), Systems\
+    \ Research Engineer Intern - GPU Programming (Fall 2026). Both San Francisco.\
+    \ Was disabled; re-enabled."
+  enabled: true
+- name: Meta
+  careers_url: https://www.metacareers.com
+  scan_method: websearch
+  scan_query: site:metacareers.com "intern" "AI" OR "Machine Learning" OR "Software
+    Engineer" "Summer 2028"
+  notes: Meta Careers. ~$50/hr Summer 2028. No public ATS API.
+  enabled: true
+- name: Apple
+  careers_url: https://jobs.apple.com
+  scan_method: websearch
+  scan_query: site:jobs.apple.com "intern" "AI" OR "Machine Learning" OR "Software
+    Engineer"
+  notes: "No public ATS API. Branded careers page only \u2014 websearch required."
+  enabled: true
+- name: Netflix
+  careers_url: https://jobs.netflix.com
+  scan_method: websearch
+  scan_query: site:jobs.netflix.com "intern" "AI" OR "Machine Learning" OR "Software"
+  notes: No public ATS API.
+  enabled: true
+- name: Tesla
+  careers_url: https://www.tesla.com/careers
+  scan_method: websearch
+  scan_query: site:tesla.com/careers "intern" "AI" OR "Autopilot" OR "Machine Learning"
+  notes: Autopilot / Dojo internship tracks.
+  enabled: true
+- name: Anthropic
+  careers_url: https://job-boards.greenhouse.io/anthropic
+  api: https://boards-api.greenhouse.io/v1/boards/anthropic/jobs
+  notes: Greenhouse public API. AI safety lab.
+  enabled: true
+- name: OpenAI
+  careers_url: https://openai.com/careers
+  scan_method: websearch
+  scan_query: site:openai.com/careers "intern" OR "University Grad"
+  notes: Ashby board (verified 2026-07-21), no public Greenhouse. Use branded careers.
+  enabled: false  # ROUND-48: disabled — duplicate of OpenAI Ashby entry (line 148). Branded careers websearch never produces parseable URLs.
+- name: Mistral
+  careers_url: https://mistral.ai/careers
+  scan_method: websearch
+  scan_query: site:mistral.ai/careers OR site:jobs.lever.co/mistral OR site:jobs.ashbyhq.com/mistral
+    "intern" OR "AI Engineer"
+  enabled: false  # ROUND-48: disabled — duplicate of Mistral Ashby entry (line 174).
+  notes: Lever + Ashby (private APIs); browser-only
+- name: Cohere
+  careers_url: https://cohere.com/careers
+  scan_method: websearch
+  scan_query: site:cohere.com/careers "intern" OR "AI Engineer" OR "ML Engineer"
+  enabled: false  # ROUND-48: disabled — duplicate of Cohere Ashby entry (line 157).
+  notes: Browser-only ATS
+- name: HuggingFace
+  careers_url: https://huggingface.co/jobs
+  scan_method: websearch
+  scan_query: site:apply.workable.com/huggingface OR site:huggingface.co/jobs "intern"
+    OR "ML Engineer"
+  enabled: true  # ROUND-48: kept enabled — Workable slug for HF unknown, websearch is fallback. Investigate https://apply.workable.com/<slug> if found.
+  notes: Workable + custom careers
+- name: LangChain
+  careers_url: https://www.langchain.com/careers
+  scan_method: websearch
+  scan_query: site:langchain.com/careers OR site:boards.greenhouse.io/langchain "intern"
+    OR "AI Engineer"
+  enabled: false  # ROUND-48: disabled — duplicate of LangChain Ashby entry (line 166).
+  notes: Custom careers + Greenhouse
+- name: Pinecone
+  careers_url: https://www.pinecone.io/careers
+  scan_method: websearch
+  scan_query: site:pinecone.io/careers OR "pinecone" "engineer" site:jobs.lever.co
+    OR site:boards.greenhouse.io
+  enabled: false  # ROUND-48: disabled — duplicate of Pinecone Ashby entry (line 183).
+  notes: Custom careers page
+- name: ElevenLabs
+  careers_url: https://jobs.ashbyhq.com/elevenlabs
+  notes: "ElevenLabs (Ashby). ROUND-48: scan_method websearch removed — auto-detects via careers_url pattern, Ashby API direct, 242 jobs. Audio AI voice startup, no intern roles historically but worth scanning."
+  enabled: true
+- name: Databricks
+  careers_url: https://job-boards.greenhouse.io/databricks
+  api: https://boards-api.greenhouse.io/v1/boards/databricks/jobs
+  enabled: true
+- name: Stripe
+  careers_url: https://job-boards.greenhouse.io/stripe
+  api: https://boards-api.greenhouse.io/v1/boards/stripe/jobs
+  enabled: true
+- name: Cursor
+  careers_url: https://jobs.ashbyhq.com/cursor
+  api: https://api.ashbyhq.com/posting-api/job-board/cursor
+  notes: Ashby public API. AI-native code editor.
+  enabled: true
+- name: Replit
+  careers_url: https://jobs.ashbyhq.com/replit
+  api: https://api.ashbyhq.com/posting-api/job-board/replit
+  notes: Ashby public API. AI dev tools.
+  enabled: true
+- name: Harvey
+  careers_url: https://jobs.ashbyhq.com/harvey
+  api: https://api.ashbyhq.com/posting-api/job-board/harvey
+  notes: 'Ashby public API. Legal AI platform. (ROUND-32: was harvey-ai, wrong)'
+  enabled: true
+- name: Glean
+  careers_url: https://job-boards.greenhouse.io/gleanwork
+  api: https://boards-api.greenhouse.io/v1/boards/gleanwork/jobs
+  notes: 'Greenhouse public API (gleanwork). Enterprise search AI. (ROUND-32: was
+    Ashby glean, wrong)'
+  enabled: true
+- name: Perplexity
+  careers_url: https://jobs.ashbyhq.com/perplexity
+  api: https://api.ashbyhq.com/posting-api/job-board/perplexity
+  notes: Ashby public API. AI search.
+  enabled: true
+- name: xAI
+  careers_url: https://job-boards.greenhouse.io/xai
+  api: https://boards-api.greenhouse.io/v1/boards/xai/jobs
+  notes: 'Greenhouse public API (xai). AI lab. (ROUND-32: was Ashby, wrong)'
+  enabled: true
+- name: Scale
+  careers_url: https://job-boards.greenhouse.io/scaleai
+  api: https://boards-api.greenhouse.io/v1/boards/scaleai/jobs
+  notes: 'Greenhouse public API (scaleai). AI data platform. (ROUND-32: was Ashby
+    scale, wrong)'
+  enabled: true
+- name: Together
+  careers_url: https://www.together.ai/careers
+  scan_method: websearch
+  scan_query: site:together.ai/careers "intern" OR "engineer"
+  notes: 'ROUND-32: no public Greenhouse/Ashby. Websearch fallback only.'
+  enabled: false
+- name: Cloudflare
+  careers_url: https://job-boards.greenhouse.io/cloudflare
+  api: https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs
+  notes: Greenhouse public API. Network/edge AI.
+  enabled: true
+- name: Roblox
+  careers_url: https://job-boards.greenhouse.io/roblox
+  api: https://boards-api.greenhouse.io/v1/boards/roblox/jobs
+  notes: Greenhouse public API. Game/platform AI.
+  enabled: true
+- name: Datadog
+  careers_url: https://job-boards.greenhouse.io/datadog
+  api: https://boards-api.greenhouse.io/v1/boards/datadog/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: MongoDB
+  careers_url: https://job-boards.greenhouse.io/mongodb
+  api: https://boards-api.greenhouse.io/v1/boards/mongodb/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Okta
+  careers_url: https://job-boards.greenhouse.io/okta
+  api: https://boards-api.greenhouse.io/v1/boards/okta/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Brex
+  careers_url: https://job-boards.greenhouse.io/brex
+  api: https://boards-api.greenhouse.io/v1/boards/brex/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Samsara
+  careers_url: https://job-boards.greenhouse.io/samsara
+  api: https://boards-api.greenhouse.io/v1/boards/samsara/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Pinterest
+  careers_url: https://job-boards.greenhouse.io/pinterest
+  api: https://boards-api.greenhouse.io/v1/boards/pinterest/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Affirm
+  careers_url: https://job-boards.greenhouse.io/affirm
+  api: https://boards-api.greenhouse.io/v1/boards/affirm/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Airbnb
+  careers_url: https://job-boards.greenhouse.io/airbnb
+  api: https://boards-api.greenhouse.io/v1/boards/airbnb/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: GitLab
+  careers_url: https://job-boards.greenhouse.io/gitlab
+  api: https://boards-api.greenhouse.io/v1/boards/gitlab/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Coinbase
+  careers_url: https://job-boards.greenhouse.io/coinbase
+  api: https://boards-api.greenhouse.io/v1/boards/coinbase/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Twilio
+  careers_url: https://job-boards.greenhouse.io/twilio
+  api: https://boards-api.greenhouse.io/v1/boards/twilio/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Reddit
+  careers_url: https://job-boards.greenhouse.io/reddit
+  api: https://boards-api.greenhouse.io/v1/boards/reddit/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Figma
+  careers_url: https://job-boards.greenhouse.io/figma
+  api: https://boards-api.greenhouse.io/v1/boards/figma/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Riot Games
+  careers_url: https://job-boards.greenhouse.io/riotgames
+  api: https://boards-api.greenhouse.io/v1/boards/riotgames/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Epic Games
+  careers_url: https://job-boards.greenhouse.io/epicgames
+  api: https://boards-api.greenhouse.io/v1/boards/epicgames/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Asana
+  careers_url: https://job-boards.greenhouse.io/asana
+  api: https://boards-api.greenhouse.io/v1/boards/asana/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Robinhood
+  careers_url: https://job-boards.greenhouse.io/robinhood
+  api: https://boards-api.greenhouse.io/v1/boards/robinhood/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Duolingo
+  careers_url: https://job-boards.greenhouse.io/duolingo
+  api: https://boards-api.greenhouse.io/v1/boards/duolingo/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Together AI
+  careers_url: https://job-boards.greenhouse.io/togetherai
+  api: https://boards-api.greenhouse.io/v1/boards/togetherai/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Chime
+  careers_url: https://job-boards.greenhouse.io/chime
+  api: https://boards-api.greenhouse.io/v1/boards/chime/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Mercury
+  careers_url: https://job-boards.greenhouse.io/mercury
+  api: https://boards-api.greenhouse.io/v1/boards/mercury/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Fastly
+  careers_url: https://job-boards.greenhouse.io/fastly
+  api: https://boards-api.greenhouse.io/v1/boards/fastly/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Warby Parker
+  careers_url: https://job-boards.greenhouse.io/warbyparker
+  api: https://boards-api.greenhouse.io/v1/boards/warbyparker/jobs
+  scan_method: greenhouse
+  notes: Greenhouse public API. Round-34 expansion.
+  max_pages: 5
+  enabled: true
+- name: Notion
+  careers_url: https://jobs.ashbyhq.com/notion
+  api: https://api.ashbyhq.com/posting-api/job-board/notion
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Cerebras
+  careers_url: https://jobs.ashbyhq.com/cerebras
+  api: https://api.ashbyhq.com/posting-api/job-board/cerebras
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Ramp
+  careers_url: https://jobs.ashbyhq.com/ramp
+  api: https://api.ashbyhq.com/posting-api/job-board/ramp
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Plaid
+  careers_url: https://jobs.ashbyhq.com/plaid
+  api: https://api.ashbyhq.com/posting-api/job-board/plaid
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Cognition
+  careers_url: https://jobs.ashbyhq.com/cognition
+  api: https://api.ashbyhq.com/posting-api/job-board/cognition
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Mercor
+  careers_url: https://jobs.ashbyhq.com/mercor
+  api: https://api.ashbyhq.com/posting-api/job-board/mercor
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Suno
+  careers_url: https://jobs.ashbyhq.com/suno
+  api: https://api.ashbyhq.com/posting-api/job-board/suno
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Supabase
+  careers_url: https://jobs.ashbyhq.com/supabase
+  api: https://api.ashbyhq.com/posting-api/job-board/supabase
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: n8n
+  careers_url: https://jobs.ashbyhq.com/n8n
+  api: https://api.ashbyhq.com/posting-api/job-board/n8n
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Modal
+  careers_url: https://jobs.ashbyhq.com/modal
+  api: https://api.ashbyhq.com/posting-api/job-board/modal
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Linear
+  careers_url: https://jobs.ashbyhq.com/linear
+  api: https://api.ashbyhq.com/posting-api/job-board/linear
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Anyscale
+  careers_url: https://jobs.ashbyhq.com/anyscale
+  api: https://api.ashbyhq.com/posting-api/job-board/anyscale
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Character
+  careers_url: https://jobs.ashbyhq.com/character
+  api: https://api.ashbyhq.com/posting-api/job-board/character
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Runway
+  careers_url: https://jobs.ashbyhq.com/runway
+  api: https://api.ashbyhq.com/posting-api/job-board/runway
+  scan_method: ashby
+  notes: Ashby public API. Round-34 expansion.
+  enabled: true
+- name: Palantir
+  careers_url: https://jobs.lever.co/palantir
+  api: https://api.lever.co/v0/postings/palantir
+  scan_method: lever
+  notes: Lever public API. Round-34 expansion.
+  enabled: true
+- name: Mastercard
+  careers_url: https://mastercard.wd1.myworkdayjobs.com/CorporateCareers
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 50
+  enabled: true
+  
+- name: Capital One
+  careers_url: https://capitalone.wd12.myworkdayjobs.com/Capital_One
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 50
+  enabled: true
+  
+- name: Accenture
+  careers_url: https://accenture.wd103.myworkdayjobs.com/AccentureCareers
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 50
+  enabled: true
+  
+- name: Target
+  careers_url: https://target.wd5.myworkdayjobs.com/targetcareers
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 50
+  enabled: true
+  
+- name: Visa
+  careers_url: https://visa.wd5.myworkdayjobs.com/Visa
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 50
+  enabled: true
+  
+- name: Workday Inc
+  careers_url: https://workday.wd5.myworkdayjobs.com/Workday
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 50
+  enabled: true
+  
+- name: BlackRock
+  careers_url: https://blackrock.wd1.myworkdayjobs.com/BlackRock_Professional
+  scan_method: workday
+  notes: Workday CXS endpoint. Round-34 expansion.
+  max_pages: 20
+  enabled: true
+  
+
+# ─────────── ROUND-51 MISSING AI COMPANIES ───────────
+- name: Scale AI
+  careers_url: https://boards.greenhouse.io/scaleai
+  api: https://boards-api.greenhouse.io/v1/boards/scaleai/jobs
+  scan_method: greenhouse
+  notes: "Greenhouse public API. Round-51: added missing AI data platform."
+  enabled: true
+- name: Windsurf
+  careers_url: https://jobs.ashbyhq.com/windsurf
+  api: https://api.ashbyhq.com/posting-api/job-board/windsurf
+  scan_method: ashby
+  notes: "Ashby public API. Round-51: added missing AI code editor startup."
+  enabled: true
+- name: Sourcegraph
+  careers_url: https://boards.greenhouse.io/sourcegraph
+  api: https://boards-api.greenhouse.io/v1/boards/sourcegraph/jobs
+  scan_method: greenhouse
+  notes: "Greenhouse public API. Round-51: added missing code search platform."
+  enabled: true
+- name: Tabnine
+  careers_url: https://jobs.ashbyhq.com/tabnine
+  api: https://api.ashbyhq.com/posting-api/job-board/tabnine
+  scan_method: ashby
+  notes: "Ashby public API. Round-51: added missing AI code completion startup."
+  enabled: true
+- name: Weights & Biases
+  careers_url: https://boards.greenhouse.io/wandb
+  api: https://boards-api.greenhouse.io/v1/boards/wandb/jobs
+  scan_method: greenhouse
+  notes: "Greenhouse public API. Round-51: added missing MLOps platform."
+  enabled: true
+- name: UC Berkeley AIR
+  careers_url: https://boards.greenhouse.io/berkeleyair
+  api: https://boards-api.greenhouse.io/v1/boards/berkeleyair/jobs
+  scan_method: greenhouse
+  notes: "Greenhouse public API. Round-51: added missing AI research lab."
+  enabled: true
+- name: Vicarious
+  careers_url: https://jobs.ashbyhq.com/vicarious
+  api: https://api.ashbyhq.com/posting-api/job-board/vicarious
+  scan_method: ashby
+  notes: "Ashby public API. Round-51: added missing AI robotics company."
+  enabled: true
+
+# ─────────── ROUND-34 SIMPLIFYJOBS AGGREGATOR ───────────
+- name: SimplifyJobs 2027 (aggregator)
+  careers_url: https://raw.githubusercontent.com/SimplifyJobs/Summer2027-Internships/dev/.github/scripts/listings.json
+  provider: simplify-jobs
+  scan_method: simplify-jobs
+  filter_terms:
+    - Summer 2026
+    - Fall 2026
+    - Winter 2026
+    - Spring 2027
+    - Summer 2027
+    - Fall 2027
+    - Winter 2027
+    - Spring 2028
+    - Summer 2028
+  filter_categories:
+    - Software
+    - Data & ML/AI
+    - Hardware
+    - Cybersecurity
+    - Product
+  filter_us_only: true
+  filter_visible_only: true
+  skip_phd_only: true
+  notes: SimplifyJobs aggregator JSON (10.9MB, ~14.5k listings). Round-34 expansion to 500+ internships.
+  enabled: true
+
+# ─────────── JOB BOARDS — REMOTE + AGGREGATOR ───────────
+job_boards:
+- name: RemoteOK
+  provider: remoteok
+  scan_method: remoteok
+  notes: Public JSON API — remote tech jobs. 100 latest postings. Round-49 expansion.
+  enabled: true
+- name: Remotive
+  provider: remotive
+  scan_method: remotive
+  notes: Public JSON API — remote tech/PM/engineering jobs. Round-49 expansion.
+  enabled: true
+- name: We Work Remotely
+  provider: weworkremotely
+  scan_method: weworkremotely
+  notes: Public RSS feed — remote software/product jobs. Round-49 expansion.
+  enabled: true
+- name: WorkingNomads
+  provider: workingnomads
+  scan_method: workingnomads
+  notes: Remote work aggregator — tech/engineering. Round-49 expansion.
+  enabled: true
+- name: Jobicy
+  provider: jobicy
+  scan_method: jobicy
+  notes: Remote and hybrid tech jobs — US + international. Round-49 expansion.
+  enabled: true
