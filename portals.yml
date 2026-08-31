@@ -690,11 +690,23 @@ tracked_companies:
   scan_method: greenhouse
   notes: "Greenhouse public API. Round-51: added missing AI research lab."
   enabled: true
-- name: Vicarious
-  careers_url: https://jobs.ashbyhq.com/vicarious
-  api: https://api.ashbyhq.com/posting-api/job-board/vicarious
+- name: Zip
+  careers_url: https://jobs.ashbyhq.com/zip
+  api: https://api.ashbyhq.com/posting-api/job-board/zip?includeCompensation=true
   scan_method: ashby
-  notes: "Ashby public API. Round-51: added missing AI robotics company."
+  notes: "Ashby public API. AI platform for enterprise procurement ($56-60/hr Summer 2027 SWE Intern)."
+  enabled: true
+- name: Northwood Space
+  careers_url: https://jobs.ashbyhq.com/northwoodspace
+  api: https://api.ashbyhq.com/posting-api/job-board/northwoodspace?includeCompensation=true
+  scan_method: ashby
+  notes: "Ashby public API. Space communications infrastructure."
+  enabled: true
+- name: Ginkgo Bioworks
+  careers_url: https://job-boards.greenhouse.io/ginkgobioworks
+  api: https://boards-api.greenhouse.io/v1/boards/ginkgobioworks/jobs
+  scan_method: greenhouse
+  notes: "Greenhouse public API. Autonomous lab / AI scientist intern."
   enabled: true
 
 # ─────────── ROUND-34 SIMPLIFYJOBS AGGREGATOR ───────────
