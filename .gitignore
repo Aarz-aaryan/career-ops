@@ -7,6 +7,7 @@ data/salary-observations.tsv
 data/status-log.tsv
 data/assessments.tsv
 data/pipeline.md
+data/discard.log
 data/scan-history.tsv
 data/scan-runs.tsv
 data/portal-health.tsv
@@ -66,6 +67,7 @@ config/benchmarks.yml
 portals.yml
 modes/_profile.md
 modes/_custom.md
+modes/_brief.md
 .update-dismissed
 .update-lock
 .manifesto-noted
