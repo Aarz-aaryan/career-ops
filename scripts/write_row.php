@@ -92,15 +92,39 @@ if (empty($company) || empty($role)) {
 }
 
 try {
-    $db = new PDO("sqlite:$dbPath", null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $db = new PDO("sqlite:$dbPath", null, null, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        // ROOT-CAUSE FIX (2026-08-31 round-53): enable WAL mode so writes
+        // from this PHP CLI don't block on long-running Nextcloud web/UI
+        // transactions (Nextcloud serves HTTP via PHP-FPM, which takes
+        // exclusive SQLite locks during table operations — without WAL,
+        // a cron write could queue behind a UI read and time out, leaving
+        // the parent row created without its cells).
+        PDO::ATTR_TIMEOUT => 30,  // 30s busy-timeout instead of default 0
+    ]);
+    // Enable WAL — better concurrency, lets readers proceed during writes.
+    $db->exec("PRAGMA journal_mode = WAL");
+    $db->exec("PRAGMA busy_timeout = 30000");  // 30s busy_timeout at the SQLite layer
 } catch (Throwable $e) {
     fwrite(STDERR, "DB connect failed: " . $e->getMessage() . "\n");
     exit(1);
 }
 
-// --- Find-or-create parent row in oc_tables_rows ---
+// --- All-or-nothing transactional write (round-53 fix) ---
+// BUG PRIOR: the script created the parent row, then wrote each cell as a
+// separate auto-commit. If anything between (cell write, network drop, OOM,
+// PDO timeout) interrupted execution, the parent row remained in the DB
+// with 0 cells — visible as an "empty row" in the Nextcloud Tables UI and
+// API. Result: 64+ orphan rows from cron runs since 2026-08-24.
+//
+// FIX: open a transaction at the top, write everything inside it, then
+// commit at the bottom. On ANY exception, the transaction rolls back and
+// the parent row is rolled back too — no orphans possible.
 $rowId = null;
 try {
+    $db->beginTransaction();
+
+    // Find-or-create parent row
     $stmt = $db->prepare(
         "SELECT r.id FROM oc_tables_rows r
          JOIN oc_tables_row_cells_text t144 ON t144.row_id = r.id AND t144.column_id = 144
@@ -131,6 +155,7 @@ try {
         echo "Created parent row $rowId for $company / $role.\n";
     }
 } catch (Throwable $e) {
+    if ($db->inTransaction()) $db->rollBack();
     fwrite(STDERR, "Parent row upsert failed: " . $e->getMessage() . "\n");
     exit(1);
 }
@@ -183,40 +208,59 @@ function upsertSelection($db, $rowId, $colId, $optionId, $now, $uid) {
     }
 }
 
-// --- Write all cells ---
-upsertText($db, $rowId, 144, $company,          $now, $userId);
-upsertText($db, $rowId, 145, $role,             $now, $userId);
-upsertLink($db, $rowId, 146, $jobUrl,           $now, $userId);
-upsertLink($db, $rowId, 148, $pdfUrl,           $now, $userId);
-upsertSelection($db, $rowId, 149, 1,             $now, $userId);
-upsertSelection($db, $rowId, 150, 1,             $now, $userId);
-upsertSelection($db, $rowId, 151, (int)$tier,    $now, $userId);
-upsertSelection($db, $rowId, 152, 1,             $now, $userId);
-upsertSelection($db, $rowId, 153, 1,             $now, $userId);
-upsertSelection($db, $rowId, 154, (int)$source,  $now, $userId);
-upsertNumber($db, $rowId, 155, $fitScore,        $now, $userId);
-upsertText($db, $rowId, 158, $today,             $now, $userId);
-upsertText($db, $rowId, 160, $notes,             $now, $userId);
+// --- Write all cells (inside the open transaction) ---
+try {
+    upsertText($db, $rowId, 144, $company,          $now, $userId);
+    upsertText($db, $rowId, 145, $role,             $now, $userId);
+    upsertLink($db, $rowId, 146, $jobUrl,           $now, $userId);
+    upsertLink($db, $rowId, 148, $pdfUrl,           $now, $userId);
+    upsertSelection($db, $rowId, 149, 1,             $now, $userId);
+    upsertSelection($db, $rowId, 150, 1,             $now, $userId);
+    upsertSelection($db, $rowId, 151, (int)$tier,    $now, $userId);
+    upsertSelection($db, $rowId, 152, 1,             $now, $userId);
+    upsertSelection($db, $rowId, 153, 1,             $now, $userId);
+    upsertSelection($db, $rowId, 154, (int)$source,  $now, $userId);
+    upsertNumber($db, $rowId, 155, $fitScore,        $now, $userId);
+    upsertText($db, $rowId, 158, $today,             $now, $userId);
+    upsertText($db, $rowId, 160, $notes,             $now, $userId);
+} catch (Throwable $e) {
+    // Cell write failed → roll back the whole transaction so the parent
+    // row never exists without its cells.
+    if ($db->inTransaction()) $db->rollBack();
+    fwrite(STDERR, "Cell write failed for $company / $role (rolled back): " . $e->getMessage() . "\n");
+    exit(1);
+}
 
-// --- Hard-fail gate ---
+// --- Hard-fail gate (round-53: also checks company, role, score) ---
 $verify = $db->prepare(
-    "SELECT t146.value AS link, t148.value AS pdf
+    "SELECT t144.value AS company, t145.value AS role, t146.value AS link, t148.value AS pdf,
+            n155.value AS score
      FROM oc_tables_rows r
+     LEFT JOIN oc_tables_row_cells_text t144 ON t144.row_id = r.id AND t144.column_id = 144
+     LEFT JOIN oc_tables_row_cells_text t145 ON t145.row_id = r.id AND t145.column_id = 145
      LEFT JOIN oc_tables_row_cells_text t146 ON t146.row_id = r.id AND t146.column_id = 146
      LEFT JOIN oc_tables_row_cells_text t148 ON t148.row_id = r.id AND t148.column_id = 148
+     LEFT JOIN oc_tables_row_cells_number n155 ON n155.row_id = r.id AND n155.column_id = 155
      WHERE r.id = ?"
 );
 $verify->execute([$rowId]);
 $row = $verify->fetch(PDO::FETCH_ASSOC);
 
 $missing = [];
-if (empty($row['link'])) $missing[] = "col 146 (Job Link)";
+if (empty($row['company'])) $missing[] = "col 144 (Company)";
+if (empty($row['role']))    $missing[] = "col 145 (Role)";
+if (empty($row['link']))    $missing[] = "col 146 (Job Link)";
+if (empty($row['score']))   $missing[] = "col 155 (Fit Score)";
 if (empty($row['pdf']) && !empty($pdfUrl)) $missing[] = "col 148 (Resume Used)";
 
 if (!empty($missing)) {
-    fwrite(STDERR, "CRITICAL: " . implode(", ", $missing) . " empty for row $rowId — HARD FAIL\n");
+    // Verify failed → roll back the parent row + cells together.
+    if ($db->inTransaction()) $db->rollBack();
+    fwrite(STDERR, "CRITICAL: " . implode(", ", $missing) . " empty for row $rowId — HARD FAIL (rolled back)\n");
     exit(2);
 }
 
+// All checks passed → commit the transaction (persists row + sleeve + cells atomically).
+$db->commit();
 echo "Row $rowId verified: $company / $role OK\n";
 exit(0);
