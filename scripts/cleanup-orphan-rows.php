@@ -49,6 +49,8 @@ try {
 }
 
 // Find orphan rows: rows with NO cells in any cell table.
+// Also clean up cells/sleeves that are orphaned (their parent row was deleted
+// by an earlier round — without this, the Nextcloud Tables API shows ghost rows).
 $stmt = $db->prepare("
     SELECT r.id, r.created_at
     FROM oc_tables_rows r
@@ -61,12 +63,31 @@ $stmt = $db->prepare("
 $stmt->execute(['tid' => $tableId]);
 $orphans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (empty($orphans)) {
-    echo "Table $tableId: no orphan rows found. Clean.\n";
+// Also collect orphan sleeves/cells (parent row missing) for cleanup
+$orphanSleevesStmt = $db->prepare("
+    SELECT s.id FROM oc_tables_row_sleeves s
+    WHERE s.table_id = :tid
+      AND NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = s.id)
+");
+$orphanSleevesStmt->execute(['tid' => $tableId]);
+$orphanSleeves = $orphanSleevesStmt->fetchAll(PDO::FETCH_COLUMN);
+
+$orphanCellsText = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = t.row_id)")->fetchColumn();
+$orphanCellsNumber = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = n.row_id)")->fetchColumn();
+$orphanCellsSelection = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = s.row_id)")->fetchColumn();
+
+if (empty($orphans) && empty($orphanSleeves) && $orphanCellsText == 0 && $orphanCellsNumber == 0 && $orphanCellsSelection == 0) {
+    echo "Table $tableId: no orphan rows or cells found. Clean.\n";
     exit(2);
 }
 
-echo "Table $tableId: found " . count($orphans) . " orphan rows.\n";
+echo "Table $tableId: cleanup summary:\n";
+echo "  Orphan parent rows (no cells):     " . count($orphans) . "\n";
+echo "  Orphan sleeves (parent deleted):  " . count($orphanSleeves) . "\n";
+echo "  Orphan text cells:                $orphanCellsText\n";
+echo "  Orphan number cells:              $orphanCellsNumber\n";
+echo "  Orphan selection cells:           $orphanCellsSelection\n";
+
 if ($dryRun) {
     echo "(dry-run mode — not deleting)\n";
     foreach ($orphans as $r) {
@@ -77,21 +98,30 @@ if ($dryRun) {
 
 $db->beginTransaction();
 try {
-    $ids = array_column($orphans, 'id');
-    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    // 1. Delete orphan parent rows (rows with no cells)
+    if (!empty($orphans)) {
+        $ids = array_column($orphans, 'id');
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $rowStmt = $db->prepare("DELETE FROM oc_tables_rows WHERE id IN ($placeholders)");
+        $rowStmt->execute($ids);
+        $rowsDeleted = $rowStmt->rowCount();
+        $sleeveStmt = $db->prepare("DELETE FROM oc_tables_row_sleeves WHERE id IN ($placeholders)");
+        $sleeveStmt->execute($ids);
+        $sleevesDeleted = $sleeveStmt->rowCount();
+    } else {
+        $rowsDeleted = 0;
+        $sleevesDeleted = 0;
+    }
 
-    // Delete sleeves first (they reference row IDs)
-    $sleeveStmt = $db->prepare("DELETE FROM oc_tables_row_sleeves WHERE id IN ($placeholders)");
-    $sleeveStmt->execute($ids);
-    $sleevesDeleted = $sleeveStmt->rowCount();
-
-    // Delete parent rows
-    $rowStmt = $db->prepare("DELETE FROM oc_tables_rows WHERE id IN ($placeholders)");
-    $rowStmt->execute($ids);
-    $rowsDeleted = $rowStmt->rowCount();
+    // 2. Cascade-clean ALL orphan cells (where parent row was deleted by any prior cleanup)
+    $db->exec("DELETE FROM oc_tables_row_sleeves WHERE id NOT IN (SELECT id FROM oc_tables_rows)");
+    $db->exec("DELETE FROM oc_tables_row_cells_text      WHERE row_id NOT IN (SELECT id FROM oc_tables_rows)");
+    $db->exec("DELETE FROM oc_tables_row_cells_number    WHERE row_id NOT IN (SELECT id FROM oc_tables_rows)");
+    $db->exec("DELETE FROM oc_tables_row_cells_selection WHERE row_id NOT IN (SELECT id FROM oc_tables_rows)");
 
     $db->commit();
-    echo "Deleted $rowsDeleted orphan rows and $sleevesDeleted sleeves.\n";
+    echo "Deleted $rowsDeleted empty rows + their sleeves.\n";
+    echo "Cascade-cleaned all orphan cells/sleeves.\n";
     echo "Table $tableId is now clean.\n";
     exit(0);
 } catch (Throwable $e) {
