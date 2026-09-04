@@ -151,11 +151,21 @@ tracked_companies:
     \ NVIDIA-class salary."
   enabled: true
 - name: Microsoft
-  careers_url: https://jobs.careers.microsoft.com/global/en/search
-  scan_method: websearch
-  scan_query: site:jobs.careers.microsoft.com "intern" "AI" OR "Machine Learning"
-    OR "Software Engineer"
-  notes: "No public ATS API. Branded careers page only \u2014 websearch required."
+  careers_url: https://apply.careers.microsoft.com
+  provider: microsoft
+  scan_method: microsoft
+  query: intern
+  location: United States
+  max_pages: 30
+  notes: "Round-55 PCSX/Eightfold REST endpoint. /api/pcsx/search returns 10/page, no Akamai but soft-rate-limited (1.5s/page). Verified 2026-09-04."
+  enabled: true
+- name: Apple
+  careers_url: https://jobs.apple.com/en-us/search
+  provider: apple
+  scan_method: apple
+  query: software engineer intern
+  max_pages: 50
+  notes: "Round-55 jobs.apple.com /api/v1/search with CSRF flow. POST 20/page, no anti-bot. Verified 2026-09-04."
   enabled: true
 - name: Amazon
   careers_url: https://www.amazon.jobs
