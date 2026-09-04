@@ -220,13 +220,6 @@ tracked_companies:
     Engineer" "Summer 2028"
   notes: Meta Careers. ~$50/hr Summer 2028. No public ATS API.
   enabled: true
-- name: Apple
-  careers_url: https://jobs.apple.com
-  scan_method: websearch
-  scan_query: site:jobs.apple.com "intern" "AI" OR "Machine Learning" OR "Software
-    Engineer"
-  notes: "No public ATS API. Branded careers page only \u2014 websearch required."
-  enabled: true
 - name: Netflix
   careers_url: https://jobs.netflix.com
   scan_method: websearch
