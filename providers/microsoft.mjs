@@ -43,6 +43,13 @@ function parseRetryAfterMs(value) {
  * Live API shape (verified 2026-09-04):
  *   { id, displayJobId, name, locations: [string], standardizedLocations: [string],
  *     postedTs: <unix-seconds>, department, atsJobId, positionUrl: "/careers/job/<id>" }
+ *
+ * Location handling: Microsoft's API returns BOTH:
+ *   - `locations`: ["United States, Washington, Redmond"]  (country + state + city)
+ *   - `standardizedLocations`: ["Redmond, WA, US"]  (city + state + country code)
+ * We prefer `locations` because it contains the literal "United States" string,
+ * which matches downstream `portals.yml::location_filter.allow` patterns.
+ * For multi-location jobs we join all entries with " | " separator.
  */
 function toCanonicalJob(p, entry) {
   const title = String(p.name || '').trim();
@@ -50,10 +57,10 @@ function toCanonicalJob(p, entry) {
   const url = relativeUrl.startsWith('http')
     ? relativeUrl
     : `https://apply.careers.microsoft.com${relativeUrl.startsWith('/') ? '' : '/'}${relativeUrl}`;
-  // standardizedLocations is the cleaner format ("Redmond, WA, US"), fall back to locations.
+  // Prefer `locations` (has country name like "United States"), fall back to standardizedLocations.
+  const richLocs = Array.isArray(p.locations) ? p.locations.filter(Boolean) : [];
   const stdLocs = Array.isArray(p.standardizedLocations) ? p.standardizedLocations.filter(Boolean) : [];
-  const rawLocs = Array.isArray(p.locations) ? p.locations.filter(Boolean) : [];
-  const location = stdLocs.length > 0 ? stdLocs.join(' | ') : rawLocs.join(' | ');
+  const location = richLocs.length > 0 ? richLocs.join(' | ') : stdLocs.join(' | ');
   // postedTs is unix seconds; convert to ms.
   const postedAt = Number.isFinite(p.postedTs) ? p.postedTs * 1000 : undefined;
   return {
