@@ -20,6 +20,9 @@ data/parser-output/**/*.json
 !data/parser-output/.gitkeep
 !data/parser-output/**/.gitkeep
 data/cache/ats-companies/
+# Round-55 cleanup: stale websearch queue + ad-hoc scratch directory
+data/websearch-queue.json
+scratch/
 # Received offers/contracts, promise notes, prep reports (PII — never commit)
 data/offers/*
 !data/offers/.gitkeep
