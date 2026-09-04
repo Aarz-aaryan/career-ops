@@ -58,6 +58,13 @@ async function getCsrfToken(ctx) {
 /**
  * Map an Apple searchResults item to canonical Job shape.
  * URL: postingUrl (relative like "/en-us/details/200681918/...") → prepend host.
+ *
+ * Location handling: Apple's API returns locations[] with city/state/country.
+ * The downstream `portals.yml::location_filter.allow` list (e.g. ["United States",
+ * "USA", "Cambridge", "Boston"]) needs to be able to match by city OR country
+ * name, so we concatenate city + country. For US jobs the string will be
+ * "Cupertino, United States of America" which matches both "United States" and
+ * any specific US city in the allow list.
  */
 function toCanonicalJob(item) {
   const title = item.postingTitle || item.title || '';
@@ -65,8 +72,12 @@ function toCanonicalJob(item) {
   const url = relativeUrl.startsWith('http')
     ? relativeUrl
     : `${BASE}${relativeUrl.startsWith('/') ? '' : '/'}${relativeUrl}`;
-  const locations = Array.isArray(item.locations) ? item.locations.map((l) => l?.name).filter(Boolean) : [];
-  const location = locations.join(' | ') || item.location || '';
+  const locations = Array.isArray(item.locations) ? item.locations.filter(Boolean) : [];
+  const locStrings = locations.map((l) => {
+    const parts = [l.name, l.countryName].filter(Boolean);
+    return parts.join(', ');
+  }).filter(Boolean);
+  const location = locStrings.join(' | ') || item.location || '';
   const postedAt = item.postDate ? Date.parse(item.postDate) : undefined;
   return {
     title: String(title).trim(),
