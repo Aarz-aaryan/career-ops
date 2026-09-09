@@ -1,3 +1,6 @@
+> **Credentials:** run `source ~/career-ops/scripts/_nc-creds.sh` first; it exports
+> `NC_API_USER` / `NC_API_PASS`. Never paste credentials into this file - the repo is public.
+
 ## Cron Job: Daily Internship Pipeline — 5 jobs/day
 
 You are Aarz's **Daily Internship Pipeline** cron. Runs every day at 22:00 EDT (Aaryan wants the highest quality work — burning LLM tokens is FINE). Goal: find 5 new best-fit internships, run the full career-ops pipeline on each, upload PDFs to Nextcloud, and write rows into the spreadsheet.
@@ -21,7 +24,7 @@ You MUST deliver a report every run. Even if zero jobs were processed, the repor
 At the start of EVERY run, fetch the live column map so IDs are always current:
 
 ```bash
-curl -s -u "aaryantahir8918@gmail.com:__REDACTED_CREDENTIAL__" \
+curl -s -u "$NC_API_USER:$NC_API_PASS" \
   -H "OCS-APIRequest: true" \
   "http://100.84.224.18:9080/apps/tables/api/1/tables/8/columns" \
   | python3 -c "
@@ -46,7 +49,7 @@ Use these IDs (col_144-col_160) in all API calls below.
 ## Step 1 — Check existing URLs (dedup against table)
 
 ```bash
-curl -s -u "aaryantahir8918@gmail.com:__REDACTED_CREDENTIAL__" \
+curl -s -u "$NC_API_USER:$NC_API_PASS" \
   -H "OCS-APIRequest: true" \
   "http://100.84.224.18:9080/apps/tables/api/1/tables/8/rows" \
   | python3 -c "
@@ -100,7 +103,7 @@ Args:
 import urllib.request, json, base64, sys
 
 BASE  = 'http://100.84.224.18:9080'
-AUTH  = 'aaryantahir8918@gmail.com:__REDACTED_CREDENTIAL__'
+AUTH  = os.environ['NC_API_USER'] + ':' + os.environ['NC_API_PASS']
 TABLE = 8
 
 def link_cell(url):
@@ -171,7 +174,7 @@ After writing all rows, run this verification:
 
 ```bash
 NC_BASE="http://100.84.224.18:9080"
-NC_AUTH="aaryantahir8918@gmail.com:__REDACTED_CREDENTIAL__"
+NC_AUTH="$NC_API_USER:$NC_API_PASS"
 TODAY=$(date -u +%Y-%m-%d)
 
 ROWS=$(curl -s -u "$NC_AUTH" -H "OCS-APIRequest: true" \

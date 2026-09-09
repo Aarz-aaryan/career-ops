@@ -21,6 +21,9 @@
 
 set -euo pipefail
 
+source "$(dirname "${BASH_SOURCE[0]}")/_nc-creds.sh"
+: "${NC_API_USER:?NC_API_USER not set}" "${NC_API_PASS:?NC_API_PASS not set}"
+
 NC_HOST="${NC_HOST:-100.84.224.18}"
 NC_PORT="${NC_PORT:-22}"
 NC_USER="${NC_SSH_USER:-r-server}"
@@ -47,6 +50,7 @@ fi
 LOCAL_TMP=$(mktemp /tmp/tables-audit-XXXXXX.php)
 cat > "$LOCAL_TMP" << 'EOF'
 <?php
+define('NC_API_AUTH_PLACEHOLDER', '__NC_API_AUTH__');
 $dbPath = '/var/www/html/data/nextcloud.db';
 $tableId = (int)($argv[1] ?? 8);
 
@@ -77,7 +81,7 @@ $counts = [
 // Compare API row count to DB rows_with_cells (the ghost-row check)
 $apiUrl = "http://100.84.224.18:9080/apps/tables/api/1/tables/$tableId/rows";
 $apiRows = @file_get_contents($apiUrl, false, stream_context_create([
-    'http' => ['method' => 'GET', 'header' => "Authorization: Basic " . base64_encode('aaryantahir8918@gmail.com:__REDACTED_CREDENTIAL__')]
+    'http' => ['method' => 'GET', 'header' => "Authorization: Basic " . base64_encode(NC_API_AUTH_PLACEHOLDER)]
 ]));
 $apiCount = is_string($apiRows) ? count(json_decode($apiRows, true) ?? []) : -1;
 $counts['api_rows'] = $apiCount;
@@ -99,6 +103,8 @@ if ($dirty) {
 }
 exit(0);
 EOF
+
+sed -i "s|__NC_API_AUTH__|${NC_API_USER}:${NC_API_PASS}|" "$LOCAL_TMP"
 
 # SCP the PHP over
 "${SCP[@]}" "$LOCAL_TMP" "${NC_USER}@${NC_HOST}:/tmp/tables-audit.php" >/dev/null

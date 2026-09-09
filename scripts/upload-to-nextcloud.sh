@@ -4,7 +4,7 @@
 # Usage: upload-to-nextcloud.sh <path-to-pdf> [custom-remote-name]
 #
 # Reads NC_USER + NC_PASS from ~/.hermes/profiles/aarz/.env (matches NC_USER / NC_PASS
-# already exported by the Hermes shell). Falls back to aaryantahir8918@gmail.com / __REDACTED_CREDENTIAL__.
+# already exported by the Hermes shell). No credential fallback lives in this repo.
 #
 # Why this exists: round-12 was the first time Aaryan had to upload a fresh-build
 # PDF to Nextcloud. Prior rounds (1-11) uploaded PDFs manually via the Nextcloud web
@@ -17,6 +17,8 @@
 
 set -euo pipefail
 
+source "$(dirname "${BASH_SOURCE[0]}")/_nc-creds.sh"
+
 # Load creds from hermes env if present
 if [ -f "$HOME/.hermes/profiles/aarz/.env" ]; then
   set +e
@@ -24,8 +26,8 @@ if [ -f "$HOME/.hermes/profiles/aarz/.env" ]; then
   set -e
 fi
 
-NC_USER="${NC_USER:-aaryantahir8918@gmail.com}"
-NC_PASS="${NC_PASS:-__REDACTED_CREDENTIAL__}"
+NC_USER="${NC_USER:?NC_USER not set -- add it to ~/.hermes/profiles/aarz/.env}"
+NC_PASS="${NC_PASS:?NC_PASS not set -- add it to ~/.hermes/profiles/aarz/.env}"
 NC_HOST="${NC_HOST:-100.84.224.18}"
 NC_PORT="${NC_PORT:-9080}"
 NC_BASE="${NC_BASE:-/remote.php/dav/files/${NC_USER}}"

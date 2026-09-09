@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+source "$(dirname "${BASH_SOURCE[0]}")/scripts/_nc-creds.sh"
+: "${NC_API_USER:?NC_API_USER not set}" "${NC_API_PASS:?NC_API_PASS not set}"
+
 create_row() {
   local json_payload="$1"
   curl -s -w '\n%{http_code}' \
-       -u "aaryantahir8918@gmail.com:__REDACTED_CREDENTIAL__" \
+       -u "${NC_API_USER}:${NC_API_PASS}" \
        -X POST \
        -H "Content-Type: application/json" \
        -H "OCS-APIRequest: true" \
