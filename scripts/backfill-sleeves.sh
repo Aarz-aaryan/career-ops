@@ -6,6 +6,23 @@
 #
 # Usage:  bash scripts/backfill-sleeves.sh [table_id]   (default table_id=8)
 
+
+# ---------------------------------------------------------------------------
+# ROUND-61 (2026-09-09) SAFETY GUARD — this script is OBSOLETE and unsafe.
+#
+# It recreates sleeves from oc_tables_rows. That made sense when write_row.php
+# wrote both tables. write_row.php is now sleeve-only, and oc_tables_rows holds
+# only legacy husks -- so running this would RESURRECT rows you deleted.
+#
+# It is not called by any cron. Kept for historical reference only.
+# Override with:  ALLOW_OBSOLETE_BACKFILL_SLEEVES=1 bash scripts/backfill-sleeves.sh
+# ---------------------------------------------------------------------------
+if [ "${ALLOW_OBSOLETE_BACKFILL_SLEEVES:-0}" != "1" ]; then
+  echo "backfill-sleeves.sh is obsolete as of ROUND-61 and would resurrect deleted rows." >&2
+  echo "Set ALLOW_OBSOLETE_BACKFILL_SLEEVES=1 if you really mean to run it." >&2
+  exit 3
+fi
+
 set -euo pipefail
 TABLE_ID="${1:-8}"
 NC_HOST="${NC_HOST:-100.84.224.18}"
@@ -24,7 +41,8 @@ fi
 # Inline PHP script — runs inside the nextcloud container
 read -r -d '' PHP_SCRIPT <<'PHP' || true
 <?php
-$db = new PDO("sqlite:/var/www/html/data/nextcloud.db");
+// ROUND-59: use Nextcloud's configured DB (was a hardcoded sqlite: DSN)
+$db = require '/opt/nc-scripts/nc-pdo.php';
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $tid = (int)($argv[1] ?? 8);
 $missing = $db->query("

@@ -42,7 +42,8 @@ foreach (array_slice($argv, 1) as $arg) {
 }
 
 try {
-    $db = new PDO("sqlite:$dbPath", null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    // ROUND-59: use Nextcloud's configured DB (was a hardcoded sqlite: DSN)
+    $db = require '/opt/nc-scripts/nc-pdo.php';
 } catch (Throwable $e) {
     fwrite(STDERR, "DB connect failed: " . $e->getMessage() . "\n");
     exit(1);
@@ -53,7 +54,7 @@ try {
 // by an earlier round — without this, the Nextcloud Tables API shows ghost rows).
 $stmt = $db->prepare("
     SELECT r.id, r.created_at
-    FROM oc_tables_rows r
+    FROM oc_tables_row_sleeves r
     WHERE r.table_id = :tid
       AND NOT EXISTS (SELECT 1 FROM oc_tables_row_cells_text      WHERE row_id = r.id)
       AND NOT EXISTS (SELECT 1 FROM oc_tables_row_cells_number    WHERE row_id = r.id)
@@ -65,16 +66,16 @@ $orphans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Also collect orphan sleeves/cells (parent row missing) for cleanup
 $orphanSleevesStmt = $db->prepare("
-    SELECT s.id FROM oc_tables_row_sleeves s
+    SELECT s.id FROM oc_tables_rows s
     WHERE s.table_id = :tid
-      AND NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = s.id)
+      AND NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id = s.id)
 ");
 $orphanSleevesStmt->execute(['tid' => $tableId]);
 $orphanSleeves = $orphanSleevesStmt->fetchAll(PDO::FETCH_COLUMN);
 
-$orphanCellsText = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = t.row_id)")->fetchColumn();
-$orphanCellsNumber = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = n.row_id)")->fetchColumn();
-$orphanCellsSelection = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id = s.row_id)")->fetchColumn();
+$orphanCellsText = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t WHERE NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id = t.row_id)")->fetchColumn();
+$orphanCellsNumber = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n WHERE NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id = n.row_id)")->fetchColumn();
+$orphanCellsSelection = $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s WHERE NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id = s.row_id)")->fetchColumn();
 
 if (empty($orphans) && empty($orphanSleeves) && $orphanCellsText == 0 && $orphanCellsNumber == 0 && $orphanCellsSelection == 0) {
     echo "Table $tableId: no orphan rows or cells found. Clean.\n";
@@ -102,10 +103,10 @@ try {
     if (!empty($orphans)) {
         $ids = array_column($orphans, 'id');
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $rowStmt = $db->prepare("DELETE FROM oc_tables_rows WHERE id IN ($placeholders)");
+        $rowStmt = $db->prepare("DELETE FROM oc_tables_row_sleeves WHERE id IN ($placeholders)");
         $rowStmt->execute($ids);
         $rowsDeleted = $rowStmt->rowCount();
-        $sleeveStmt = $db->prepare("DELETE FROM oc_tables_row_sleeves WHERE id IN ($placeholders)");
+        $sleeveStmt = $db->prepare("DELETE FROM oc_tables_rows WHERE id IN ($placeholders)");
         $sleeveStmt->execute($ids);
         $sleevesDeleted = $sleeveStmt->rowCount();
     } else {
@@ -114,10 +115,15 @@ try {
     }
 
     // 2. Cascade-clean ALL orphan cells (where parent row was deleted by any prior cleanup)
-    $db->exec("DELETE FROM oc_tables_row_sleeves WHERE id NOT IN (SELECT id FROM oc_tables_rows)");
-    $db->exec("DELETE FROM oc_tables_row_cells_text      WHERE row_id NOT IN (SELECT id FROM oc_tables_rows)");
-    $db->exec("DELETE FROM oc_tables_row_cells_number    WHERE row_id NOT IN (SELECT id FROM oc_tables_rows)");
-    $db->exec("DELETE FROM oc_tables_row_cells_selection WHERE row_id NOT IN (SELECT id FROM oc_tables_rows)");
+    // ROUND-61 (2026-09-09): this cascade used to delete anything absent from
+    // oc_tables_rows. write_row.php now writes ONLY sleeves (the real row
+    // identity in Tables 0.7+), so that logic would have deleted every new
+    // pipeline row. Sleeves are authoritative; oc_tables_rows is the legacy
+    // table, and a legacy entry with no sleeve is the husk to remove.
+    $db->exec("DELETE FROM oc_tables_rows WHERE id NOT IN (SELECT id FROM oc_tables_row_sleeves)");
+    $db->exec("DELETE FROM oc_tables_row_cells_text      WHERE row_id NOT IN (SELECT id FROM oc_tables_row_sleeves)");
+    $db->exec("DELETE FROM oc_tables_row_cells_number    WHERE row_id NOT IN (SELECT id FROM oc_tables_row_sleeves)");
+    $db->exec("DELETE FROM oc_tables_row_cells_selection WHERE row_id NOT IN (SELECT id FROM oc_tables_row_sleeves)");
 
     $db->commit();
     echo "Deleted $rowsDeleted empty rows + their sleeves.\n";

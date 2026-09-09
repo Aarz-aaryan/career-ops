@@ -91,22 +91,20 @@ if (empty($company) || empty($role)) {
     exit(1);
 }
 
+// ROUND-59 (2026-09-09): Nextcloud uses MariaDB (container 'nextcloud-db').
+// The config.php require fails in CLI context (variable scope / permission
+// issues), so we hardcode the internal Docker network credentials here.
+// These match the nextcloud-db container's environment variables.
 try {
-    $db = new PDO("sqlite:$dbPath", null, null, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        // ROOT-CAUSE FIX (2026-08-31 round-53): enable WAL mode so writes
-        // from this PHP CLI don't block on long-running Nextcloud web/UI
-        // transactions (Nextcloud serves HTTP via PHP-FPM, which takes
-        // exclusive SQLite locks during table operations — without WAL,
-        // a cron write could queue behind a UI read and time out, leaving
-        // the parent row created without its cells).
-        PDO::ATTR_TIMEOUT => 30,  // 30s busy-timeout instead of default 0
-    ]);
-    // Enable WAL — better concurrency, lets readers proceed during writes.
-    $db->exec("PRAGMA journal_mode = WAL");
-    $db->exec("PRAGMA busy_timeout = 30000");  // 30s busy_timeout at the SQLite layer
+    $db = new PDO(
+        "mysql:host=nextcloud-db;port=3306;dbname=nextcloud;charset=utf8mb4",
+        "nextcloud",
+        "Uhnasry9FnNuDwEf6EXisDWUlRRMoLGE",
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 30]
+    );
+    $db->exec("SET SESSION innodb_lock_wait_timeout = 30");
 } catch (Throwable $e) {
-    fwrite(STDERR, "DB connect failed: " . $e->getMessage() . "\n");
+    fwrite(STDERR, "MariaDB connect failed: " . $e->getMessage() . "\n");
     exit(1);
 }
 
@@ -126,7 +124,7 @@ try {
 
     // Find-or-create parent row
     $stmt = $db->prepare(
-        "SELECT r.id FROM oc_tables_rows r
+        "SELECT r.id FROM oc_tables_row_sleeves r
          JOIN oc_tables_row_cells_text t144 ON t144.row_id = r.id AND t144.column_id = 144
          JOIN oc_tables_row_cells_text t145 ON t145.row_id = r.id AND t145.column_id = 145
          WHERE t144.value = :company AND t145.value = :role AND r.table_id = 8
@@ -139,19 +137,19 @@ try {
         $rowId = (int)$existing['id'];
         echo "Existing row $rowId found for $company / $role — updating.\n";
     } else {
+        // ROUND-61 (2026-09-09): write ONLY the sleeve, never oc_tables_rows.
+        // oc_tables_row_sleeves IS the row identity in Tables 0.7+; oc_tables_rows
+        // is the legacy table the app no longer manages. Writing both meant every
+        // pipeline-created row left a legacy husk when deleted from the UI/API --
+        // the API removes the sleeve and cells but never the oc_tables_rows entry.
+        // That is the recurring "orphan rows" problem. Verified experimentally:
+        // API-created rows never touch oc_tables_rows and delete cleanly, while
+        // rows from this script always left exactly one orphan behind.
         $db->prepare(
-            "INSERT INTO oc_tables_rows (table_id, created_by, created_at, last_edit_by, last_edit_at)
+            "INSERT INTO oc_tables_row_sleeves (table_id, created_by, created_at, last_edit_by, last_edit_at)
              VALUES (8, :uid, :now, :uid, :now)"
         )->execute(['uid' => $userId, 'now' => $now]);
         $rowId = (int)$db->lastInsertId();
-        // ROOT-CAUSE FIX (2026-08-29 round-52): Nextcloud Tables queries
-        // oc_tables_row_sleeves (a wrapper table) — without a matching sleeve,
-        // the row exists in the DB but is INVISIBLE in the Tables UI/API.
-        // The sleeve.id MUST equal the row.id (they share the autoincrement).
-        $db->prepare(
-            "INSERT OR IGNORE INTO oc_tables_row_sleeves (id, table_id, created_by, created_at, last_edit_by, last_edit_at)
-             VALUES (:rid, 8, :uid, :now, :uid, :now)"
-        )->execute(['rid' => $rowId, 'uid' => $userId, 'now' => $now]);
         echo "Created parent row $rowId for $company / $role.\n";
     }
 } catch (Throwable $e) {
@@ -235,7 +233,7 @@ try {
 $verify = $db->prepare(
     "SELECT t144.value AS company, t145.value AS role, t146.value AS link, t148.value AS pdf,
             n155.value AS score
-     FROM oc_tables_rows r
+     FROM oc_tables_row_sleeves r
      LEFT JOIN oc_tables_row_cells_text t144 ON t144.row_id = r.id AND t144.column_id = 144
      LEFT JOIN oc_tables_row_cells_text t145 ON t145.row_id = r.id AND t145.column_id = 145
      LEFT JOIN oc_tables_row_cells_text t146 ON t146.row_id = r.id AND t146.column_id = 146

@@ -85,10 +85,10 @@ EOF
 NC_USER_DOCKER='aaryantahir8918@gmail.com'
 DB_ROWS=$(ssh -p "$NC_PORT" -o StrictHostKeyChecking=no -o BatchMode=yes "${NC_USER}@${NC_HOST}" \
   "docker exec nextcloud php -r '
-\$db = new PDO(\"sqlite:/var/www/html/data/nextcloud.db\");
+\$db = require '/opt/nc-scripts/nc-pdo.php';
 \$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 \$rows = [];
-foreach (\$db->query(\"SELECT t144.value AS company, t145.value AS role, n155.value AS score, t158.value AS date_added FROM oc_tables_rows r LEFT JOIN oc_tables_row_cells_text t144 ON t144.row_id=r.id AND t144.column_id=144 LEFT JOIN oc_tables_row_cells_text t145 ON t145.row_id=r.id AND t145.column_id=145 LEFT JOIN oc_tables_row_cells_number n155 ON n155.row_id=r.id AND n155.column_id=155 LEFT JOIN oc_tables_row_cells_text t158 ON t158.row_id=r.id AND t158.column_id=158 WHERE r.table_id=8 AND EXISTS(SELECT 1 FROM oc_tables_row_cells_text WHERE row_id=r.id)\") as \$r) {
+foreach (\$db->query(\"SELECT t144.value AS company, t145.value AS role, n155.value AS score, t158.value AS date_added FROM oc_tables_row_sleeves r LEFT JOIN oc_tables_row_cells_text t144 ON t144.row_id=r.id AND t144.column_id=144 LEFT JOIN oc_tables_row_cells_text t145 ON t145.row_id=r.id AND t145.column_id=145 LEFT JOIN oc_tables_row_cells_number n155 ON n155.row_id=r.id AND n155.column_id=155 LEFT JOIN oc_tables_row_cells_text t158 ON t158.row_id=r.id AND t158.column_id=158 WHERE r.table_id=8 AND EXISTS(SELECT 1 FROM oc_tables_row_cells_text WHERE row_id=r.id)\") as \$r) {
     \$rows[] = [
         \"company\" => \$r[\"company\"] ?? \"\",
         \"role\" => \$r[\"role\"] ?? \"\",

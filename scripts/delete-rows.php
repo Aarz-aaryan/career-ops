@@ -40,7 +40,8 @@ for ($i = 1; $i < $argc; $i++) {
 }
 
 try {
-    $db = new PDO("sqlite:$dbPath", null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    // ROUND-59: use Nextcloud configured DB (was hardcoded sqlite: DSN)
+    $db = require '/opt/nc-scripts/nc-pdo.php';
 } catch (Throwable $e) {
     fwrite(STDERR, "DB connect failed: " . $e->getMessage() . "\n");
     exit(1);
@@ -66,7 +67,7 @@ if ($pattern) {
     $where = implode(' OR ', $clauses);
     $sql = "
         SELECT r.id, t144.value AS company
-        FROM oc_tables_rows r
+        FROM oc_tables_row_sleeves r
         LEFT JOIN oc_tables_row_cells_text t144 ON t144.row_id = r.id AND t144.column_id = 144
         WHERE r.table_id = :tid AND ($where)
     ";
@@ -77,7 +78,7 @@ if ($pattern) {
     $placeholders = implode(',', array_fill(0, count($names), '?'));
     $stmt = $db->prepare("
         SELECT r.id, t144.value AS company
-        FROM oc_tables_rows r
+        FROM oc_tables_row_sleeves r
         LEFT JOIN oc_tables_row_cells_text t144 ON t144.row_id = r.id AND t144.column_id = 144
         WHERE r.table_id = ? AND t144.value IN ($placeholders)
     ");
@@ -110,7 +111,9 @@ try {
     $sleeveStmt->execute($ids);
     $sleevesDeleted = $sleeveStmt->rowCount();
 
-    $rowStmt = $db->prepare("DELETE FROM oc_tables_rows WHERE id IN ($placeholders)");
+    $rowStmt = $db->prepare("DELETE FROM oc_tables_row_sleeves WHERE id IN ($placeholders)");
+    // ROUND-61: also drop any legacy oc_tables_rows twin so no husk survives.
+    $db->prepare("DELETE FROM oc_tables_rows WHERE id IN ($placeholders)")->execute($ids);
     $rowStmt->execute($ids);
     $rowsDeleted = $rowStmt->rowCount();
 

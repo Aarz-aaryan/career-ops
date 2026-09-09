@@ -55,7 +55,8 @@ $dbPath = '/var/www/html/data/nextcloud.db';
 $tableId = (int)($argv[1] ?? 8);
 
 try {
-    $db = new PDO("sqlite:$dbPath");
+    // ROUND-59: use Nextcloud's configured DB (was a hardcoded sqlite: DSN)
+    $db = require '/opt/nc-scripts/nc-pdo.php';
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (Throwable $e) {
     fwrite(STDERR, "DB connect failed: " . $e->getMessage() . "\n");
@@ -64,18 +65,18 @@ try {
 
 // Counts
 $counts = [
-    'rows' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_rows WHERE table_id=$tableId")->fetchColumn(),
+    'rows' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_sleeves WHERE table_id=$tableId")->fetchColumn(),
     'sleeves' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_sleeves WHERE table_id=$tableId")->fetchColumn(),
-    'cells_text' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t JOIN oc_tables_rows r ON r.id=t.row_id WHERE r.table_id=$tableId")->fetchColumn(),
-    'cells_number' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n JOIN oc_tables_rows r ON r.id=n.row_id WHERE r.table_id=$tableId")->fetchColumn(),
-    'cells_selection' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s JOIN oc_tables_rows r ON r.id=s.row_id WHERE r.table_id=$tableId")->fetchColumn(),
-    'rows_with_cells' => (int) $db->query("SELECT COUNT(DISTINCT r.id) FROM oc_tables_rows r WHERE r.table_id=$tableId AND (EXISTS(SELECT 1 FROM oc_tables_row_cells_text WHERE row_id=r.id) OR EXISTS(SELECT 1 FROM oc_tables_row_cells_number WHERE row_id=r.id) OR EXISTS(SELECT 1 FROM oc_tables_row_cells_selection WHERE row_id=r.id))")->fetchColumn(),
-    'rows_without_cells' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_rows r WHERE r.table_id=$tableId AND NOT EXISTS(SELECT 1 FROM oc_tables_row_cells_text WHERE row_id=r.id) AND NOT EXISTS(SELECT 1 FROM oc_tables_row_cells_number WHERE row_id=r.id) AND NOT EXISTS(SELECT 1 FROM oc_tables_row_cells_selection WHERE row_id=r.id)")->fetchColumn(),
-    'orphan_sleeves' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_sleeves s WHERE s.table_id=$tableId AND NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id=s.id)")->fetchColumn(),
-    'orphan_cells_text' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id=t.row_id)")->fetchColumn(),
-    'orphan_cells_number' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id=n.row_id)")->fetchColumn(),
-    'orphan_cells_selection' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s WHERE NOT EXISTS (SELECT 1 FROM oc_tables_rows r WHERE r.id=s.row_id)")->fetchColumn(),
-    'rows_added_last_2h' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_rows WHERE table_id=$tableId AND created_at >= datetime('now', '-2 hours')")->fetchColumn(),
+    'cells_text' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t JOIN oc_tables_row_sleeves r ON r.id=t.row_id WHERE r.table_id=$tableId")->fetchColumn(),
+    'cells_number' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n JOIN oc_tables_row_sleeves r ON r.id=n.row_id WHERE r.table_id=$tableId")->fetchColumn(),
+    'cells_selection' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s JOIN oc_tables_row_sleeves r ON r.id=s.row_id WHERE r.table_id=$tableId")->fetchColumn(),
+    'rows_with_cells' => (int) $db->query("SELECT COUNT(DISTINCT r.id) FROM oc_tables_row_sleeves r WHERE r.table_id=$tableId AND (EXISTS(SELECT 1 FROM oc_tables_row_cells_text WHERE row_id=r.id) OR EXISTS(SELECT 1 FROM oc_tables_row_cells_number WHERE row_id=r.id) OR EXISTS(SELECT 1 FROM oc_tables_row_cells_selection WHERE row_id=r.id))")->fetchColumn(),
+    'rows_without_cells' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_sleeves r WHERE r.table_id=$tableId AND NOT EXISTS(SELECT 1 FROM oc_tables_row_cells_text WHERE row_id=r.id) AND NOT EXISTS(SELECT 1 FROM oc_tables_row_cells_number WHERE row_id=r.id) AND NOT EXISTS(SELECT 1 FROM oc_tables_row_cells_selection WHERE row_id=r.id)")->fetchColumn(),
+    'orphan_sleeves' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_rows s WHERE s.table_id=$tableId AND NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id=s.id)")->fetchColumn(),
+    'orphan_cells_text' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_text t WHERE NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id=t.row_id)")->fetchColumn(),
+    'orphan_cells_number' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_number n WHERE NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id=n.row_id)")->fetchColumn(),
+    'orphan_cells_selection' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_cells_selection s WHERE NOT EXISTS (SELECT 1 FROM oc_tables_row_sleeves r WHERE r.id=s.row_id)")->fetchColumn(),
+    'rows_added_last_2h' => (int) $db->query("SELECT COUNT(*) FROM oc_tables_row_sleeves WHERE table_id=$tableId AND created_at >= '" . date('Y-m-d H:i:s', time() - 7200) . "'")->fetchColumn(),
 ];
 
 // Compare API row count to DB rows_with_cells (the ghost-row check)

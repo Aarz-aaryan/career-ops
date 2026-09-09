@@ -65,7 +65,7 @@ for PDF_PATH in $(ls -1t output/*.pdf 2>/dev/null); do
             SKIPPED=$((SKIPPED + 1))
             continue
         fi
-        REPORT_FILE=$(ls reports/*-${SLUG}-*.md 2>/dev/null | head -1)
+        REPORT_FILE=$(ls reports/*-${SLUG}-*.md 2>/dev/null | head -1 || true)
         if [[ -z "$REPORT_FILE" ]]; then
             echo "SKIP: $BASENAME_NO_EXT (no report for slug '$SLUG')"
             SKIPPED=$((SKIPPED + 1))
@@ -78,7 +78,7 @@ for PDF_PATH in $(ls -1t output/*.pdf 2>/dev/null); do
             continue
         fi
     else
-        REPORT_FILE=$(ls reports/${REPORT_NUM}-*.md 2>/dev/null | head -1)
+        REPORT_FILE=$(ls reports/${REPORT_NUM}-*.md 2>/dev/null | head -1 || true)
         if [[ -z "$REPORT_FILE" ]]; then
             echo "SKIP: $BASENAME_NO_EXT (no report file for #$REPORT_NUM)"
             SKIPPED=$((SKIPPED + 1))
@@ -100,11 +100,29 @@ for PDF_PATH in $(ls -1t output/*.pdf 2>/dev/null); do
     COMPANY=$(echo "$COMPANY" | sed 's/[[:space:]]*$//')
     ROLE=$(echo "$ROLE" | sed 's/[[:space:]]*$//')
 
-    SCORE_RAW=$(grep -oE '\*\*Score:\*\*[[:space:]]*[0-9.]+/5' "$REPORT_FILE" | head -1 | sed -E 's/.*\*\*Score:\*\*[[:space:]]*([0-9.]+)\/5.*/\1/')
-    JOB_URL=$(grep -oE '\*\*URL:\*\*[[:space:]]*https?://[^[:space:]]+' "$REPORT_FILE" | head -1 | sed -E 's/\*\*URL:\*\*[[:space:]]*//')
+    # ROUND-58: every `|| true` in this loop guards the same failure mode --
+    # grep exits 1 and ls exits 2 when a field or report file is absent, and
+    # under `set -euo pipefail` that aborted the whole backfill mid-loop.
+    # grep exits 1 when the field is absent, and under
+    # `set -euo pipefail` that ABORTED the whole backfill mid-loop, silently
+    # skipping every remaining PDF. Open since r53, mis-described there as a
+    # cosmetic "exits 1 on clean runs".
+    SCORE_RAW=$(grep -oE '\*\*Score:\*\*[[:space:]]*[0-9.]+/5' "$REPORT_FILE" | head -1 | sed -E 's/.*\*\*Score:\*\*[[:space:]]*([0-9.]+)\/5.*/\1/' || true)
+    JOB_URL=$(grep -oE '\*\*URL:\*\*[[:space:]]*https?://[^[:space:]]+' "$REPORT_FILE" | head -1 | sed -E 's/\*\*URL:\*\*[[:space:]]*//' || true)
 
     if [[ -z "$COMPANY" || -z "$ROLE" || -z "$SCORE_RAW" ]]; then
         echo "SKIP: report #$REPORT_NUM (couldn't parse — company='$COMPANY' role='$ROLE' score='$SCORE_RAW')"
+        SKIPPED=$((SKIPPED + 1))
+        continue
+    fi
+
+    # ROUND-58: skip entries with no Job URL. write_row.php hard-fails
+    # verification when col 146 (Job Link) is empty, and its rollback does NOT
+    # remove the already-inserted row -- leaving an incomplete row in table 8.
+    # 20 of 232 reports have no "**URL:**" field. Skipping here keeps the table
+    # clean instead of writing rows the verifier will reject.
+    if [[ -z "${JOB_URL:-}" ]]; then
+        echo "   SKIP #$REPORT_NUM ($COMPANY): report has no **URL:** field"
         SKIPPED=$((SKIPPED + 1))
         continue
     fi
@@ -142,3 +160,8 @@ echo "Created:        $PROSESSED"
 echo "Already exists: $ALREADY_EXISTS"
 echo "Skipped:        $SKIPPED"
 echo "Failed:         $FAILED"
+
+# ROUND-58: explicit success exit. Real problems are reported in the summary
+# above (Failed: N); a non-zero exit here made the 06:30 watchdog treat
+# healthy runs as failures.
+exit 0

@@ -21,20 +21,26 @@ else
   SCP_CMD=(scp -P "$NC_PORT" -o StrictHostKeyChecking=no)
 fi
 
-SCRIPT_PATH_REMOTE="/tmp/write_row.php"
+# ROUND-59: write_row.php used to live in the container's /tmp, which is wiped
+# whenever the container is recreated -- that broke the cron pre-flight (and the
+# write path) after any restart. It now lives in the bind-mounted html dir, which
+# persists, and is refreshed here whenever the local copy is newer.
+SCRIPT_HOST_PATH="/home/r-server/docker/nc-scripts/write_row.php"
+SCRIPT_PATH_REMOTE="/opt/nc-scripts/write_row.php"
 
 # Push PHP script (only if local is newer)
 LOCAL_PHP="$(dirname "$0")/write_row.php"
 NEED_PUSH=1
-if "${SSH_CMD[@]}" "[ -f $SCRIPT_PATH_REMOTE ]" 2>/dev/null; then
-  REMOTE_MTIME=$("${SSH_CMD[@]}" "stat -c %Y $SCRIPT_PATH_REMOTE 2>/dev/null" || echo 0)
+if "${SSH_CMD[@]}" "[ -f $SCRIPT_HOST_PATH ]" 2>/dev/null; then
+  REMOTE_MTIME=$("${SSH_CMD[@]}" "stat -c %Y $SCRIPT_HOST_PATH 2>/dev/null" || echo 0)
   LOCAL_MTIME=$(stat -c %Y "$LOCAL_PHP" 2>/dev/null || echo 0)
   if [ "${REMOTE_MTIME:-0}" -ge "$LOCAL_MTIME" ]; then
     NEED_PUSH=0
   fi
 fi
 if [ "$NEED_PUSH" = "1" ]; then
-  "${SCP_CMD[@]}" "$LOCAL_PHP" "${NC_USER}@${NC_HOST}:${SCRIPT_PATH_REMOTE}" >/dev/null 2>&1 || true
+  "${SCP_CMD[@]}" "$LOCAL_PHP" "${NC_USER}@${NC_HOST}:/tmp/write_row.php" >/dev/null 2>&1 || true
+  "${SSH_CMD[@]}" "sudo cp /tmp/write_row.php $SCRIPT_HOST_PATH && sudo chown www-data:www-data $SCRIPT_HOST_PATH" >/dev/null 2>&1 || true
 fi
 
 # Build args JSON via python (avoids shell quoting issues)
