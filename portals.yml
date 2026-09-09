@@ -1,30 +1,255 @@
 scan_history:
   recheck_after_days: 14
 location_filter:
+  # ROUND-58 (2026-09-08): the previous `allow` list was a 15-city whitelist.
+  # Because `allow` is a hard whitelist, any US job whose location string did
+  # not contain one of those cities was REJECTED -- measured at 189 of 260
+  # off-season US roles dropped (73%), including Philadelphia, Palo Alto,
+  # San Jose, Chicago, Atlanta and Denver. Now a full US whitelist: all 50
+  # states by name, comma-prefixed 2-letter codes, DC, plus Remote/US markers.
+  # `block` runs BEFORE `allow`, so the non-US list below neutralises the
+  # ", ca"/", in" style collisions with Canada / India.
   always_allow:
+  # ROUND-58: "Remote" removed from always_allow -- always_allow short-circuits
+  # the block list, so "Remote - Canada" was passing. Remote is still in `allow`
+  # below, so plain "Remote" / "Remote - US" still match.
   - United States
   - USA
-  - Remote
+  # ROUND-58: these US places collide with blocked country substrings
+  # ("india" in Indiana/Indianapolis, "china" in China Grove/China Lake).
+  # always_allow runs BEFORE block, so listing them here lets the block list
+  # use the bare country name and still catch "Remote - India".
+  - Indiana
+  - Indianapolis
+  - China Grove
+  - China Lake
   allow:
   - Remote
   - United States
   - USA
-  - Cambridge
-  - Boston
+  - "U.S."
+  - US-
+  - "Washington, D.C."
+  - District of Columbia
+  - Alabama
+  - Alaska
+  - Arizona
+  - Arkansas
+  - California
+  - Colorado
+  - Connecticut
+  - Delaware
+  - Florida
+  - Georgia
+  - Hawaii
+  - Idaho
+  - Illinois
+  - Indiana
+  - Iowa
+  - Kansas
+  - Kentucky
+  - Louisiana
+  - Maine
+  - Maryland
+  - Massachusetts
+  - Michigan
+  - Minnesota
+  - Mississippi
+  - Missouri
+  - Montana
+  - Nebraska
+  - Nevada
+  - New Hampshire
+  - New Jersey
+  - New Mexico
   - New York
-  - Mountain View
-  - Sunnyvale
-  - Cupertino
-  - San Francisco
-  - Seattle
-  - Redmond
-  - Bellevue
-  - Santa Clara
-  - Pittsburgh
-  - Austin
-  - Los Angeles
-  - San Diego
-  block: []
+  - North Carolina
+  - North Dakota
+  - Ohio
+  - Oklahoma
+  - Oregon
+  - Pennsylvania
+  - Rhode Island
+  - South Carolina
+  - South Dakota
+  - Tennessee
+  - Texas
+  - Utah
+  - Vermont
+  - Virginia
+  - Washington
+  - West Virginia
+  - Wisconsin
+  - Wyoming
+  - ", AL"
+  - ", AK"
+  - ", AZ"
+  - ", AR"
+  - ", CA"
+  - ", CO"
+  - ", CT"
+  - ", DE"
+  - ", FL"
+  - ", GA"
+  - ", HI"
+  - ", ID"
+  - ", IL"
+  - ", IN"
+  - ", IA"
+  - ", KS"
+  - ", KY"
+  - ", LA"
+  - ", ME"
+  - ", MD"
+  - ", MA"
+  - ", MI"
+  - ", MN"
+  - ", MS"
+  - ", MO"
+  - ", MT"
+  - ", NE"
+  - ", NV"
+  - ", NH"
+  - ", NJ"
+  - ", NM"
+  - ", NY"
+  - ", NC"
+  - ", ND"
+  - ", OH"
+  - ", OK"
+  - ", OR"
+  - ", PA"
+  - ", RI"
+  - ", SC"
+  - ", SD"
+  - ", TN"
+  - ", TX"
+  - ", UT"
+  - ", VT"
+  - ", VA"
+  - ", WA"
+  - ", WV"
+  - ", WI"
+  - ", WY"
+  - ", DC"
+  block:
+  - canada
+  - toronto
+  - vancouver
+  - montreal
+  - quebec
+  - calgary
+  - ottawa
+  - winnipeg
+  - british columbia
+  - alberta
+  - saskatchewan
+  - nova scotia
+  - united kingdom
+  - england
+  - scotland
+  - ireland
+  - dublin
+  - belfast
+  - india
+  - bangalore
+  - bengaluru
+  - hyderabad
+  - chennai
+  - gurgaon
+  - noida
+  - mumbai
+  - germany
+  - munich
+  - berlin
+  - hamburg
+  - france
+  - paris
+  - spain
+  - madrid
+  - barcelona
+  - netherlands
+  - amsterdam
+  - sweden
+  - stockholm
+  - switzerland
+  - zurich
+  - geneva
+  - israel
+  - tel aviv
+  - haifa
+  - singapore
+  - australia
+  - sydney
+  - melbourne
+  - japan
+  - tokyo
+  - china
+  - shanghai
+  - beijing
+  - shenzhen
+  - hong kong
+  - taiwan
+  - south korea
+  - seoul
+  - mexico
+  - brazil
+  - argentina
+  - poland
+  - warsaw
+  - krakow
+  - romania
+  - bucharest
+  - czech
+  - prague
+  - hungary
+  - budapest
+  - portugal
+  - lisbon
+  - italy
+  - milan
+  - denmark
+  - copenhagen
+  - norway
+  - oslo
+  - finland
+  - helsinki
+  - belgium
+  - brussels
+  - austria
+  - vienna
+  - greece
+  - athens
+  - turkey
+  - istanbul
+  - egypt
+  - south africa
+  - nigeria
+  - kenya
+  - united arab emirates
+  - dubai
+  - abu dhabi
+  - saudi
+  - qatar
+  - philippines
+  - manila
+  - vietnam
+  - thailand
+  - bangkok
+  - indonesia
+  - jakarta
+  - malaysia
+  - kuala lumpur
+  - new zealand
+  - auckland
+  - chile
+  - colombia
+  - peru
+  - costa rica
+  - uruguay
+  - emea
+  - apac
+  - latam
 salary_filter:
   min: 40000
   max: 0
@@ -37,6 +262,22 @@ title_filter:
   - Internship
   - Co-op
   - Coop
+  # ROUND-58 (2026-09-08): retarget to the Fall/Winter 2027 co-op cycle
+  # (Sept 2027 - Mar 2028). A Drexel six-month cycle is posted under a
+  # range of labels, and a cycle is often named by the term it ends in,
+  # so Spring 2028 is included deliberately.
+  - Fall 2027
+  - Winter 2027
+  - Spring 2028
+  - Fall/Winter
+  - Autumn 2027
+  - Off-Cycle
+  - Off Cycle
+  - Off-Season
+  - 6-Month
+  - Six Month
+  - Fall Co-op
+  - Winter Co-op
   - Summer 2028
   - Class of 2028
   - ML Intern
@@ -62,8 +303,8 @@ title_filter:
   - Software Engineer
   - University
   - Student
-  - 2027
-  - 2028
+  - '2027'   # ROUND-58: quoted -- bare 2027 parsed as int and was silently dropped
+  - '2028'
   negative:
   - Senior
   - Staff
@@ -131,6 +372,14 @@ content_filter:
   - Internship
   - Co-op
   - Coop
+  # ROUND-58 (2026-09-08): mirror the title_filter retarget to Fall/Winter 2027.
+  - Fall 2027
+  - Winter 2027
+  - Spring 2028
+  - Fall/Winter
+  - Off-Cycle
+  - Off Cycle
+  - 6-Month
   - Summer 2028
   - Class of 2028
   negative: []
@@ -139,7 +388,7 @@ tracked_companies:
   careers_url: https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite
   scan_method: workday
   notes: Workday CXS endpoint. WD tenant=NVIDIAExternalCareerSite, wd_server=wd5
-  max_pages: 50
+  max_pages: 82  # ROUND-58: was 50; scan truncated at 50 (2000 jobs available)
   enabled: true
   
 - name: Google
@@ -216,9 +465,11 @@ tracked_companies:
 - name: Meta
   careers_url: https://www.metacareers.com
   scan_method: websearch
-  scan_query: site:metacareers.com "intern" "AI" OR "Machine Learning" OR "Software
-    Engineer" "Summer 2028"
-  notes: Meta Careers. ~$50/hr Summer 2028. No public ATS API.
+  scan_query: site:metacareers.com "intern" OR "co-op" "AI" OR "Machine Learning" OR
+    "Software Engineer"
+  notes: 'Meta Careers. ~$50/hr. No public ATS API. ROUND-58 (2026-09-08): dropped
+    the hardcoded "Summer 2028" AND-term from scan_query -- it excluded every
+    Fall/Winter co-op posting. Query is now season-agnostic.'
   enabled: true
 - name: Netflix
   careers_url: https://jobs.netflix.com
@@ -604,21 +855,21 @@ tracked_companies:
   careers_url: https://capitalone.wd12.myworkdayjobs.com/Capital_One
   scan_method: workday
   notes: Workday CXS endpoint. Round-34 expansion.
-  max_pages: 50
+  max_pages: 78  # ROUND-58: was 50; scan truncated at 50 (1920 jobs available)
   enabled: true
   
 - name: Accenture
   careers_url: https://accenture.wd103.myworkdayjobs.com/AccentureCareers
   scan_method: workday
   notes: Workday CXS endpoint. Round-34 expansion.
-  max_pages: 50
+  max_pages: 82  # ROUND-58: was 50; scan truncated at 50 (2000 jobs available)
   enabled: true
   
 - name: Target
   careers_url: https://target.wd5.myworkdayjobs.com/targetcareers
   scan_method: workday
   notes: Workday CXS endpoint. Round-34 expansion.
-  max_pages: 50
+  max_pages: 82  # ROUND-58: was 50; scan truncated at 50 (2000 jobs available)
   enabled: true
   
 - name: Visa
@@ -718,21 +969,35 @@ tracked_companies:
   provider: simplify-jobs
   scan_method: simplify-jobs
   filter_terms:
-    - Summer 2026
-    - Fall 2026
-    - Winter 2026
-    - Spring 2027
-    - Summer 2027
+    # ROUND-58 (2026-09-08): retargeted from Summer to the FALL/WINTER 2027
+    # co-op cycle (Sept 2027 - Mar 2028). Matching is .some() over a listing's
+    # terms[], so multi-term postings (e.g. "Winter 2027, Spring 2027, Summer
+    # 2027") still match -- we only lose summer-ONLY postings, which is the
+    # point. Employers frequently label a six-month cycle by the term it ENDS
+    # in, so Spring 2028 and Winter 2028 are included deliberately.
+    # Live census 2026-09-08: 703 visible listings match these terms.
+    # To revert to summer targeting, restore the Summer 2026/2027/2028 and
+    # Fall 2026 / Winter 2026 / Spring 2027 entries.
     - Fall 2027
     - Winter 2027
     - Spring 2028
-    - Summer 2028
+    - Winter 2028
   filter_categories:
+    # ROUND-58 (2026-09-08): these MUST match the category strings the
+    # SimplifyJobs listings.json actually emits. The previous list used
+    # "Data & ML/AI" and "Cybersecurity", neither of which exists in the
+    # feed -- silently dropping 6,877 AI/ML/Data listings (the largest
+    # category, and Aaryan's primary target). Verified against the live
+    # feed on 2026-09-08. "Quant" is deliberately excluded: prop-trading
+    # firms are a hard dealbreaker per modes/_custom.md Off-Limits #8.
     - Software
-    - Data & ML/AI
+    - Software Engineering
+    - AI/ML/Data
+    - Data Science, AI & Machine Learning
     - Hardware
-    - Cybersecurity
+    - Hardware Engineering
     - Product
+    - Product Management
   filter_us_only: true
   filter_visible_only: true
   skip_phd_only: true
