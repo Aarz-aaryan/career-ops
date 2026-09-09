@@ -1,80 +1,44 @@
 #!/usr/bin/env bash
-# write_row.sh — bash wrapper that invokes write_row.php via SSH into the nextcloud container.
-# Real logic lives in scripts/write_row.php.
+# write_row.sh — write one job row into Nextcloud Tables.
 #
-# Uses SSH key auth first (works without sshpass), falls back to sshpass if NC_PASS is set.
-# Args: $1=company $2=role $3=jobUrl $4=pdfUrl $5=fitScore $6=tier $7=source $8=notes
+# ROUND-63 (2026-09-09): this now delegates to scripts/write_row_api.mjs, which
+# uses the public Tables REST API. It previously shelled into the nextcloud
+# container and wrote the database directly, which caused a long tail of
+# problems:
+#
+#   * it inserted into oc_tables_rows as well as oc_tables_row_sleeves, leaving
+#     an orphan husk behind every time a row was deleted (round 61)
+#   * it required write_row.php to live inside the container, which the 34.0.3
+#     upgrade wiped along with /var/www/html (round 59)
+#   * it hardcoded a sqlite DSN and had to be rewritten for the MariaDB move
+#   * it bypassed Nextcloud's own validation, so it happily stored values the
+#     UI and API consider invalid (bare-IP link URLs, round 62)
+#
+# The API path has none of those couplings: no files in the container, no bind
+# mount, no DB credentials, and it survives Nextcloud upgrades.
+#
+# Usage (unchanged):
+#   write_row.sh <company> <role> <job_url> <pdf_url> <score> [tier] [source] [notes]
+#
+# Output contract (unchanged, backfill-tables.sh greps for "Existing row"):
+#   "Created row N for C / R."        - new row
+#   "Existing row N updated: C / R"   - idempotent update
+#   "Row N verified: C / R OK"        - verification passed
+#
+# Escape hatch: WRITE_ROW_LEGACY_SQL=1 restores the old direct-SQL path
+# (scripts/write_row.php via ssh + docker exec). Kept for emergencies only --
+# it reintroduces the orphan-row behaviour described above.
 
-set -euo pipefail
+set -uo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-NC_HOST="${NC_HOST:-100.84.224.18}"
-NC_PORT="${NC_PORT:-22}"
-NC_USER="${NC_SSH_USER:-r-server}"
-NC_PASS="${NC_PASS:-}"
-
-# Build SSH/SCP args based on whether we have a password or key
-if [ -n "$NC_PASS" ] && command -v sshpass >/dev/null 2>&1; then
-  SSH_CMD=(sshpass -p "$NC_PASS" ssh -p "$NC_PORT" -o StrictHostKeyChecking=no "${NC_USER}@${NC_HOST}")
-  SCP_CMD=(sshpass -p "$NC_PASS" scp -P "$NC_PORT" -o StrictHostKeyChecking=no)
-else
-  SSH_CMD=(ssh -p "$NC_PORT" -o StrictHostKeyChecking=no -o BatchMode=yes "${NC_USER}@${NC_HOST}")
-  SCP_CMD=(scp -P "$NC_PORT" -o StrictHostKeyChecking=no)
+if [ "${WRITE_ROW_LEGACY_SQL:-0}" = "1" ]; then
+    exec bash "$DIR/write_row_legacy_sql.sh" "$@"
 fi
 
-# ROUND-59: write_row.php used to live in the container's /tmp, which is wiped
-# whenever the container is recreated -- that broke the cron pre-flight (and the
-# write path) after any restart. It now lives in the bind-mounted html dir, which
-# persists, and is refreshed here whenever the local copy is newer.
-SCRIPT_HOST_PATH="/home/r-server/docker/nc-scripts/write_row.php"
-SCRIPT_PATH_REMOTE="/opt/nc-scripts/write_row.php"
+# shellcheck source=/dev/null
+source "$DIR/_nc-creds.sh"
+: "${NC_API_USER:?NC_API_USER not set — check ~/.hermes/profiles/aarz/.env}"
+: "${NC_API_PASS:?NC_API_PASS not set — check ~/.hermes/profiles/aarz/.env}"
 
-# Push PHP script (only if local is newer)
-LOCAL_PHP="$(dirname "$0")/write_row.php"
-NEED_PUSH=1
-if "${SSH_CMD[@]}" "[ -f $SCRIPT_HOST_PATH ]" 2>/dev/null; then
-  REMOTE_MTIME=$("${SSH_CMD[@]}" "stat -c %Y $SCRIPT_HOST_PATH 2>/dev/null" || echo 0)
-  LOCAL_MTIME=$(stat -c %Y "$LOCAL_PHP" 2>/dev/null || echo 0)
-  if [ "${REMOTE_MTIME:-0}" -ge "$LOCAL_MTIME" ]; then
-    NEED_PUSH=0
-  fi
-fi
-if [ "$NEED_PUSH" = "1" ]; then
-  "${SCP_CMD[@]}" "$LOCAL_PHP" "${NC_USER}@${NC_HOST}:/tmp/write_row.php" >/dev/null 2>&1 || true
-  "${SSH_CMD[@]}" "sudo cp /tmp/write_row.php $SCRIPT_HOST_PATH && sudo chown www-data:www-data $SCRIPT_HOST_PATH" >/dev/null 2>&1 || true
-fi
-
-# Build args JSON via python (avoids shell quoting issues)
-ARGS_FILE=$(mktemp /tmp/write_row_args.XXXXXX.json)
-COMPANY="${1:-}"
-ROLE="${2:-}"
-JOB_URL="${3:-}"
-PDF_URL="${4:-}"
-SCORE="${5:-4.0}"
-TIER="${6:-2}"
-SOURCE="${7:-6}"
-NOTES="${8:-}"
-
-python3 - "$ARGS_FILE" "$COMPANY" "$ROLE" "$JOB_URL" "$PDF_URL" "$SCORE" "$TIER" "$SOURCE" "$NOTES" <<'PYEOF'
-import json, sys
-path, company, role, job_url, pdf_url, score, tier, source, notes = sys.argv[1:]
-data = {
-  "company": company, "role": role,
-  "jobUrl": job_url, "pdfUrl": pdf_url,
-  "fitScore": float(score),
-  "tier": int(tier), "source": int(source),
-  "notes": notes,
-}
-with open(path, 'w') as f:
-  json.dump(data, f)
-PYEOF
-
-# SCP the JSON
-REMOTE_ARGS="/tmp/write_row_args.json"
-"${SCP_CMD[@]}" "$ARGS_FILE" "${NC_USER}@${NC_HOST}:${REMOTE_ARGS}" >/dev/null 2>&1
-
-# Execute inside the nextcloud container
-"${SSH_CMD[@]}" "docker cp $REMOTE_ARGS nextcloud:/tmp/ && docker exec nextcloud php $SCRIPT_PATH_REMOTE --json /tmp/write_row_args.json"
-
-RC=$?
-rm -f "$ARGS_FILE"
-exit $RC
+exec node "$DIR/write_row_api.mjs" "$@"
