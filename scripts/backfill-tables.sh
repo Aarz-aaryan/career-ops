@@ -25,7 +25,24 @@
 set -euo pipefail
 
 DRY_RUN=0
-[[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
+# ROUND-62 (2026-09-09): --since N limits the sweep to PDFs modified in the last
+# N days. The daily cron only ever needs the run it just produced; without a
+# window it re-derives a row for EVERY pdf in output/ (220 of them), which
+# silently repopulates the whole table after a deliberate clear-out.
+# Default stays unbounded so a manual full backfill still works.
+SINCE_DAYS=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run) DRY_RUN=1; shift ;;
+        --since)   SINCE_DAYS="${2:-}"; shift 2 ;;
+        --since=*) SINCE_DAYS="${1#*=}"; shift ;;
+        *) shift ;;
+    esac
+done
+if [[ -n "$SINCE_DAYS" && ! "$SINCE_DAYS" =~ ^[0-9]+$ ]]; then
+    echo "ERROR: --since expects a whole number of days (got: $SINCE_DAYS)" >&2
+    exit 2
+fi
 
 CO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$CO_DIR"
@@ -52,7 +69,14 @@ SKIPPED=0
 FAILED=0
 ALREADY_EXISTS=0
 
-for PDF_PATH in $(ls -1t output/*.pdf 2>/dev/null); do
+if [[ -n "$SINCE_DAYS" ]]; then
+    PDF_LIST=$(find output -maxdepth 1 -name '*.pdf' -mtime -"$SINCE_DAYS" -printf '%T@ %p\n' 2>/dev/null | sort -rn | cut -d' ' -f2-)
+    echo "Window: PDFs modified in the last $SINCE_DAYS day(s) -> $(echo "$PDF_LIST" | grep -c . ) of $PDF_COUNT"
+else
+    PDF_LIST=$(ls -1t output/*.pdf 2>/dev/null)
+fi
+
+for PDF_PATH in $PDF_LIST; do
     BASENAME_NO_EXT=$(basename "$PDF_PATH" .pdf)
     # Filename pattern A: cv-aaryan-{NNN}-{slug}-{YYYY-MM-DD}.pdf  (newer)
     REPORT_NUM=$(echo "$BASENAME_NO_EXT" | sed -nE 's/^cv-aaryan-([0-9]+)-.*/\1/p')

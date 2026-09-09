@@ -1,13 +1,6 @@
 #!/usr/bin/env node
 /**
- * write_row_api.mjs  [INCOMPLETE - NOT WIRED INTO THE PIPELINE]
- *
- * Status 2026-09-09: create + idempotent update work. Blocked on a Nextcloud
- * Tables 2.3.0 bug where only the FIRST text/link column in a request is
- * stored, so Resume Used (148) is dropped when sent alongside Job Link (146).
- * Writing 148 in a follow-up PUT works by hand but not yet from this script.
- * The pipeline still uses scripts/write_row.sh. Kept as the future path to
- * removing all direct-DB coupling. — write a job row into Nextcloud Tables via the PUBLIC REST API.
+ * write_row_api.mjs — write a job row into Nextcloud Tables via the PUBLIC REST API.
  *
  * Added 2026-09-09 (round 60). Replaces write_row.sh + write_row.php, which
  * connected straight to Nextcloud's database from inside the container. That
@@ -39,6 +32,16 @@ const [company, role, jobUrl, pdfUrl, scoreRaw, tier = '2', source = '6', notes 
 if (!company || !role) { console.error('ERROR: company and role are required'); process.exit(1); }
 if (!jobUrl) { console.error(`SKIP ${company}: no job URL`); process.exit(3); }
 
+
+// Nextcloud's link-column validator rejects bare-IP hosts (stores NULL on an
+// HTTP 200). Swap the Tailscale IP for its MagicDNS name, which it accepts.
+const NC_IP = process.env.NC_HOST || '100.84.224.18';
+const NC_DNS = process.env.NC_MAGICDNS || 'resource-server.tail6da67c.ts.net';
+const normalizeUrl = (u) => {
+  if (typeof u !== 'string' || !u) return u;
+  return u.replace(new RegExp('://' + NC_IP.replace(/\./g, '\\.') + '(?=[:/]|$)'), '://' + NC_DNS);
+};
+
 const api = async (method, path, body) => {
   const r = await fetch(BASE + path, {
     method,
@@ -69,14 +72,17 @@ const existing = rows.find(r =>
 const data = {
   [COL.company]: company,
   [COL.role]: role,
-  [COL.jobLink]: jobUrl,
+  [COL.jobLink]: normalizeUrl(jobUrl),
   [COL.score]: Number(scoreRaw) || 0,
   [COL.dateAdded]: new Date().toISOString().slice(0, 10),
 };
-// NOTE (2026-09-09): Nextcloud Tables 2.3.0 only stores the FIRST text/link
-// column in a request -- sending Job Link (146) and Resume Used (148) together
-// silently drops 148. Verified: POSTing 148 alone works. So link columns after
-// the first are written in their own follow-up request below.
+// NOTE (2026-09-09): a text/link column silently stores NULL when the URL host
+// is a bare IP address. Measured: http://example.com/a.pdf stores fine,
+// http://100.84.224.18:9080/a.pdf and https://100.84.224.18:9080/a.pdf both
+// come back null with an HTTP 200. Resume PDFs are served from the Tailscale
+// IP, so every one of them was being dropped. normalizeUrl() below rewrites a
+// bare-IP host to the MagicDNS name, which the validator accepts. The direct
+// SQL writer never hit this because it bypasses validation entirely.
 if (notes) data[COL.notes] = notes;
 if (tier) data[COL.tier] = Number(tier);
 if (source) data[COL.source] = Number(source);
@@ -97,7 +103,7 @@ if (existing) {
 // Redis cache and report the cell as empty when it was in fact written.
 let after;
 if (pdfUrl) {
-  after = await api('PUT', `/rows/${rowId}`, { data: { [COL.resume]: pdfUrl } });
+  after = await api('PUT', `/rows/${rowId}`, { data: { [COL.resume]: normalizeUrl(pdfUrl) } });
 } else {
   after = (await api('GET', `/tables/${TABLE_ID}/rows`)).find(r => r.id === rowId);
 }
