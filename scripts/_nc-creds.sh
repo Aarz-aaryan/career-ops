@@ -20,9 +20,16 @@ if [ -f "$_nc_env" ]; then
         [ -z "$_cur" ] && export "$_k=$_v"
         ;;
     esac
-  done < <(grep -E '^NC_(USER|PASS|HOST|TOKEN)=' "$_nc_env" 2>/dev/null)
+  done < <(grep -E '^NC_(USER|PASS|HOST|TOKEN|NC_PORT)=' "$_nc_env" 2>/dev/null)
 fi
-unset _nc_env _k _v _cur
+unset _nc_env _k _v _cur NC_PORT
+
+# NC_PORT should not propagate from shell environment to SSH calls.
+# SSH uses port 22; NC_PORT=9080 in the env is for Nextcloud HTTP (different port).
+# Only keep the value if .env explicitly defines it, otherwise leave unset.
+if [ -z "${NC_PORT:-}" ] && ! grep -qE '^NC_PORT=' "${_nc_env:-}" 2>/dev/null; then
+  unset NC_PORT
+fi
 
 # API auth identity (Nextcloud account), distinct from the SSH login user.
 export NC_API_USER="${NC_API_USER:-${NC_USER:-}}"

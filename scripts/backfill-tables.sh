@@ -151,7 +151,25 @@ for PDF_PATH in $PDF_LIST; do
         continue
     fi
 
-    PDF_URL="http://${NC_HOST}:${NC_PORT}/remote.php/dav/files/${NC_USER}/$(basename "$PDF_PATH")"
+    # ROUND-64 (2026-09-16): upload the PDF before writing a row that links to it.
+    # Neither cron had an upload step, so every row since ~round 53 recorded a
+    # Resume Used URL pointing at a file that was never uploaded -- 41 of 45 links
+    # returned 404. Coupling the upload to the write here means a link can never be
+    # recorded without its file being present. upload-to-nextcloud.sh is idempotent
+    # (overwrites + verifies MD5), so re-running is safe.
+    # ROUND-64 (2026-09-16): build this WITHOUT an explicit port. A Nextcloud
+    # Tables link column silently truncates any URL carrying one --
+    # "http://host:9080/a/b.pdf" is stored as "http://host", losing the path.
+    # 37 of 45 resume links had been reduced to a bare hostname. Port 80 is now
+    # published alongside 9080 and the MagicDNS name is a trusted domain, so a
+    # port-less URL reaches the same place and survives storage intact.
+    NC_PUBLIC_BASE="${NC_PUBLIC_BASE:-http://resource-server.tail6da67c.ts.net}"
+    PDF_URL="${NC_PUBLIC_BASE}/remote.php/dav/files/${NC_USER}/$(basename "$PDF_PATH")"
+    if [[ $DRY_RUN -eq 0 ]]; then
+        if ! bash "$(dirname "$0")/upload-to-nextcloud.sh" "$PDF_PATH" >/dev/null 2>&1; then
+            echo "   WARN: upload failed for $(basename "$PDF_PATH") — link may 404"
+        fi
+    fi
     TIER=2
     SOURCE=6
     NOTES="Backfilled from report #$REPORT_NUM on $(date -u +%Y-%m-%d)"

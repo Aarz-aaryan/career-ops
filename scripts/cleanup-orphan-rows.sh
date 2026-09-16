@@ -8,7 +8,7 @@
 set -euo pipefail
 
 NC_HOST="${NC_HOST:-100.84.224.18}"
-NC_PORT="${NC_PORT:-22}"
+NC_PORT="22"
 NC_USER="${NC_SSH_USER:-r-server}"
 
 if [ -n "${NC_PASS:-}" ] && command -v sshpass >/dev/null 2>&1; then

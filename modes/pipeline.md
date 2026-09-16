@@ -6,7 +6,13 @@ Process job URLs stored in `data/pipeline.md`. The user adds URLs at any time an
 
 **Run this before processing any URLs.** Entries added by the scanner in headless/batch mode carry `**Verification:** unconfirmed (batch mode)` because Playwright was unavailable at scan time — they were never checked for liveness. Without a sweep, dead postings reach evaluation one tab at a time, burning time and tokens on phantom roles (a single inbox of 8 stale URLs produces 8 wasted evaluations).
 
-Sweep all pending URLs in one batch with the zero-token liveness checker before the per-URL loop:
+Sweep pending URLs in one batch with the zero-token liveness checker before the per-URL loop.
+**Cap the sweep at the first `liveness_sweep_limit` pending entries (default 40, see
+`modes/_custom.md` House Rule 17).** Sweeping the *entire* queue does not scale: the queue
+grows far faster than the pipeline drains it, and on 2026-09-15 an unbounded sweep over
+1,820 entries consumed the whole 30-minute agy budget and produced ZERO applications while
+still reporting success. The queue is newest-first, so the first N entries are the freshest
+candidates and 40 is ample to find the 5 the run needs:
 
 1. Collect every `- [ ]` URL from the "Pending" section into a temp file (one URL per line).
 2. Run `node check-liveness.mjs --file <tmpfile>` (add `--throttle` for large batches to stay under WAF rate limits; it's pure Playwright, zero Claude tokens). The checker prints a per-URL verdict and exits non-zero if any are expired/uncertain.

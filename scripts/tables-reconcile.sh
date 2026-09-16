@@ -25,7 +25,9 @@ STRICT=0
 
 CRON_OUTPUT_DIR="$HOME/.hermes/profiles/aarz/cron/output/607c910ef279"
 NC_HOST="${NC_HOST:-100.84.224.18}"
-NC_PORT="${NC_PORT:-22}"
+# SSH to r-server always uses port 22. NC_PORT=9080 from the shell env is
+# for Nextcloud HTTP, not for SSH — hardcode it.
+NC_PORT="22"
 NC_USER="${NC_SSH_USER:-r-server}"
 
 # 1. Find the latest cron output file

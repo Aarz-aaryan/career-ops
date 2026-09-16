@@ -39,7 +39,14 @@ const NC_IP = process.env.NC_HOST || '100.84.224.18';
 const NC_DNS = process.env.NC_MAGICDNS || 'resource-server.tail6da67c.ts.net';
 const normalizeUrl = (u) => {
   if (typeof u !== 'string' || !u) return u;
-  return u.replace(new RegExp('://' + NC_IP.replace(/\./g, '\\.') + '(?=[:/]|$)'), '://' + NC_DNS);
+  // Rewrite the Tailscale IP to its MagicDNS name AND drop the explicit port.
+  // Both matter: the validator stores NULL for a bare-IP host, and it truncates
+  // any URL carrying a port down to the bare origin, discarding the path.
+  // Port 80 is published alongside 9080, so the port-less form resolves.
+  return u.replace(
+    new RegExp('://(?:' + NC_IP.replace(/\./g, '\\.') + '|' + NC_DNS.replace(/\./g, '\\.') + ')(?::\\d+)?(?=[/?#]|$)'),
+    '://' + NC_DNS,
+  );
 };
 
 const api = async (method, path, body) => {
@@ -74,7 +81,6 @@ const data = {
   [COL.role]: role,
   [COL.jobLink]: normalizeUrl(jobUrl),
   [COL.score]: Number(scoreRaw) || 0,
-  [COL.dateAdded]: new Date().toISOString().slice(0, 10),
 };
 // NOTE (2026-09-09): a text/link column silently stores NULL when the URL host
 // is a bare IP address. Measured: http://example.com/a.pdf stores fine,
@@ -93,7 +99,13 @@ if (existing) {
   await api('PUT', `/rows/${rowId}`, { data });
   console.log(`Existing row ${rowId} updated: ${company} / ${role}`);
 } else {
-  const created = await api('POST', `/tables/${TABLE_ID}/rows`, { data });
+  // ROUND-64 (2026-09-16): Date Added is stamped ONLY on create. It used to sit
+  // in the shared `data` object, so every idempotent update re-stamped it with
+  // today's date -- and because --since 2 re-writes each row for two days, the
+  // column drifted and effectively meant "last touched" rather than "added".
+  const created = await api('POST', `/tables/${TABLE_ID}/rows`, {
+    data: { ...data, [COL.dateAdded]: new Date().toISOString().slice(0, 10) },
+  });
   rowId = created.id;
   console.log(`Created row ${rowId} for ${company} / ${role}.`);
 }
