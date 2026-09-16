@@ -110,6 +110,26 @@ for PDF_PATH in $PDF_LIST; do
         fi
     fi
 
+    # ROUND-65 (2026-09-16): confirm this report actually belongs to THIS pdf.
+    # Both lookups above use `ls ... | head -1` on a glob, which silently picks
+    # the wrong report whenever several share a slug or number prefix -- that is
+    # how table rows ended up linked to a different application's resume. Every
+    # report names its own PDF in a "**PDF:** [file]" line, so treat that as the
+    # authority and re-resolve when it disagrees.
+    PDF_BASENAME="$(basename "$PDF_PATH")"
+    CLAIMED_PDF=$(grep -oE '\*\*PDF:\*\*[[:space:]]*\[[^]]+\.pdf\]' "$REPORT_FILE" 2>/dev/null | head -1 | sed -E 's/.*\[([^]]+)\]/\1/' || true)
+    if [[ -n "$CLAIMED_PDF" && "$CLAIMED_PDF" != "$PDF_BASENAME" ]]; then
+        TRUE_REPORT=$(grep -rlF "$PDF_BASENAME" reports/ 2>/dev/null | head -1 || true)
+        if [[ -n "$TRUE_REPORT" ]]; then
+            REPORT_FILE="$TRUE_REPORT"
+            REPORT_NUM=$(basename "$REPORT_FILE" | sed -nE 's/^([0-9]+)-.*/\1/p')
+        else
+            echo "SKIP: $PDF_BASENAME (report #$REPORT_NUM names '$CLAIMED_PDF'; no report names this PDF)"
+            SKIPPED=$((SKIPPED + 1))
+            continue
+        fi
+    fi
+
     # Report header format:
     #   # Evaluation: Company — Role
     #   **URL:** https://...
