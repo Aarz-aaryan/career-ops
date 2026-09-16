@@ -184,7 +184,9 @@ for PDF_PATH in $PDF_LIST; do
     # published alongside 9080 and the MagicDNS name is a trusted domain, so a
     # port-less URL reaches the same place and survives storage intact.
     NC_PUBLIC_BASE="${NC_PUBLIC_BASE:-http://resource-server.tail6da67c.ts.net}"
-    PDF_URL="${NC_PUBLIC_BASE}/remote.php/dav/files/${NC_USER}/$(basename "$PDF_PATH")"
+    # ROUND-67: resumes live in Career-ops/Resumes, not the account root.
+    NC_RESUME_DIR="${NC_RESUME_DIR:-Career-ops/Resumes}"
+    PDF_URL="${NC_PUBLIC_BASE}/remote.php/dav/files/${NC_USER}/${NC_RESUME_DIR}/$(basename "$PDF_PATH")"
     # ROUND-66 (2026-09-16): a failed upload must NOT produce a row. Warning and
     # writing anyway is how broken links appear -- the row records a URL for a
     # file that is not there, and nothing ever revisits it. Retry once, then skip

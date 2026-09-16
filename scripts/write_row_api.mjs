@@ -120,6 +120,26 @@ if (pdfUrl) {
   after = (await api('GET', `/tables/${TABLE_ID}/rows`)).find(r => r.id === rowId);
 }
 
+// ROUND-68 (2026-09-16): confirm the job link survived storage. Nextcloud's
+// link column truncates any TLD longer than three characters -- ".jobs" becomes
+// ".job", ".careers" becomes ".car", ".tech" becomes ".tec" -- while still
+// returning HTTP 200. amazon.jobs is a major posting source, so this silently
+// produces dead tracker entries. Detect it and say so loudly rather than let a
+// corrupted URL pass as success; the value is echoed to stdout so the cron
+// report carries the real URL even when the cell cannot hold it.
+{
+  const storedLink = plain(cellValue(after, COL.jobLink));
+  if (jobUrl && storedLink && storedLink !== jobUrl) {
+    console.error(`WARNING: job link was altered on write for row ${rowId}.`);
+    console.error(`  sent:   ${jobUrl}`);
+    console.error(`  stored: ${storedLink}`);
+    const tld = (jobUrl.match(/^https?:\/\/[^/:]*\.([a-z]+)/i) || [])[1];
+    if (tld && tld.length > 3) {
+      console.error(`  cause:  Nextcloud truncates the ".${tld}" TLD to three characters.`);
+    }
+  }
+}
+
 // Verify the same fields the old PHP gate checked, so behaviour is unchanged.
 const missing = [];
 if (!cellValue(after, COL.company)) missing.push('Company (144)');

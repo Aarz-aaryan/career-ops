@@ -71,6 +71,20 @@ if (!QUICK) {
   if (broken.length) fail('resume links', `${broken.length} broken — ${broken.slice(0, 3).join('; ')}`);
 }
 
+// 3b. job links must carry a real path, not just a bare host. The same Tables
+// link-column truncation that destroyed resume URLs also silently shortened at
+// least one posting URL to "https://www.amazon.job" -- the tracker's primary
+// purpose is getting back to the posting, so a bare host is a dead entry.
+const truncated = [];
+for (const r of rows) {
+  const u = urlOf(cellOf(r, 146));
+  const m = /^https?:\/\/[^/]+(\/.*)?$/.exec(u || '');
+  const path = m && m[1] ? m[1] : '';
+  if (!u || !path || path === '/') truncated.push(`row ${r.id} (${cellOf(r, 144)}) -> ${u || 'empty'}`);
+}
+note('job links', `${rows.length - truncated.length}/${rows.length} carry a real path`);
+if (truncated.length) fail('job links', `${truncated.length} truncated/empty — ${truncated.slice(0, 3).join('; ')}`);
+
 // 4. today's output actually happened
 try {
   const pdfsToday = readdirSync('output').filter(f => f.endsWith('.pdf') &&

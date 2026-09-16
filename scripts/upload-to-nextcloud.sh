@@ -33,7 +33,12 @@ NC_PORT="${NC_PORT:-9080}"
 NC_BASE="${NC_BASE:-/remote.php/dav/files/${NC_USER}}"
 
 PDF_PATH="${1:?Usage: upload-to-nextcloud.sh <path-to-pdf> [custom-remote-name]}"
-REMOTE_NAME="${2:-$(basename "$PDF_PATH")}"
+# ROUND-67 (2026-09-16): default to Career-ops/Resumes, NOT the account root.
+# This defaulted to a bare basename, so any caller that did not pass an explicit
+# destination dropped the PDF straight into the top level of Aaryan's Nextcloud
+# -- 87 resumes ended up sitting next to College/, Photos/, Notes/ and Deck/.
+NC_RESUME_DIR="${NC_RESUME_DIR:-Career-ops/Resumes}"
+REMOTE_NAME="${2:-${NC_RESUME_DIR}/$(basename "$PDF_PATH")}"
 
 if [ ! -f "$PDF_PATH" ]; then
   echo "ERROR: file not found: $PDF_PATH" >&2
@@ -41,6 +46,19 @@ if [ ! -f "$PDF_PATH" ]; then
 fi
 
 URL="http://${NC_HOST}:${NC_PORT}${NC_BASE}/${REMOTE_NAME}"
+
+# Create the destination folder if it is missing. MKCOL is idempotent -- 201 when
+# created, 405 when it already exists -- so this is safe to run on every upload.
+REMOTE_DIR="$(dirname "$REMOTE_NAME")"
+if [ "$REMOTE_DIR" != "." ] && [ -n "$REMOTE_DIR" ]; then
+  _acc=""
+  IFS='/' read -ra _parts <<< "$REMOTE_DIR"
+  for _p in "${_parts[@]}"; do
+    _acc="${_acc:+$_acc/}$_p"
+    curl -s -o /dev/null -X MKCOL -u "${NC_USER}:${NC_PASS}" \
+      "http://${NC_HOST}:${NC_PORT}${NC_BASE}/${_acc}" || true
+  done
+fi
 
 echo "=== Uploading ==="
 echo "Local:  $PDF_PATH"

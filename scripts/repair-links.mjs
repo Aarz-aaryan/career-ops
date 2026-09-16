@@ -20,6 +20,8 @@ const host = process.env.NC_HOST, user = process.env.NC_API_USER, pass = process
 const BASE = `http://${host}:9080/apps/tables/api/1`;
 const auth = 'Basic ' + Buffer.from(`${user}:${pass}`).toString('base64');
 const PUBLIC = process.env.NC_PUBLIC_BASE || 'http://resource-server.tail6da67c.ts.net';
+// ROUND-67: resumes live in Career-ops/Resumes, not the account root.
+const RESUME_DIR = process.env.NC_RESUME_DIR || 'Career-ops/Resumes';
 const DRY = process.argv.includes('--dry-run');
 
 const api = async (m, p, b) => {
@@ -50,7 +52,7 @@ const rows = await api('GET', '/tables/8/rows');
 let fixed = 0, already = 0, unresolved = 0;
 for (const r of rows) {
   const cur = urlOf(cell(r, 148));
-  if (cur.startsWith(PUBLIC) && cur.endsWith('.pdf')) { already++; continue; }
+  if (cur.startsWith(`${PUBLIC}/remote.php/dav/files/${user}/${RESUME_DIR}/`) && cur.endsWith('.pdf')) { already++; continue; }
 
   const company = String(cell(r, 144) || '').trim();
   const role = String(cell(r, 145) || '').trim();
@@ -63,7 +65,7 @@ for (const r of rows) {
   if (DRY) { console.log(`  would fix row ${r.id} (${company}) -> ${pdf}`); fixed++; continue; }
   try { execFileSync('bash', ['scripts/upload-to-nextcloud.sh', `output/${pdf}`], { stdio: 'ignore' }); }
   catch { console.log(`  upload failed: ${pdf}`); }
-  await api('PUT', `/rows/${r.id}`, { data: { 148: `${PUBLIC}/remote.php/dav/files/${user}/${pdf}` } });
+  await api('PUT', `/rows/${r.id}`, { data: { 148: `${PUBLIC}/remote.php/dav/files/${user}/${RESUME_DIR}/${pdf}` } });
   fixed++;
 }
 console.log(`  repaired: ${fixed}   already OK: ${already}   unresolved: ${unresolved}`);
