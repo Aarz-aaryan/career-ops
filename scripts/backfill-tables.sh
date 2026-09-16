@@ -185,9 +185,24 @@ for PDF_PATH in $PDF_LIST; do
     # port-less URL reaches the same place and survives storage intact.
     NC_PUBLIC_BASE="${NC_PUBLIC_BASE:-http://resource-server.tail6da67c.ts.net}"
     PDF_URL="${NC_PUBLIC_BASE}/remote.php/dav/files/${NC_USER}/$(basename "$PDF_PATH")"
+    # ROUND-66 (2026-09-16): a failed upload must NOT produce a row. Warning and
+    # writing anyway is how broken links appear -- the row records a URL for a
+    # file that is not there, and nothing ever revisits it. Retry once, then skip
+    # the row entirely: backfill is idempotent and re-runs daily, so the row gets
+    # written on the next run once the upload succeeds. A transient Nextcloud or
+    # network blip now self-heals instead of leaving a permanent 404.
     if [[ $DRY_RUN -eq 0 ]]; then
-        if ! bash "$(dirname "$0")/upload-to-nextcloud.sh" "$PDF_PATH" >/dev/null 2>&1; then
-            echo "   WARN: upload failed for $(basename "$PDF_PATH") — link may 404"
+        UPLOAD_OK=0
+        for _attempt in 1 2; do
+            if bash "$(dirname "$0")/upload-to-nextcloud.sh" "$PDF_PATH" >/dev/null 2>&1; then
+                UPLOAD_OK=1; break
+            fi
+            sleep 3
+        done
+        if [[ $UPLOAD_OK -eq 0 ]]; then
+            echo "SKIP: $(basename "$PDF_PATH") (upload failed twice — not writing a row that would 404; will retry next run)"
+            SKIPPED=$((SKIPPED + 1))
+            continue
         fi
     fi
     TIER=2
